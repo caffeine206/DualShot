@@ -26,8 +26,7 @@ public class EnergyOrbBehavior : MonoBehaviour {
 		transform.position = new Vector3(0,0,0);
 		NewDirection();	
 
-		// kReferenceSpeed = 20.0f + (Random.value * 20.0f);
-		kReferenceSpeed = 0;
+		kReferenceSpeed = 10.0f;
 		mSpeed = kReferenceSpeed;
 
 		mEnergyOrbState = EnergyOrbState.Normal;
@@ -52,20 +51,20 @@ public class EnergyOrbBehavior : MonoBehaviour {
 		
 		if (status != LocalGameBehavior.WorldBoundStatus.Inside) {
 			// Debug.Log("collided position: " + this.transform.position);
-			transform.position = new Vector3(localGameBehavior.WorldMin.x + kReferenceSpeed, 
-			                                 localGameBehavior.WorldMin.y + kReferenceSpeed, 0f);
+			/*transform.position = new Vector3(localGameBehavior.WorldMin.x + kReferenceSpeed, 
+			                                 localGameBehavior.WorldMin.y + kReferenceSpeed, 0f);*/
 			NewDirection();
 		}
 	}
 
 	private void NewDirection() {
-		LocalGameBehavior localGameBehavior = GameObject.Find ("GameManager").GetComponent<LocalGameBehavior>();
+		LocalGameBehavior LocalGameBehavior = GameObject.Find ("GameManager").GetComponent<LocalGameBehavior>();
 		
 		// we want to move towards the center of the world
-		Vector2 v = localGameBehavior.WorldCenter - new Vector2(transform.position.x, transform.position.y);  
+		Vector2 v = LocalGameBehavior.WorldCenter - new Vector2(transform.position.x, transform.position.y);  
 		// this is vector that will take us back to world center
 		v.Normalize();
-		Vector2 vn = new Vector2(v.y, -v.x); // this is a direciotn that is perpendicular to V
+		Vector2 vn = new Vector2(v.y, -v.x); // this is a direction that is perpendicular to V
 		
 		float useV = 1.0f - Mathf.Clamp(mTowardsCenter, 0.01f, 1.0f);
 		float tanSpread = Mathf.Tan( useV * Mathf.PI / 2.0f );
@@ -81,13 +80,20 @@ public class EnergyOrbBehavior : MonoBehaviour {
 	
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		Debug.Log ("Hit!");
-		
-		// Only care if hitting an Egg (vs. hitting another EnergyOrb!
-		if (other.gameObject.name == "Egg(Clone)") {
-			Destroy(other.gameObject);
-			Destroy(this.gameObject);
+		// Wave Blast collision
+		if (other.gameObject.name == "WaveBlast(Clone)") {
+			Vector3 v =  transform.position - other.gameObject.transform.position;
+			v.Normalize();
+			Vector3 newDir = v + transform.up;
+			newDir.Normalize();
+			transform.up = newDir;
+			//Destroy(other.gameObject);
 		}
+	}
+
+	void OnTriggerExit2D(Collider2D other)
+	{
+
 	}
 
 	/*
