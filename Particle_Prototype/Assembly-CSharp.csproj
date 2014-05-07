@@ -46,7 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Resources\Scripts\ChargeParticle.cs" />
      <Compile Include="Assets\Resources\Scripts\DestroyExplosion.cs" />
      <Compile Include="Assets\Resources\Scripts\ExplosionManager.cs" />
      <Compile Include="Assets\Resources\Scripts\GlobalBehavior.cs" />
