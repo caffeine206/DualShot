@@ -5,6 +5,8 @@
  * A ship class.
 */
 
+//John was here.
+
 using UnityEngine;
 using System.Collections;
 
