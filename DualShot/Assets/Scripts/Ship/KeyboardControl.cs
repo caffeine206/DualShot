@@ -46,13 +46,12 @@ public class KeyboardControl : MonoBehaviour {
 		//transform.position += Input.GetAxis ("Vertical")  * transform.up * (kHeroSpeed * Time.smoothDeltaTime);
 	
 		// New Movement
-		
 		if (Input.GetAxis("Horizontal") > 0.1f || Input.GetAxis ("Horizontal") < -0.1f ||
 			Input.GetAxis ("Vertical") > 0.1f || Input.GetAxis ("Vertical") < -0.1f) {
 			Vector2 move = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-			rigidbody2D.AddForce ( move.normalized * kHeroSpeed * Time.smoothDeltaTime);
-			Debug.Log ("move: " + move);
+			rigidbody2D.AddForce ( move.normalized * kHeroSpeed);
 			}
+		
 		
 		// Old Tranform
 		/*if (Input.GetAxis("Horizontal") > 0.0) { //if the up arrow is pressed 
@@ -70,6 +69,13 @@ public class KeyboardControl : MonoBehaviour {
 
 		BoundsControl boundsControl = GameObject.Find("GameManager").GetComponent<BoundsControl>();
 		boundsControl.ClampAtWorldBounds(this.gameObject, this.renderer.bounds);
+		
+		Vector2 mousedir;
+		mousedir = boundsControl.mMainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+		mousedir.Normalize();
+		transform.up = mousedir;
+		
+		
 		/*LocalGameBehavior LocalGameBehavior2 = GameObject.Find ("GameManager").GetComponent<LocalGameBehavior>();
 		mClampedPosition = new Vector3(Mathf.Clamp(this.transform.position.x, LocalGameBehavior2.mWorldMin.x, LocalGameBehavior2.mWorldMax.x),
 		Mathf.Clamp(this.transform.position.y, LocalGameBehavior2.mWorldMin.y, LocalGameBehavior2.mWorldMax.y), 0.0f);
@@ -88,9 +94,7 @@ public class KeyboardControl : MonoBehaviour {
 				mWaveBlastSpawnTime = Time.realtimeSinceStartup;
 				if (null != waveBlast) {
 					e.transform.position = transform.position;
-					Vector3 mousePos = boundsControl.mMainCamera.ScreenToWorldPoint(Input.mousePosition);
-					mousePos.z = 0;
-					waveBlast.SetForwardDirection(mousePos - e.transform.position);
+					waveBlast.SetForwardDirection(mousedir);
 				}
 				// Play (mClip, .25f, 1);
 			}
@@ -108,9 +112,7 @@ public class KeyboardControl : MonoBehaviour {
 				waveBlast.mSpeed += waveBlast.mSpeed * kWaveTotalChargeTime;
 				e.transform.localScale += new Vector3(kWaveTotalChargeTime, kWaveTotalChargeTime, 0.0f);
 				e.transform.position = transform.position;
-				Vector3 mousePos2 = boundsControl.mMainCamera.ScreenToWorldPoint(Input.mousePosition);
-				mousePos2.z = 0;
-				waveBlast.SetForwardDirection(mousePos2 - e.transform.position);
+				waveBlast.SetForwardDirection(mousedir);
 			}
 		}
 

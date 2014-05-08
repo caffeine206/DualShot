@@ -1,4 +1,5 @@
 DualShot/Library
 DualShot/Temp
 DualShot/Assets/*.unity
-DualShot/*.sln
+*.sln
+*.userprefs
