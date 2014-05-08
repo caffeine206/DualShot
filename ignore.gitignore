@@ -1,10 +1,10 @@
 
 #don't ignore assets
 !**/Assets/**
-!**/*.sln
 
 
 #ignore all scene files
 *.scene
 **/Library/*
+**/Temp/*
 **/*.meta
