@@ -4,7 +4,7 @@
 
 
 #ignore all scene files
-*.scene
+*.unity
 **/Library/*
 **/Temp/*
 **/*.meta
