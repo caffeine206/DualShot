@@ -1,0 +1,18 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Mode1\BoundsControl.cs">
+    <Files>
+      <File FileName="Assets\Scripts\Ship\KeyboardControl.cs" Line="7" Column="1" />
+      <File FileName="Assets\Scripts\Ship\WaveBlastBehavior.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Mode1\OrbBehavior.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Mode1\BoundsControl.cs" Line="116" Column="31" />
+      <File FileName="Assets\Scripts\Ship\JoyStickControl.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Ship\KeyboardControl.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Ship\ShotgunBlastBehavior.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

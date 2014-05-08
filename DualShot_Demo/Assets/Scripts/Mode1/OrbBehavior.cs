@@ -1,27 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BallBehavior : MonoBehaviour {
+public class OrbBehavior : MonoBehaviour {
 	
 	#region PublicVar
-	public const float kSize1 = 1f;
-	public const float kSize2 = 5;
-	public const float kSize3 = 10;
-	public float kExplodeForce = 100f;
+	// the minmum mass for the 3 sizes of asteroids
+	public float kSize1 = 1f;
+	public float kSize2 = 5;
+	public float kSize3 = 10;
+	
+	public float kExplodeForce = 25f;
+	public int health = 2;
 	public const int kPieces = 2;
 	#endregion
 	
 	#region PrivateVar
-	private int health = 2;
 	private const float kScale = 1f; // the constant for determining the diameter, might be Pi
 	// Use this for initialization
 	private GameObject mObject = null; // The prefab of this object.
 	#endregion
 
 	void Start () {
+		// Get Prefab
 		if (mObject == null) {
-			mObject = (GameObject) Resources.Load ("Prefab/Asteroid");
+			mObject = (GameObject) Resources.Load ("Prefabs/Orb");
 		}
+		
+		// Set mass and adjust the scale to match
 		float mass = rigidbody2D.mass;
 		float diameter = Mathf.Sqrt(mass) / kScale;
 		transform.localScale = new Vector3(diameter, diameter);
@@ -29,6 +34,8 @@ public class BallBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+	/*
+	#if DEBUG
 		if (Input.GetButtonDown("Fire2")) {
 			Debug.Log("Smash");
 			--health;
@@ -37,6 +44,7 @@ public class BallBehavior : MonoBehaviour {
 			Debug.Log("Boom");
 			explode();
 		}
+	#endif*/
 	}
 
 	private void explode() {
@@ -53,6 +61,7 @@ public class BallBehavior : MonoBehaviour {
 		// get a new mass for the object
 		float mass = rigidbody2D.mass;
 		
+		// This is a steaming mess that I need to clean up somehow
 		float newMass = Random.Range ( minSize, maxSize );
 		mass -= newMass;
 		GameObject e = (GameObject) Instantiate(mObject);

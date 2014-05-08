@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Level1GameState : LocalGameBehavior {
+public class Level1GameState : BoundsControl {
 	
 
 	#region  support runtime enemy creation..

@@ -46,7 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\BallBehavior.cs" />
      <Compile Include="Assets\Scripts\BoundsControl.cs" />
      <Compile Include="Assets\Scripts\DestroyExplosion.cs" />
      <Compile Include="Assets\Scripts\EnergyOrbBehavior.cs" />
@@ -57,6 +56,7 @@
      <Compile Include="Assets\Scripts\LoadLevelOnMouse.cs" />
      <Compile Include="Assets\Scripts\LocalGameBehavior.cs" />
      <Compile Include="Assets\Scripts\MenuState.cs" />
+     <Compile Include="Assets\Scripts\OrbBehavior.cs" />
      <Compile Include="Assets\Scripts\ParticleShip.cs" />
      <Compile Include="Assets\Scripts\ShipControl.cs" />
      <Compile Include="Assets\Scripts\ShipControl2.cs" />
