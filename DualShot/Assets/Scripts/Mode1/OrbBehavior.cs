@@ -8,17 +8,18 @@ public class OrbBehavior : MonoBehaviour {
 	public float kSize1 = 1f;
 	public float kSize2 = 5;
 	public float kSize3 = 10;
-	public const float kScale = 1f; // the constant for determining the diameter, might be Pi 
-	
+	public float kScale = 1f; // the constant for determining the diameter, might be Pi 
+
 	public float kExplodeForce = 25f;
-	public int health = 2;
+	public float health = 100.0f;
 	public const int kPieces = 2;
 	#endregion
 	
 	#region PrivateVar
 	// Use this for initialization
 	private GameObject mObject = null; // The prefab of this object.
-	private BoundsControl mWorld;
+	private BoundsControl mWorld = null;
+	private GameObject mPowerUp = null;
 	#endregion
 
 	void Start () {
@@ -29,18 +30,21 @@ public class OrbBehavior : MonoBehaviour {
 		if (mWorld == null) {
 			mWorld = GameObject.Find("GameManager").GetComponent<BoundsControl>();
 		}
+		if (mPowerUp == null) {
+			mPowerUp = (GameObject) Resources.Load ("Prefabs/PowerUp");
+		}
 		
 		// Set mass and adjust the scale to match
 		float mass = rigidbody2D.mass;
 		float diameter = Mathf.Sqrt(mass) * kScale;
 		transform.localScale = new Vector3(diameter, diameter);
-		mWorld.Orbs++;
+			mWorld.Orbs++;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
-		// DEBUG
+		
+			// DEBUG
 		if (Input.GetKeyDown(KeyCode.F3)) {
 			Debug.Log("Smash");
 			--health;
@@ -59,6 +63,7 @@ public class OrbBehavior : MonoBehaviour {
 		} else {
 			Destroy(this.gameObject);
 			mWorld.Orbs--;
+
 		}
 	}
 	
@@ -86,10 +91,26 @@ public class OrbBehavior : MonoBehaviour {
 			e.transform.localScale = Vector2.one * newMass;
 		}
 		
+
+		float random = Random.Range ( 0.0f, 1.0f ); 
+		if (random <= .01) { // 1% chance of power up spawning upon orb death
+			GameObject powerUp = (GameObject) Instantiate(mPowerUp);
+			powerUp.transform.position = transform.position;
+		}
+
 		Destroy(this.gameObject);
 		mWorld.Orbs--;
 	}
-	
+
+	void OnCollisionEnter2D(Collision2D other) {
+		if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)") {
+			health -= 50.0f;
+			Destroy(other.gameObject);
+		}
+		if (other.gameObject.name == "Orb(Clone)") {
+			health -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
+		}
+	}
 	void OnTriggerExit2D(Collider2D other) {
 		string otherName = other.gameObject.name;
 		if (otherName == "Top" || otherName == "Bot") {
