@@ -2,11 +2,25 @@
 using System.Collections;
 
 public class BoundsControl : MonoBehaviour {
-
-	public GameObject mBall = null;
+	
+	// Vars for Asteroid Spawning
+	public float mSpawnTime = 15f;
+	public int mMaxOrbs = 25;
+	public int mSpawnNum = 6;
+	public int mSpawnMinSize = 1;
+	public int mSpawnMaxSize = 15;
+	public float mSpawnSpread = 20f;
+	public float mSpawnSpeed = 30f;
+	public float mSpawnStagger = 10f;
+	
+	public GameObject mOrb = null;
 	public GUIText mEcho = null;
+	
+	
 	protected float mMass = 1;
 	protected float mVelocity = 50f;
+	protected int mCurOrbs;
+	protected float mLastSpawn = 0; // The last time that orbs were spawned
 
 	#region World Bound support
 	// Top, Bot, Left, and Right are built to provide
@@ -24,14 +38,15 @@ public class BoundsControl : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		if (mBall == null) {
-			mBall = (GameObject) Resources.Load ("Prefab/Asteroid");                
+		if (mOrb == null) {
+			mOrb = (GameObject) Resources.Load ("Prefabs/Orb");                
 		}
-		/*
+		
 		if (mEcho == null) {
 			mEcho = GameObject.Find ("GUI Text").GetComponent<GUIText>();
 		}
-		*/
+		mCurOrbs = 0;
+		
 		#region World Bounds
 		mMainCamera = Camera.main;
 		mWorldBound = new Bounds (Vector3.zero, Vector3.one);
@@ -46,6 +61,18 @@ public class BoundsControl : MonoBehaviour {
 		{
 			Application.Quit();
 		}
+		
+		#region Orb Spawner Logic
+		if ( Input.GetKeyDown(KeyCode.F2)) { // Manual Spawner
+			SpawnOrbs();
+		}
+		
+		// Automated spawner. Uses the metrics of time since last spawn and limits the number of orbs on the screen.
+		if ( Time.realtimeSinceStartup - mLastSpawn > mSpawnTime && mCurOrbs < mMaxOrbs ) {
+			SpawnOrbs();
+			mLastSpawn = Time.realtimeSinceStartup;
+		}
+		#endregion
 		/*
 		mMass += Input.GetAxis ("Vertical");
 		if (mMass < 1) {
@@ -58,15 +85,15 @@ public class BoundsControl : MonoBehaviour {
 		}
 
 		if (Input.GetButtonDown ("Fire1")) {
-			GameObject e = (GameObject) Instantiate(mBall);
+			GameObject e = (GameObject) Instantiate(mOrb);
 			e.transform.position = mWorldMin + Vector2.one * 5f;
 			e.transform.up = new Vector2(Random.Range (0f,1f), Random.Range(0f, 1f));
 			e.rigidbody2D.mass = mMass;
 			e.rigidbody2D.AddForce(e.transform.up * mVelocity * mMass);
-		}
+		}*/
 
-		mEcho.text = "Press Ctrl to spawn \nMass: " + mMass + " Velocity: " + mVelocity;
-		*/
+		mEcho.text = "Total Orbs: " + mCurOrbs + "\ncur < max: " + (mCurOrbs < mMaxOrbs);
+		
 	}
 	
 	void Awake() {
@@ -191,6 +218,44 @@ public class BoundsControl : MonoBehaviour {
 			return sTheGameState;
 		} }
 	
+	#endregion
+	
+	#region Asteroid Spawner
+	
+	public int Orbs {
+		get { return mCurOrbs; }
+		set { mCurOrbs = value; }
+	}
+	
+	private void SpawnOrbs() {
+		int topNum, botNum; // Number spawning from top/bottom
+		topNum = mSpawnNum/2;
+		botNum = mSpawnNum - topNum;
+		
+		for(int i = 0; i < topNum; ++i) {
+			Vector2 spawnPoint = new Vector2( Random.Range(-mSpawnSpread, mSpawnSpread), mWorldMax.y + (i + 1) * mSpawnStagger);
+			Vector2 spawnDir = new Vector2( Random.Range (-mSpawnSpread / 2f, mSpawnSpread / 2f), -mSpawnSpeed);
+			float spawnMass = Random.Range (mSpawnMinSize, mSpawnMaxSize);
+			ThrowOrb(spawnPoint, spawnDir, spawnMass);
+		}
+		
+		for(int i = 0; i < botNum; ++i) {
+			Vector2 spawnPoint = new Vector2( Random.Range(-mSpawnSpread, mSpawnSpread), mWorldMin.y - (i + 1) * mSpawnStagger);
+			Vector2 spawnDir = new Vector2( Random.Range (-mSpawnSpread / 2f, mSpawnSpread / 2f), mSpawnSpeed);
+			float spawnMass = Random.Range (mSpawnMinSize, mSpawnMaxSize);
+			ThrowOrb(spawnPoint, spawnDir, spawnMass);
+		}
+	}
+	
+	private void ThrowOrb(Vector2 pos, Vector2 dir, float mass) {
+		GameObject e = (GameObject) Instantiate(mOrb);
+		e.rigidbody2D.mass = mass;
+		e.transform.position = pos;
+		e.rigidbody2D.velocity = dir;
+		e.transform.up = dir.normalized;
+		e.transform.localScale = mass * Vector2.one;
+		e.collider2D.isTrigger = true;
+	}
 	#endregion
 }
 

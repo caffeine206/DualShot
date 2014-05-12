@@ -8,6 +8,7 @@ public class OrbBehavior : MonoBehaviour {
 	public float kSize1 = 1f;
 	public float kSize2 = 5;
 	public float kSize3 = 10;
+	public const float kScale = 1f; // the constant for determining the diameter, might be Pi 
 	
 	public float kExplodeForce = 25f;
 	public int health = 2;
@@ -15,9 +16,9 @@ public class OrbBehavior : MonoBehaviour {
 	#endregion
 	
 	#region PrivateVar
-	private const float kScale = 1f; // the constant for determining the diameter, might be Pi
 	// Use this for initialization
 	private GameObject mObject = null; // The prefab of this object.
+	private BoundsControl mWorld;
 	#endregion
 
 	void Start () {
@@ -25,18 +26,22 @@ public class OrbBehavior : MonoBehaviour {
 		if (mObject == null) {
 			mObject = (GameObject) Resources.Load ("Prefabs/Orb");
 		}
+		if (mWorld == null) {
+			mWorld = GameObject.Find("GameManager").GetComponent<BoundsControl>();
+		}
 		
 		// Set mass and adjust the scale to match
 		float mass = rigidbody2D.mass;
-		float diameter = Mathf.Sqrt(mass) / kScale;
+		float diameter = Mathf.Sqrt(mass) * kScale;
 		transform.localScale = new Vector3(diameter, diameter);
+		mWorld.Orbs++;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	/*
-	#if DEBUG
-		if (Input.GetButtonDown("Fire2")) {
+	
+		// DEBUG
+		if (Input.GetKeyDown(KeyCode.F3)) {
 			Debug.Log("Smash");
 			--health;
 		}
@@ -44,53 +49,51 @@ public class OrbBehavior : MonoBehaviour {
 			Debug.Log("Boom");
 			explode();
 		}
-	#endif*/
 	}
 
 	private void explode() {
 		if (rigidbody2D.mass > kSize3) {
-			smash(kSize2, kSize3);
+			smash(kSize2, kSize3, 2);
 		} else if (rigidbody2D.mass > kSize2) {
-			smash(kSize1, kSize2);
+			smash(kSize1, kSize2, 2);
 		} else {
 			Destroy(this.gameObject);
+			mWorld.Orbs--;
 		}
 	}
 	
-	private void smash(float minSize, float maxSize) {
+	private void smash(float minSize, float maxSize, int pieces) {
 		// get a new mass for the object
-		float mass = rigidbody2D.mass;
-		
 		// This is a steaming mess that I need to clean up somehow
-		float newMass = Random.Range ( minSize, maxSize );
-		mass -= newMass;
-		GameObject e = (GameObject) Instantiate(mObject);
-	
-		float rotationAngle = (360f / kPieces);
 		
-		float rotate = rotationAngle / 2f;
-		e.rigidbody2D.mass = newMass;// change mass
+		float newMass = rigidbody2D.mass / pieces;
 		
-		e.transform.up = rigidbody2D.velocity; // Calculate new velocity
-		e.transform.up.Normalize();
-		e.transform.Rotate(0,0, rotate);
+		for ( int i = 0; i < pieces; ++i ) {
+			GameObject e = (GameObject) Instantiate(mObject);
+			e.rigidbody2D.mass = newMass;// change mass
+			
+			float rotatepiece = -90 + (180 * i) / pieces;
+			// the orbs each get an equal portion of a 180 arc the direction of the exploding orb
+			
+			e.transform.up = rigidbody2D.velocity; // Calculate new velocity
+			e.transform.up.Normalize();
+			e.transform.Rotate(0,0, rotatepiece + Random.Range (0f, 180f / pieces));
+			
+			e.transform.position = transform.position + e.transform.up * Mathf.Sqrt(newMass) / kScale;
+			e.rigidbody2D.velocity = (Vector2)(e.transform.up * kExplodeForce) + rigidbody2D.velocity;
+			e.transform.up = rigidbody2D.velocity.normalized;
+			
+			e.transform.localScale = Vector2.one * newMass;
+		}
 		
-		e.transform.position = transform.position + e.transform.up * Mathf.Sqrt(newMass) / kScale;
-		e.rigidbody2D.velocity = (Vector2)(e.transform.up * kExplodeForce) + rigidbody2D.velocity;
-		e.transform.up = rigidbody2D.velocity.normalized;
-		
-		e = (GameObject) Instantiate(mObject);
-		rotate += rotationAngle;
-		
-		e.rigidbody2D.mass = mass;// change mass
-		
-		e.transform.up = rigidbody2D.velocity; // Calculate new velocity
-		e.transform.up.Normalize();
-		e.transform.Rotate(0,0, rotate);
-		
-		e.transform.position = transform.position + e.transform.up * Mathf.Sqrt(newMass) / kScale;
-		e.rigidbody2D.velocity = (Vector2)(e.transform.up * kExplodeForce) + rigidbody2D.velocity;
-		e.transform.up = rigidbody2D.velocity.normalized;
 		Destroy(this.gameObject);
+		mWorld.Orbs--;
+	}
+	
+	void OnTriggerExit2D(Collider2D other) {
+		string otherName = other.gameObject.name;
+		if (otherName == "Top" || otherName == "Bot") {
+			collider2D.isTrigger = false;
+		}
 	}
 }
