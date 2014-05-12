@@ -56,15 +56,15 @@ public class BoundsControl : MonoBehaviour {
 		if (mVelocity < 1) {
 			mVelocity = 1;
 		}
-
-		if (Input.GetButtonDown ("Fire1")) {
+		*/
+		if (Input.GetButtonDown ("Jump")) {
 			GameObject e = (GameObject) Instantiate(mBall);
 			e.transform.position = mWorldMin + Vector2.one * 5f;
 			e.transform.up = new Vector2(Random.Range (0f,1f), Random.Range(0f, 1f));
-			e.rigidbody2D.mass = mMass;
-			e.rigidbody2D.AddForce(e.transform.up * mVelocity * mMass);
+			e.rigidbody2D.mass = 50;
+			e.rigidbody2D.AddForce(e.transform.up * 50000f * mMass);
 		}
-
+		/*
 		mEcho.text = "Press Ctrl to spawn \nMass: " + mMass + " Velocity: " + mVelocity;
 		*/
 	}

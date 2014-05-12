@@ -12,9 +12,10 @@ public class KeyboardControl : MonoBehaviour {
 
 	private float kHeroSpeed = 40f;
 	private Vector3 mClampedPosition;
+	private int mPowerLevel = 1;
 
 	private float mWaveBlastSpawnTime = -1.0f;
-	private float kWaveBlastSpawnInterval = 0.3f;
+	private float kWaveBlastSpawnInterval = 0.2f;
 	private float kWaveBlastChargeInterval = 0.4f;
 	private float mWaveBlastChargeTime = -1.0f;
 	private float kWaveTotalChargeTime = 0.0f;
@@ -25,7 +26,7 @@ public class KeyboardControl : MonoBehaviour {
 	private float kShotgunBlastChargeInterval = 0.4f;
 	private float mShotgunBlastChargeTime = -1.0f;
 	private float kShotgunTotalChargeTime = 0.0f;
-	private float kShotgunMaxChargeTime = 1.8f;
+	private float kShotgunMaxChargeTime = 1.2f;
 
 	private float kShotgunSpread = -10.0f;
 	private int kShotgunShots = 3;
@@ -93,6 +94,8 @@ public class KeyboardControl : MonoBehaviour {
 
 				mWaveBlastSpawnTime = Time.realtimeSinceStartup;
 				if (null != waveBlast) {
+					if (mPowerLevel > 1)
+						waveBlast.SetPowerLevel(mPowerLevel);
 					e.transform.position = transform.position;
 					waveBlast.SetForwardDirection(mousedir);
 				}
@@ -100,7 +103,7 @@ public class KeyboardControl : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetMouseButtonUp (0) && (Time.realtimeSinceStartup - mWaveBlastChargeTime) > kWaveBlastChargeInterval) 
+		if (Input.GetMouseButtonUp (0) && (Time.realtimeSinceStartup - mWaveBlastChargeTime) > (kWaveBlastSpawnInterval)) 
 		{
 			kWaveTotalChargeTime = Time.realtimeSinceStartup - mWaveBlastChargeTime;
 			if (kWaveTotalChargeTime > kWaveMaxChargeTime)
@@ -109,6 +112,8 @@ public class KeyboardControl : MonoBehaviour {
 			GameObject e = Instantiate(mWaveProjectile) as GameObject;
 			WaveBlastBehavior waveBlast = e.GetComponent<WaveBlastBehavior>();
 			if (null != waveBlast) {
+				if (mPowerLevel > 1)
+					waveBlast.SetPowerLevel(mPowerLevel);
 				waveBlast.mSpeed += waveBlast.mSpeed * kWaveTotalChargeTime;
 				e.transform.localScale += new Vector3(kWaveTotalChargeTime, kWaveTotalChargeTime, 0.0f);
 				e.transform.position = transform.position;
@@ -131,11 +136,11 @@ public class KeyboardControl : MonoBehaviour {
 			kShotgunTotalChargeTime = Time.realtimeSinceStartup - mShotgunBlastChargeTime;
 			if (kShotgunTotalChargeTime > kShotgunMaxChargeTime) {
 				FireShotgun(8, -60.0f);
-			} else if (kShotgunTotalChargeTime > 1.5f) {
+			} else if (kShotgunTotalChargeTime > .9f) {
 				FireShotgun(7, -50.0f);
-			} else if (kShotgunTotalChargeTime > 1.1f) {
+			} else if (kShotgunTotalChargeTime > .7f) {
 				FireShotgun(6, -40.0f);
-			} else if (kShotgunTotalChargeTime > 0.7f) {
+			} else if (kShotgunTotalChargeTime > 0.5f) {
 				FireShotgun(5, -30.0f);
 			} else {
 				FireShotgun(4, -20.0f);
@@ -166,10 +171,24 @@ public class KeyboardControl : MonoBehaviour {
 			ShotgunBlastBehavior shotgunBlast = e.GetComponent<ShotgunBlastBehavior>();
 			
 			if (null != shotgunBlast) {
-				e.transform.position = transform.position;
-				e.transform.Rotate(Vector3.forward, spread + (i * shots * 2));
+				if (mPowerLevel > 1)
+					shotgunBlast.SetPowerLevel(mPowerLevel);
+				e.transform.position = transform.position + transform.up * 10;
+				e.transform.up = transform.up;
+				shotgunBlast.AddShotgunSpeed(kHeroSpeed);
 				shotgunBlast.SetForwardDirection(e.transform.up);
+				e.transform.Rotate(Vector3.forward, spread + (i * shots * 2));
 			}
+		}
+	}
+
+	void OnCollisionEnter2D(Collision2D other) {
+		if (other.gameObject.name == "PowerUp" || other.gameObject.name == "PowerUp(Clone)") {
+			Destroy(other.gameObject);
+			mPowerLevel++;
+			//Debug.Log("Power level: " + mPowerLevel);
+			if (mPowerLevel > 3)
+				mPowerLevel = 3;
 		}
 	}
 }

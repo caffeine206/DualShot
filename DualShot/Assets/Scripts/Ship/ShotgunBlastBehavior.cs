@@ -4,13 +4,12 @@ using System.Collections;
 public class ShotgunBlastBehavior : MonoBehaviour {
 	
 	private float mSpeed = 100f;
-	private float kShotgunLife;
+	private float kShotgunLife = 0.3f;
 	private float kShotgunSpawnTime;
 
 	void Start()
 	{
-		kShotgunLife = 0.5f;
-		kShotgunSpawnTime =Time.realtimeSinceStartup;;
+		kShotgunSpawnTime = Time.realtimeSinceStartup;
 	}
 
 	// Update is called once per frame
@@ -45,5 +44,15 @@ public class ShotgunBlastBehavior : MonoBehaviour {
 		v.z = (cos * tz) + (sin * ty);
 		
 		return v;
+	}
+
+	public void AddShotgunSpeed(float f) {
+		mSpeed += f;
+	}
+
+	public void SetPowerLevel(int level) {
+		float increase = level * 1.0f;
+		kShotgunLife += increase / 6.0f;
+		transform.localScale += new Vector3 (increase * 3.0f, increase * 3.0f, 0.0f);
 	}
 }

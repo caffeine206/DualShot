@@ -10,7 +10,7 @@ public class OrbBehavior : MonoBehaviour {
 	public float kSize3 = 10;
 	
 	public float kExplodeForce = 25f;
-	public int health = 2;
+	public float health = 100.0f;
 	public const int kPieces = 2;
 	#endregion
 	
@@ -18,12 +18,17 @@ public class OrbBehavior : MonoBehaviour {
 	private const float kScale = 1f; // the constant for determining the diameter, might be Pi
 	// Use this for initialization
 	private GameObject mObject = null; // The prefab of this object.
+	private GameObject mPowerUp = null;
 	#endregion
 
 	void Start () {
 		// Get Prefab
 		if (mObject == null) {
 			mObject = (GameObject) Resources.Load ("Prefabs/Orb");
+		}
+
+		if (mPowerUp == null) {
+			mPowerUp = (GameObject) Resources.Load ("Prefabs/PowerUp");
 		}
 		
 		// Set mass and adjust the scale to match
@@ -34,17 +39,15 @@ public class OrbBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	/*
-	#if DEBUG
+		/*
 		if (Input.GetButtonDown("Fire2")) {
 			Debug.Log("Smash");
 			--health;
 		}
-		if (health <= 0) {
-			Debug.Log("Boom");
+		*/
+		if (health <= 0.0f) {
 			explode();
 		}
-	#endif*/
 	}
 
 	private void explode() {
@@ -91,6 +94,23 @@ public class OrbBehavior : MonoBehaviour {
 		e.transform.position = transform.position + e.transform.up * Mathf.Sqrt(newMass) / kScale;
 		e.rigidbody2D.velocity = (Vector2)(e.transform.up * kExplodeForce) + rigidbody2D.velocity;
 		e.transform.up = rigidbody2D.velocity.normalized;
+
+		float random = Random.Range ( 0.0f, 1.0f ); 
+		if (random <= .01) { // 1% chance of power up spawning upon orb death
+			GameObject powerUp = (GameObject) Instantiate(mPowerUp);
+			powerUp.transform.position = transform.position;
+		}
+
 		Destroy(this.gameObject);
+	}
+
+	void OnCollisionEnter2D(Collision2D other) {
+		if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)") {
+			health -= 50.0f;
+			Destroy(other.gameObject);
+		}
+		if (other.gameObject.name == "Orb(Clone)") {
+			health -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
+		}
 	}
 }
