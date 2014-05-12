@@ -53,6 +53,8 @@ public class OrbBehavior : MonoBehaviour {
 			Debug.Log("Boom");
 			explode();
 		}
+
+		DestroyAllOrbs();
 	}
 
 	private void explode() {
@@ -115,6 +117,13 @@ public class OrbBehavior : MonoBehaviour {
 		string otherName = other.gameObject.name;
 		if (otherName == "Top" || otherName == "Bot") {
 			collider2D.isTrigger = false;
+		}
+	}
+
+	//NEW
+	private void DestroyAllOrbs() {
+		if (Input.GetKeyDown(KeyCode.Return)) {
+			Destroy(this.gameObject);
 		}
 	}
 }

@@ -88,6 +88,8 @@ public class RespawnBehavior : MonoBehaviour {
 	#region Reset the current session
 	private void Reset() {
 		if (Input.GetKeyDown(KeyCode.Return)) {
+			//OrbBehavior orbs = GameObject.Find("Orb").GetComponent<OrbBehavior>();
+
 			periwinkle.gameObject.SetActive(true);
 			orangeRed.gameObject.SetActive(true);
 			
@@ -96,6 +98,8 @@ public class RespawnBehavior : MonoBehaviour {
 			
 			periwinkle.Reset();
 			orangeRed.Reset();
+
+			//orbs.DestroyAllOrbs();
 			
 			/*
 			 * To do:

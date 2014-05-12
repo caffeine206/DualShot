@@ -256,6 +256,7 @@ public class BoundsControl : MonoBehaviour {
 		e.transform.localScale = mass * Vector2.one;
 		e.collider2D.isTrigger = true;
 	}
+
 	#endregion
 
 }
