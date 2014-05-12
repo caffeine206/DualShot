@@ -4,6 +4,7 @@ using System.Collections;
 public class WaveBlastBehavior : MonoBehaviour {
 	
 	public float mSpeed = 100f;
+	public float mForce = 40f;
 	private float kWaveLife = 1.2f;
 	private float kWaveSpawnTime;
 
@@ -36,7 +37,7 @@ public class WaveBlastBehavior : MonoBehaviour {
 		if (other.gameObject.name == "Orb" || other.gameObject.name == "Orb(Clone)") {
 			Vector2 dir = other.transform.position - transform.position;
 			dir.Normalize();
-			other.rigidbody2D.AddForce(mSpeed * dir * 100f);
+			other.rigidbody2D.AddForce(mSpeed * dir * mForce);
 		}
 	}
 

@@ -10,7 +10,7 @@ public class KeyboardControl : MonoBehaviour {
 	public GameObject mWaveProjectile = null;
 	public GameObject[] mShotgunProjectile = null;
 
-	private float kHeroSpeed = 40f;
+	public float kHeroSpeed = 140f;
 	private Vector3 mClampedPosition;
 	private int mPowerLevel = 1;
 

@@ -1,13 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Ship\KeyboardControl.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Ship\WaveBlastBehavior.cs">
     <Files>
-      <File FileName="Assets\Scripts\Ship\WaveBlastBehavior.cs" Line="26" Column="26" />
-      <File FileName="Assets\Scripts\Ship\KeyboardControl.cs" Line="29" Column="43" />
-      <File FileName="Assets\Scripts\Ship\ShotgunBlastBehavior.cs" Line="9" Column="2" />
-      <File FileName="Assets\Scripts\Mode1\OrbBehavior.cs" Line="99" Column="28" />
-      <File FileName="Assets\Scripts\Mode1\PowerUpBehavior.cs" Line="6" Column="17" />
-      <File FileName="Assets\Scripts\Mode1\BaseBehavior.cs" Line="5" Column="32" />
+      <File FileName="Assets\Scripts\Mode1\BoundsControl.cs" Line="42" Column="48" />
+      <File FileName="Assets\Scripts\Ship\KeyboardControl.cs" Line="195" Column="1" />
+      <File FileName="Assets\Scripts\Ship\WaveBlastBehavior.cs" Line="50" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

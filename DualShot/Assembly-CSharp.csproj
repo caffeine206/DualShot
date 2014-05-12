@@ -55,6 +55,8 @@
      <Compile Include="Assets\Scripts\Ship\JoyStickControl.cs" />
      <Compile Include="Assets\Scripts\Ship\KeyboardControl.cs" />
      <Compile Include="Assets\Scripts\Ship\ParticleShip.cs" />
+     <Compile Include="Assets\Scripts\Ship\RespawnBehavior.cs" />
+     <Compile Include="Assets\Scripts\Ship\RespawnShip.cs" />
      <Compile Include="Assets\Scripts\Ship\ShipRespawn.cs" />
      <Compile Include="Assets\Scripts\Ship\ShotgunBlastBehavior.cs" />
      <Compile Include="Assets\Scripts\Ship\WaveBlastBehavior.cs" />
