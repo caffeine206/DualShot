@@ -129,12 +129,9 @@ public class OrbBehavior : MonoBehaviour {
 		}
 	}
 
-	//NEW
 	private void DestroyAllOrbs() {
 		if (Input.GetKeyDown(KeyCode.Return)) {
 			Destroy(this.gameObject);
 		}
-	}
-	
 	}
 }

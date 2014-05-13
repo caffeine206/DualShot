@@ -58,7 +58,7 @@ public class RespawnBehavior : MonoBehaviour {
 	private IEnumerator Blink(RespawnShip theShip) {
 		float endTime = Time.realtimeSinceStartup + invulnTime;
 
-		//To do: Change damage flag to false.
+		theShip.isInvulnerable = true;
 
 		while (Time.realtimeSinceStartup < endTime) {
 			theShip.renderer.enabled = false;
@@ -67,7 +67,7 @@ public class RespawnBehavior : MonoBehaviour {
 			yield return new WaitForSeconds(0.15f);
 		}
 
-		//To do: Change damage flag to true.
+		theShip.isInvulnerable = false;
 	}
 	#endregion
 
@@ -85,8 +85,6 @@ public class RespawnBehavior : MonoBehaviour {
 	#region Reset the current session
 	private void Reset() {
 		if (Input.GetKeyDown(KeyCode.Return)) {
-			//OrbBehavior orbs = GameObject.Find("Orb").GetComponent<OrbBehavior>();
-
 			periwinkle.gameObject.SetActive(true);
 			orangeRed.gameObject.SetActive(true);
 			
@@ -95,15 +93,6 @@ public class RespawnBehavior : MonoBehaviour {
 			
 			periwinkle.Reset();
 			orangeRed.Reset();
-
-			//orbs.DestroyAllOrbs();
-			
-			/*
-			 * To do:
-			 * Restore city health
-			 * Clean up orbs
-			 * Reset orb spawn wave
-			*/
 		}
 	}
 	#endregion

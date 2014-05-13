@@ -14,6 +14,10 @@ public class RespawnShip : MonoBehaviour {
 	public Vector3 startLocation = new Vector3(0f, 0f, 0f);
 	//The middle of our world. Used to reorient the ships to their default direction after respawning.
 	private Vector3 originOfWorld = new Vector3(0f, 0f, 0f);
+	//Tracks the powerup level of the ship.
+	public int powerLevel = 1;
+	//Invulnerability flag.
+	public bool isInvulnerable = false;
 
 	void Start () {
 		if (explosion == null) {
@@ -27,12 +31,24 @@ public class RespawnShip : MonoBehaviour {
 		Die();
 	}
 
+	#region Collision with orbs and pickup powerups
 	void OnCollisionEnter2D(Collision2D other) {
-		if (other.gameObject.name == "Orb(Clone)") {
+		if (other.gameObject.name == "Orb(Clone)" && !isInvulnerable) {
 			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * 
 					other.gameObject.rigidbody2D.mass) / 100.0f);
 		}
+
+		if (other.gameObject.name == "PowerUp" || other.gameObject.name == "PowerUp(Clone)") {
+			Destroy(other.gameObject);
+			
+			powerLevel++;
+			
+			if (powerLevel > 3) {
+				powerLevel = 3;
+			}
+		}
 	}
+	#endregion
 
 	#region Ship dies
 	private void Die() {
@@ -67,11 +83,7 @@ public class RespawnShip : MonoBehaviour {
 		Transform shield = transform.Find("Shield");
 		renderer.enabled = true;
 		shield.renderer.enabled = true;
-
-		/*
-		 * To do:
-		 * Remove powerups
-		*/
+		powerLevel = 0;
 	}
 	#endregion
 
