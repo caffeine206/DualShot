@@ -52,7 +52,7 @@ public class BoundsControl : MonoBehaviour {
 		mWorldBound = new Bounds (Vector3.zero, Vector3.one);
 		UpdateWorldBound ();
 		#endregion	
-		
+			
 	}
 	
 	// Update is called once per frame
@@ -94,6 +94,13 @@ public class BoundsControl : MonoBehaviour {
 
 		//mEcho.text = "Total Orbs: " + mCurOrbs + "\ncur < max: " + (mCurOrbs < mMaxOrbs);
 		
+		reset();
+	}
+
+	private void reset() {
+		if (Input.GetKey(KeyCode.Return)) {
+			mCurOrbs = 0;
+		}
 	}
 	
 	void Awake() {
