@@ -138,19 +138,19 @@ public class BoundsControl : MonoBehaviour {
 
 			Top = GameObject.Find ("Top").GetComponent<BoxCollider2D>();
 			Top.center = new Vector2(mWorldCenter.x, mWorldMax.y);
-			Top.size = new Vector2(sizeX,5);
+			Top.size = new Vector2(sizeX,10);
 
 			Bot = GameObject.Find ("Bot").GetComponent<BoxCollider2D>();
 			Bot.center = new Vector2(mWorldCenter.x, mWorldMin.y);
-			Bot.size = new Vector2(sizeX,5);
+			Bot.size = new Vector2(sizeX,10);
 
 			Right = GameObject.Find ("Right").GetComponent<BoxCollider2D>();
 			Right.center = new Vector2(mWorldMax.x, mWorldCenter.y);
-			Right.size = new Vector2(5, sizeY);
+			Right.size = new Vector2(10, sizeY);
 
 			Left = GameObject.Find ("Left").GetComponent<BoxCollider2D>();
 			Left.center = new Vector2(mWorldMin.x, mWorldCenter.y);
-			Left.size = new Vector2(5, sizeY);
+			Left.size = new Vector2(10, sizeY);
 			
 		}
 	}

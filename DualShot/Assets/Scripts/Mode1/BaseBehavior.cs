@@ -3,9 +3,23 @@ using System.Collections;
 
 public class BaseBehavior : MonoBehaviour {
 	public float health = 1000.0f;
+	
+	public Camera mCamera = null;
 	// Use this for initialization
 	void Start () {
-	
+		if (mCamera == null) {
+			mCamera = Camera.main;
+		}
+		Debug.Log(gameObject.name);
+		float sizeX = mCamera.orthographicSize * mCamera.aspect;
+		Debug.Log ("size: " + sizeX);
+		if ( gameObject.name == "OrangeCity") {
+			Debug.Log("Move Left");
+			transform.position -= new Vector3(sizeX, 0);
+		} else if (gameObject.name == "BlueCity"){
+			transform.position += new Vector3(sizeX, 0);
+			
+		}
 	}
 	
 	// Update is called once per frame
