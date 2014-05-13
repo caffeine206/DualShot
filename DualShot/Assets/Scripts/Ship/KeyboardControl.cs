@@ -173,9 +173,9 @@ public class KeyboardControl : MonoBehaviour {
 			if (null != shotgunBlast) {
 				if (mPowerLevel > 1)
 					shotgunBlast.SetPowerLevel(mPowerLevel);
-				e.transform.position = transform.position + transform.up * 10;
+				e.transform.position = transform.position + transform.up * 12f;
 				e.transform.up = transform.up;
-				shotgunBlast.AddShotgunSpeed(kHeroSpeed);
+				shotgunBlast.AddShotgunSpeed(rigidbody2D.velocity.magnitude);
 				shotgunBlast.SetForwardDirection(e.transform.up);
 				e.transform.Rotate(Vector3.forward, spread + (i * shots * 2));
 			}
