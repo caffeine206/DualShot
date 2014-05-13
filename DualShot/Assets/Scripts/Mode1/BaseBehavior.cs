@@ -74,16 +74,15 @@ public class BaseBehavior : MonoBehaviour {
 	//For testing purposes.
 	IEnumerator EXPLOSIVE_VICTORY() {
 		GameObject s = Instantiate(smallExplosion) as GameObject;
-		GameObject b = Instantiate(bigExplosion) as GameObject;
-		GameObject s2 = Instantiate(smallExplosion2) as GameObject;
-		GameObject b2 = Instantiate(bigExplosion2) as GameObject;
-
 		s.transform.position = transform.position;
 		yield return new WaitForSeconds(0.5f);
+		GameObject b = Instantiate(bigExplosion) as GameObject;
 		b.transform.position = transform.position;
 		yield return new WaitForSeconds(1f);
+		GameObject b2 = Instantiate(bigExplosion2) as GameObject;
 		b2.transform.position = transform.position;
 		yield return new WaitForSeconds(2f);
+		GameObject s2 = Instantiate(smallExplosion2) as GameObject;
 		s2.transform.position = transform.position;
 	}
 
