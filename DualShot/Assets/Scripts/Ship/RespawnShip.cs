@@ -25,7 +25,13 @@ public class RespawnShip : MonoBehaviour {
 	
 	void Update () {
 		Die();
-		StartCoroutine("charging");
+	}
+
+	void OnCollisionEnter2D(Collision2D other) {
+		if (other.gameObject.name == "Orb(Clone)") {
+			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * 
+					other.gameObject.rigidbody2D.mass) / 100.0f);
+		}
 	}
 
 	#region Ship dies
@@ -66,33 +72,6 @@ public class RespawnShip : MonoBehaviour {
 		 * To do:
 		 * Remove powerups
 		*/
-	}
-	#endregion
-
-	#region Charge particle support
-	/*
-	 * This method is button dependent and will have to be stuck into the appropriate
-	 * control scripts.
-	*/
-	IEnumerator charging() {
-		Transform theCharge = transform.Find("Charge");
-		if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("Fire2")) {
-			yield return new WaitForSeconds(0.4f);
-			theCharge.particleSystem.enableEmission = true;
-			theCharge.particleSystem.startSize = 1.5f;
-			yield return new WaitForSeconds(0.1f);
-			theCharge.particleSystem.startSize = 2f;
-			yield return new WaitForSeconds(0.2f);
-			theCharge.particleSystem.startSize = 2.5f;
-			yield return new WaitForSeconds(0.2f);
-			theCharge.particleSystem.startSize = 3f;
-			yield return new WaitForSeconds(0.3f);
-			theCharge.particleSystem.startSize = 3.5f;
-		} else if (Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire2")) {
-			StopCoroutine("charging");
-			theCharge.particleSystem.startSize = 1.5f;
-			theCharge.particleSystem.enableEmission = false;
-		}
 	}
 	#endregion
 

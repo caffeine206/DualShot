@@ -46,11 +46,9 @@ public class OrbBehavior : MonoBehaviour {
 		
 			// DEBUG
 		if (Input.GetKeyDown(KeyCode.F3)) {
-			Debug.Log("Smash");
 			--health;
 		}
 		if (health <= 0) {
-			Debug.Log("Boom");
 			explode();
 		}
 
