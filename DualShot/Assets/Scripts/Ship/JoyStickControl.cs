@@ -145,6 +145,8 @@ public class JoyStickControl : MonoBehaviour {
             }
         }
         #endregion
+
+		StartCoroutine("charging");
     }
     /*
     public void Play(AudioClip clip, float volume, float pitch)
@@ -181,4 +183,27 @@ public class JoyStickControl : MonoBehaviour {
             }
         }
     }
+
+	#region Charge particle support
+	IEnumerator charging() {
+		Transform theCharge = transform.Find("Charge");
+		if (Input.GetButtonDown("P2Fire1") || Input.GetButtonDown("P2Fire2")) {
+			yield return new WaitForSeconds(0.4f);
+			theCharge.particleSystem.enableEmission = true;
+			theCharge.particleSystem.startSize = 1.5f;
+			yield return new WaitForSeconds(0.1f);
+			theCharge.particleSystem.startSize = 2f;
+			yield return new WaitForSeconds(0.2f);
+			theCharge.particleSystem.startSize = 2.5f;
+			yield return new WaitForSeconds(0.2f);
+			theCharge.particleSystem.startSize = 3f;
+			yield return new WaitForSeconds(0.3f);
+			theCharge.particleSystem.startSize = 3.5f;
+		} else if (Input.GetButtonUp("P2Fire1") || Input.GetButtonUp("P2Fire2")) {
+			StopCoroutine("charging");
+			theCharge.particleSystem.startSize = 1.5f;
+			theCharge.particleSystem.enableEmission = false;
+		}
+	}
+	#endregion
 }

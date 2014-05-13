@@ -55,18 +55,15 @@ public class RespawnBehavior : MonoBehaviour {
 	#endregion
 
 	#region Makes the ships blink and makes them invulnerable
-	IEnumerator Blink(RespawnShip theShip) {
+	private IEnumerator Blink(RespawnShip theShip) {
 		float endTime = Time.realtimeSinceStartup + invulnTime;
-		Transform shield = theShip.transform.Find("Shield");
 
 		//To do: Change damage flag to false.
 
-		while (Time.time < endTime) {
+		while (Time.realtimeSinceStartup < endTime) {
 			theShip.renderer.enabled = false;
-			shield.renderer.enabled = false;
 			yield return new WaitForSeconds(0.15f);
 			theShip.renderer.enabled = true;
-			shield.renderer.enabled = true;
 			yield return new WaitForSeconds(0.15f);
 		}
 

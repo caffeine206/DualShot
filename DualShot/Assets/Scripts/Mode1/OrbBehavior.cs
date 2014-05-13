@@ -52,7 +52,7 @@ public class OrbBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+	
 		if (health <= 0) {
 			explode();
 		}
