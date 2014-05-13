@@ -35,9 +35,10 @@ public class WaveBlastBehavior : MonoBehaviour {
 	
 	void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.name == "Orb" || other.gameObject.name == "Orb(Clone)") {
-			Vector2 dir = other.transform.position - transform.position;
-			dir.Normalize();
-			other.rigidbody2D.AddForce(mSpeed * dir * mForce);
+			Debug.Log("Push");
+			/*Vector2 dir = other.transform.position - transform.position;
+			dir.Normalize();*/
+			other.rigidbody2D.AddForce(mSpeed * transform.up * mForce);
 		}
 	}
 

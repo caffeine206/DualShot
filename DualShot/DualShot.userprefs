@@ -1,9 +1,11 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Mode1\BaseBehavior.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Mode1\OrbBehavior.cs">
     <Files>
-      <File FileName="Assets\Scripts\Mode1\BaseBehavior.cs" Line="18" Column="48" />
-      <File FileName="Assets\Scripts\Mode1\BoundsControl.cs" Line="122" Column="67" />
+      <File FileName="Assets\Scripts\Mode1\OrbBehavior.cs" Line="62" Column="4" />
+      <File FileName="Assets\Scripts\Mode1\BaseBehavior.cs" Line="7" Column="31" />
+      <File FileName="Assets\Scripts\Mode1\BoundsControl.cs" Line="122" Column="4" />
+      <File FileName="Assets\Scripts\Ship\WaveBlastBehavior.cs" Line="13" Column="41" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

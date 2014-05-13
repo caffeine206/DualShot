@@ -11,6 +11,7 @@ public class OrbBehavior : MonoBehaviour {
 	public float kScale = 1f; // the constant for determining the diameter, might be Pi 
 
 	public float kExplodeForce = 25f;
+	public float mInvulTime = 1f;
 	public float health = 100.0f;
 	public const int kPieces = 2;
 	#endregion
@@ -20,6 +21,10 @@ public class OrbBehavior : MonoBehaviour {
 	private GameObject mObject = null; // The prefab of this object.
 	private BoundsControl mWorld = null;
 	private GameObject mPowerUp = null;
+	
+	private float mSpawnTime;
+	private bool mInvul;
+	
 	#endregion
 
 	void Start () {
@@ -39,19 +44,21 @@ public class OrbBehavior : MonoBehaviour {
 		float diameter = Mathf.Sqrt(mass) * kScale;
 		transform.localScale = new Vector3(diameter, diameter);
 			mWorld.Orbs++;
+			
+		
+		mInvul = true;
+		mSpawnTime = Time.realtimeSinceStartup;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-			// DEBUG
-		if (Input.GetKeyDown(KeyCode.F3)) {
-			Debug.Log("Smash");
-			--health;
-		}
 		if (health <= 0) {
-			Debug.Log("Boom");
 			explode();
+		}
+		if ( mInvul && Time.realtimeSinceStartup - mSpawnTime > mInvulTime )
+		{
+			mInvul = false;
 		}
 
 		DestroyAllOrbs();
@@ -105,12 +112,14 @@ public class OrbBehavior : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
-		if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)") {
-			health -= 50.0f;
-			Destroy(other.gameObject);
-		}
-		if (other.gameObject.name == "Orb(Clone)") {
-			health -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
+		if (!mInvul) {
+			if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)") {
+				health -= 50.0f;
+				Destroy(other.gameObject);
+			}
+			if (other.gameObject.name == "Orb(Clone)") {
+				health -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
+			}
 		}
 	}
 	void OnTriggerExit2D(Collider2D other) {
@@ -125,5 +134,7 @@ public class OrbBehavior : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Return)) {
 			Destroy(this.gameObject);
 		}
+	}
+	
 	}
 }

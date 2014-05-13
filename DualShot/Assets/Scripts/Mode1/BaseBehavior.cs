@@ -5,6 +5,8 @@ public class BaseBehavior : MonoBehaviour {
 	public float health = 1000.0f;
 	
 	public Camera mCamera = null;
+	
+	
 	// Use this for initialization
 	void Start () {
 		if (mCamera == null) {
@@ -20,6 +22,7 @@ public class BaseBehavior : MonoBehaviour {
 			transform.position += new Vector3(sizeX, 0);
 			
 		}
+		
 	}
 	
 	// Update is called once per frame
