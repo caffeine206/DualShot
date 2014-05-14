@@ -7,12 +7,14 @@ using System.Collections;
 
 public class KeyboardControl : MonoBehaviour {
 
+	RespawnShip theShip;
+
 	public GameObject mWaveProjectile = null;
 	public GameObject[] mShotgunProjectile = null;
 
 	public float kHeroSpeed = 140f;
 	private Vector3 mClampedPosition;
-	private int mPowerLevel = 1;
+	//private int theShip.powerLevel = 1;
 
 	private float mWaveBlastSpawnTime = -1.0f;
 	private float kWaveBlastSpawnInterval = 0.2f;
@@ -41,6 +43,8 @@ public class KeyboardControl : MonoBehaviour {
 		for (int i = 0; i <= kMaxShotgunShots; i++) {
 			mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastBlue") as GameObject;
 		}
+
+		theShip = gameObject.GetComponent<RespawnShip>();
 	}
 
 	void Update () {
@@ -94,8 +98,8 @@ public class KeyboardControl : MonoBehaviour {
 
 				mWaveBlastSpawnTime = Time.realtimeSinceStartup;
 				if (null != waveBlast) {
-					if (mPowerLevel > 1)
-						waveBlast.SetPowerLevel(mPowerLevel);
+					if (theShip.powerLevel > 1)
+						waveBlast.SetPowerLevel(theShip.powerLevel);
 					e.transform.position = transform.position;
 					waveBlast.SetForwardDirection(mousedir);
 				}
@@ -112,8 +116,8 @@ public class KeyboardControl : MonoBehaviour {
 			GameObject e = Instantiate(mWaveProjectile) as GameObject;
 			WaveBlastBehavior waveBlast = e.GetComponent<WaveBlastBehavior>();
 			if (null != waveBlast) {
-				if (mPowerLevel > 1)
-					waveBlast.SetPowerLevel(mPowerLevel);
+				if (theShip.powerLevel > 1)
+					waveBlast.SetPowerLevel(theShip.powerLevel);
 				waveBlast.mSpeed += waveBlast.mSpeed * kWaveTotalChargeTime;
 				e.transform.localScale += new Vector3(kWaveTotalChargeTime, kWaveTotalChargeTime, 0.0f);
 				e.transform.position = transform.position;
@@ -173,24 +177,14 @@ public class KeyboardControl : MonoBehaviour {
 			ShotgunBlastBehavior shotgunBlast = e.GetComponent<ShotgunBlastBehavior>();
 			
 			if (null != shotgunBlast) {
-				if (mPowerLevel > 1)
-					shotgunBlast.SetPowerLevel(mPowerLevel);
+				if (theShip.powerLevel > 1)
+					shotgunBlast.SetPowerLevel(theShip.powerLevel);
 				e.transform.position = transform.position + transform.up * 12f;
 				e.transform.up = transform.up;
 				shotgunBlast.AddShotgunSpeed(rigidbody2D.velocity.magnitude);
 				shotgunBlast.SetForwardDirection(e.transform.up);
 				e.transform.Rotate(Vector3.forward, spread + (i * shots * 2));
 			}
-		}
-	}
-
-	void OnCollisionEnter2D(Collision2D other) {
-		if (other.gameObject.name == "PowerUp" || other.gameObject.name == "PowerUp(Clone)") {
-			Destroy(other.gameObject);
-			mPowerLevel++;
-			//Debug.Log("Power level: " + mPowerLevel);
-			if (mPowerLevel > 3)
-				mPowerLevel = 3;
 		}
 	}
 

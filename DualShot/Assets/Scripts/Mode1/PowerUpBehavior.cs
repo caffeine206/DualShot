@@ -8,6 +8,12 @@ public class PowerUpBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		DestroyAllPowerups();
+	}
+
+	private void DestroyAllPowerups() {
+		if (Input.GetKeyDown(KeyCode.Return)) {
+			Destroy(gameObject);
+		}
 	}
 }

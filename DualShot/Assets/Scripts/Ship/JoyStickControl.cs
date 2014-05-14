@@ -7,6 +7,8 @@ using System.Collections;
 
 public class JoyStickControl : MonoBehaviour {
 
+	RespawnShip theShip;
+
     public GameObject mWaveProjectile = null;
     public GameObject[] mShotgunProjectile = null;
 
