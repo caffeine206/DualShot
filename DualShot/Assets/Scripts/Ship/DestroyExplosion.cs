@@ -25,5 +25,17 @@ public class DestroyExplosion : MonoBehaviour {
 	private void die() {
 		//Destroys this object after five seconds.
 		Destroy(gameObject, 5);
+        // If Red base destroyed, load level 2
+        //Application.LoadLevel(2);
+        //if (gameObject.name == "OrangeCity")
+        //{
+        //    Application.LoadLevel(2);
+        //}
+        
+        //// If Blue base destroyed, load Level 3
+        //if (gameObject.name == "BlueCity")
+        //{
+        //    Application.LoadLevel(3);
+        //}
 	}
 }

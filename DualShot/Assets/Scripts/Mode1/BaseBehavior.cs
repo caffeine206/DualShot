@@ -11,7 +11,10 @@ public class BaseBehavior : MonoBehaviour {
 	public float currentHealth = HEALTH;
 	
 	public Camera mCamera = null;
-	
+
+    private AudioClip mBaseHit;
+    private AudioClip mBaseDead;
+
 	void Start () {
 		if (mCamera == null) {
 			mCamera = Camera.main;
@@ -42,6 +45,10 @@ public class BaseBehavior : MonoBehaviour {
 		if (bigExplosion2 == null) {
 			bigExplosion2 = Resources.Load("Prefabs/BigExplosionParticle") as GameObject;
 		}
+
+        // Audio clip
+        mBaseHit = (AudioClip)Resources.Load("Sounds/BaseHit");
+        mBaseDead = (AudioClip)Resources.Load("Sounds/BaseDead");
 		
 	}
 	
@@ -61,6 +68,14 @@ public class BaseBehavior : MonoBehaviour {
 			*/
 			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
 			Debug.Log("Base Health: " + currentHealth);
+
+            // Experimental audio play
+            //GameObject go = new GameObject("Audio: " + mBaseHit.name);
+            //AudioSource source = go.AddComponent<AudioSource>();
+            //source.volume = 1;
+            //source.Play();
+            //Destroy(go, mBaseHit.length);
+            Play(mBaseHit, 1f, 1);
 		}
 	}
 
@@ -68,6 +83,20 @@ public class BaseBehavior : MonoBehaviour {
 		if (currentHealth <= 0f) {
 			currentHealth = HEALTH;
 			StartCoroutine("EXPLOSIVE_VICTORY");
+            Play(mBaseDead, 1f, 1);
+
+            // Testing for win screen
+            if (gameObject.name == "OrangeCity")
+            {
+                Application.LoadLevel(2);
+            }
+
+            // If Blue base destroyed, load Level 3
+            if (gameObject.name == "BlueCity")
+            {
+                Application.LoadLevel(3);
+            }
+
 		}
 	}
 
@@ -91,4 +120,19 @@ public class BaseBehavior : MonoBehaviour {
 			currentHealth = HEALTH;
 		}
 	}
+
+    // Audio clip player
+    public void Play(AudioClip clip, float volume, float pitch)
+    {
+        //Create an empty game object
+        GameObject go = new GameObject("Audio: " + clip.name);
+
+        //Create the source
+        AudioSource source = go.AddComponent<AudioSource>();
+        source.clip = clip;
+        source.volume = volume;
+        source.pitch = pitch;
+        source.Play();
+        Destroy(go, clip.length);
+    }
 }

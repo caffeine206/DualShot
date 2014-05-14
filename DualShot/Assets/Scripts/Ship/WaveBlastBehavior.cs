@@ -33,19 +33,12 @@ public class WaveBlastBehavior : MonoBehaviour {
 		transform.up = f;
 	}
 	
-	/*void OnTriggerEnter2D(Collider2D other) {
+	void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.name == "Orb" || other.gameObject.name == "Orb(Clone)") {
 			Debug.Log("Push");
 			/*Vector2 dir = other.transform.position - transform.position;
 			dir.Normalize();*/
-			/*other.rigidbody2D.AddForce(mSpeed * transform.up * mForce);
-		}
-	}*/
-	
-	void OnCollisionEnter2D(Collision2D other) {
-		if (other.gameObject.name == "Orb" || other.gameObject.name == "Orb(Clone)") {
-			Debug.Log("Push");
-			//other.gameObject.rigidbody2D.AddForce(mSpeed * transform.up * mForce);
+			other.rigidbody2D.AddForce(mSpeed * transform.up * mForce);
 		}
 	}
 
