@@ -83,26 +83,29 @@ public class BaseBehavior : MonoBehaviour {
 		if (currentHealth <= 0f) {
 			currentHealth = HEALTH;
 			StartCoroutine("EXPLOSIVE_VICTORY");
-            Play(mBaseDead, 1f, 1);
-
-            // Testing for win screen
-            if (gameObject.name == "OrangeCity")
-            {
-                Application.LoadLevel(2);
-            }
-
-            // If Blue base destroyed, load Level 3
-            if (gameObject.name == "BlueCity")
-            {
-                Application.LoadLevel(3);
-            }
-
+            StartCoroutine("WinScreen");
 		}
 	}
-
+    IEnumerator WinScreen()
+    {
+        yield return new WaitForSeconds(4.5f);
+        // Testing for win screen
+        if (gameObject.name == "OrangeCity")
+        {
+            Application.LoadLevel(2);
+        }
+        // If Blue base destroyed, load Level 3
+        if (gameObject.name == "BlueCity")
+        {
+            Application.LoadLevel(3);
+        }
+    }
 	//For testing purposes.
 	IEnumerator EXPLOSIVE_VICTORY() {
 		GameObject s = Instantiate(smallExplosion) as GameObject;
+
+        Play(mBaseDead, 1f, 1);
+
 		s.transform.position = transform.position;
 		yield return new WaitForSeconds(0.5f);
 		GameObject b = Instantiate(bigExplosion) as GameObject;
@@ -118,6 +121,8 @@ public class BaseBehavior : MonoBehaviour {
 	private void Reset() {
 		if (Input.GetKeyDown(KeyCode.Return)) {
 			currentHealth = HEALTH;
+            StopCoroutine("WinScreen");
+            StopCoroutine("EXPLOSIVE_VICTORY");
 		}
 	}
 

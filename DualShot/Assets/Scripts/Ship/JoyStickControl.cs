@@ -47,7 +47,7 @@ public class JoyStickControl : MonoBehaviour {
         // Audio Files setup
         mGunShot = (AudioClip)Resources.Load("Sounds/GunFire");
         mWave = (AudioClip)Resources.Load("Sounds/WaveFire");
-        mBackground = (AudioClip)Resources.Load("Sounds/DeepSpace");
+        mBackground = (AudioClip)Resources.Load("Sounds/DeepSpaceY");
         //playme.Play(mBackground, 1f, 1);
         Play(mBackground, 1f, 1);
 

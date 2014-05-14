@@ -107,7 +107,7 @@ public class OrbBehavior : MonoBehaviour {
 		
 
 		float random = Random.Range ( 0.0f, 1.0f ); 
-		if (random <= .01) { // 1% chance of power up spawning upon orb death
+		if (random <= .05) { // 5% chance of power up spawning upon orb death
 			GameObject powerUp = (GameObject) Instantiate(mPowerUp);
 			powerUp.transform.position = transform.position;
 		}
