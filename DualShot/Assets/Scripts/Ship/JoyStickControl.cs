@@ -7,7 +7,7 @@ using System.Collections;
 
 public class JoyStickControl : MonoBehaviour {
 
-	RespawnShip theShip;
+	Ship theShip;
 
     public GameObject mWaveProjectile = null;
     public GameObject[] mShotgunProjectile = null;
@@ -59,7 +59,7 @@ public class JoyStickControl : MonoBehaviour {
             mShotgunProjectile[i] = Resources.Load("Prefabs/ShotgunBlastOrange") as GameObject;
         }
 
-        theShip = gameObject.GetComponent<RespawnShip>();
+        theShip = gameObject.GetComponent<Ship>();
 	}
 	
 	// Update is called once per frame
@@ -93,6 +93,8 @@ public class JoyStickControl : MonoBehaviour {
                 mWaveBlastSpawnTime = Time.realtimeSinceStartup;
                 if (null != waveBlast)
                 {
+					if (theShip.powerLevel > 1)
+						waveBlast.SetPowerLevel(theShip.powerLevel);
                     e.transform.position = transform.position;
                     Vector3 mousePos = boundsControl.mMainCamera.ScreenToWorldPoint(Input.mousePosition);
                     mousePos.z = 0;
@@ -113,6 +115,8 @@ public class JoyStickControl : MonoBehaviour {
             WaveBlastBehavior waveBlast = e.GetComponent<WaveBlastBehavior>();
             if (null != waveBlast)
             {
+				if (theShip.powerLevel > 1)
+					waveBlast.SetPowerLevel(theShip.powerLevel);
                 waveBlast.mSpeed += waveBlast.mSpeed * kWaveTotalChargeTime;
                 e.transform.localScale += new Vector3(kWaveTotalChargeTime, kWaveTotalChargeTime, 0.0f);
                 e.transform.position = transform.position;

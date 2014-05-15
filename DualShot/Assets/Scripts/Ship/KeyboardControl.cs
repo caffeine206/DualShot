@@ -7,18 +7,17 @@ using System.Collections;
 
 public class KeyboardControl : MonoBehaviour {
 
-	RespawnShip theShip;
+	Ship theShip;
 
 	public GameObject mWaveProjectile = null;
 	public GameObject[] mShotgunProjectile = null;
 
 	public float kHeroSpeed = 140f;
 	private Vector3 mClampedPosition;
-	//private int theShip.powerLevel = 1;
 
 	private float mWaveBlastSpawnTime = -1.0f;
 	private float kWaveBlastSpawnInterval = 0.2f;
-	private float kWaveBlastChargeInterval = 0.4f;
+	//private float kWaveBlastChargeInterval = 0.4f;
 	private float mWaveBlastChargeTime = -1.0f;
 	private float kWaveTotalChargeTime = 0.0f;
 	private float kWaveMaxChargeTime = 1.5f;
@@ -54,12 +53,10 @@ public class KeyboardControl : MonoBehaviour {
 			mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastBlue") as GameObject;
 		}
 
-		theShip = gameObject.GetComponent<RespawnShip>();
+		theShip = gameObject.GetComponent<Ship>();
 	}
 
 	void Update () {
-		//transform.position += Input.GetAxis ("Vertical")  * transform.up * (kHeroSpeed * Time.smoothDeltaTime);
-	
 		// New Movement
 		if (Input.GetAxis("Horizontal") > 0.1f || Input.GetAxis ("Horizontal") < -0.1f ||
 			Input.GetAxis ("Vertical") > 0.1f || Input.GetAxis ("Vertical") < -0.1f) {
