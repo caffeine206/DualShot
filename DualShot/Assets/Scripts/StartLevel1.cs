@@ -20,8 +20,11 @@ public class StartLevel1 : MonoBehaviour {
         Application.LoadLevel(1);
         
     }
+<<<<<<< HEAD
     
     void OnMouseOver() {
     	Debug.Log ("Here");
     }
+=======
+>>>>>>> 8903bcb7502521a2d25e8606cb55457b7fb4e110
 }

@@ -7,17 +7,23 @@ using System.Collections;
 
 public class JoyStickControl : MonoBehaviour {
 
+<<<<<<< HEAD
 	RespawnShip theShip;
 
     public GameObject mWaveProjectile = null;
     public GameObject[] mShotgunProjectile = null;
 
     public float kHeroSpeed = 1500f;
+=======
+	Ship theShip;
+    public float kHeroSpeed = 140f;
+>>>>>>> 8903bcb7502521a2d25e8606cb55457b7fb4e110
     private Vector3 mClampedPosition;
     private Vector3 mNewDirection;
     private Vector3 mNewRotation;
     private Vector3 mLastDirection;
     private Vector3 mDefaultDirection;  // Only needed for right joystick control
+<<<<<<< HEAD
 
     private float mWaveBlastSpawnTime = -1.0f;
     private float kWaveBlastSpawnInterval = 0.3f;
@@ -40,11 +46,16 @@ public class JoyStickControl : MonoBehaviour {
     private PlaySound playme;       // For initiation of playing sounds
     private AudioClip mGunShot;
     private AudioClip mWave;
+=======
+
+    private PlaySound playme;       // For initiation of playing sounds
+>>>>>>> 8903bcb7502521a2d25e8606cb55457b7fb4e110
     private AudioClip mBackground;  // "music by audionautix.com"
 
 	// Use this for initialization
     void Start() {
         // Audio Files setup
+<<<<<<< HEAD
         mGunShot = (AudioClip)Resources.Load("Sounds/GunFire");
         mWave = (AudioClip)Resources.Load("Sounds/WaveFire");
         mBackground = (AudioClip)Resources.Load("Sounds/DeepSpace");
@@ -60,6 +71,11 @@ public class JoyStickControl : MonoBehaviour {
         }
 
         theShip = gameObject.GetComponent<RespawnShip>();
+=======
+        mBackground = (AudioClip)Resources.Load("Sounds/DeepSpaceY");
+		Play (mBackground, 1f, 1);
+        theShip = gameObject.GetComponent<Ship>();
+>>>>>>> 8903bcb7502521a2d25e8606cb55457b7fb4e110
 	}
 	
 	// Update is called once per frame
@@ -79,6 +95,7 @@ public class JoyStickControl : MonoBehaviour {
         // Ship clamped to world
         BoundsControl boundsControl = GameObject.Find("GameManager").GetComponent<BoundsControl>();
         boundsControl.ClampAtWorldBounds(this.gameObject, this.renderer.bounds);
+<<<<<<< HEAD
 
         #region Wave Blast Weapon control
         // Weapon controls
@@ -219,4 +236,22 @@ public class JoyStickControl : MonoBehaviour {
         source.Play();
         Destroy(go, clip.length);
     }
+=======
+    }
+
+    // Audio clip player
+    public void Play(AudioClip clip, float volume, float pitch)
+    {
+        //Create an empty game object
+        GameObject go = new GameObject("Audio: " + clip.name);
+
+        //Create the source
+        AudioSource source = go.AddComponent<AudioSource>();
+        source.clip = clip;
+        source.volume = volume;
+        source.pitch = pitch;
+        source.Play();
+        Destroy(go, clip.length);
+    }
+>>>>>>> 8903bcb7502521a2d25e8606cb55457b7fb4e110
 }

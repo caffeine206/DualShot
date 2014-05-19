@@ -10,8 +10,6 @@ using System.Collections;
 public class RespawnBehavior : MonoBehaviour {
 
 	private GameObject respawnParticle;
-	private RespawnShip periwinkle;
-	private RespawnShip orangeRed;
 	//The length of invulnerability after respawn.
 	private const float invulnTime = 5f;
 	
@@ -19,23 +17,18 @@ public class RespawnBehavior : MonoBehaviour {
 		if (respawnParticle == null) {
 			respawnParticle = Resources.Load("Prefabs/RespawnParticle") as GameObject;
 		}
-
-		periwinkle = GameObject.Find("PeriwinkleShip").GetComponent<RespawnShip>();
-		orangeRed = GameObject.Find("OrangeRedShip").GetComponent<RespawnShip>();
 	}
 	
 	void Update () {
-		//For testing purposes.
-		KillShip();
 		Reset();
 	}
 
 	#region Respawn support
-	public void Respawn(RespawnShip theShip) {
+	public void Respawn(Ship theShip) {
 		StartCoroutine("RespawnHelper", theShip);
 	}
 	
-	IEnumerator RespawnHelper(RespawnShip theShip) {
+	IEnumerator RespawnHelper(Ship theShip) {
 		if (theShip.GetCurrentHealth() <= 0f) {
 			
 			theShip.RestoreHealth();
@@ -55,7 +48,7 @@ public class RespawnBehavior : MonoBehaviour {
 	#endregion
 
 	#region Makes the ships blink and makes them invulnerable
-	private IEnumerator Blink(RespawnShip theShip) {
+	private IEnumerator Blink(Ship theShip) {
 		float endTime = Time.realtimeSinceStartup + invulnTime;
 
 		theShip.isInvulnerable = true;
@@ -71,28 +64,10 @@ public class RespawnBehavior : MonoBehaviour {
 	}
 	#endregion
 
-	#region Destroy the ships
-	//For testing purposes.
-	private void KillShip() {
-		if (Input.GetKeyDown(KeyCode.Alpha1)) {
-			periwinkle.Suicide();
-		} else if (Input.GetKeyDown(KeyCode.Alpha2)) {
-			orangeRed.Suicide();
-		}
-	}
-	#endregion
-
 	#region Reset the current session
 	private void Reset() {
 		if (Input.GetKeyDown(KeyCode.Return)) {
-			periwinkle.gameObject.SetActive(true);
-			orangeRed.gameObject.SetActive(true);
-			
-			StopCoroutine("RespawnHelper");
-			StopCoroutine("Blink");
-			
-			periwinkle.Reset();
-			orangeRed.Reset();
+			Application.LoadLevel(1);
 		}
 	}
 	#endregion

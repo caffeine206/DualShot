@@ -7,29 +7,11 @@ using System.Collections;
 
 public class KeyboardControl : MonoBehaviour {
 
-	RespawnShip theShip;
-
-	public GameObject mWaveProjectile = null;
-	public GameObject[] mShotgunProjectile = null;
-
+	Ship theShip;
 	public float kHeroSpeed = 140f;
 	private Vector3 mClampedPosition;
-	//private int theShip.powerLevel = 1;
 
-	private float mWaveBlastSpawnTime = -1.0f;
-	private float kWaveBlastSpawnInterval = 0.2f;
-	private float kWaveBlastChargeInterval = 0.4f;
-	private float mWaveBlastChargeTime = -1.0f;
-	private float kWaveTotalChargeTime = 0.0f;
-	private float kWaveMaxChargeTime = 1.5f;
-
-	private float mShotgunBlastSpawnTime = -1.0f;
-	private float kShotgunBlastSpawnInterval = 0.6f;
-	private float kShotgunBlastChargeInterval = 0.4f;
-	private float mShotgunBlastChargeTime = -1.0f;
-	private float kShotgunTotalChargeTime = 0.0f;
-	private float kShotgunMaxChargeTime = 1.2f;
-
+<<<<<<< HEAD
 	private float kShotgunSpread = -10.0f;
 	private int kShotgunShots = 3;
 	private int kMaxShotgunShots = 8;
@@ -37,10 +19,14 @@ public class KeyboardControl : MonoBehaviour {
     private PlaySound playme;       // For initiation of playing sounds
     private AudioClip mGunShot;
     private AudioClip mWave;
+=======
+	private PlaySound playme;       // For initiation of playing sounds
+>>>>>>> 8903bcb7502521a2d25e8606cb55457b7fb4e110
     private AudioClip mBackground;  // "music by audionautix.com"
 	
 	void Start () {
         // Audio Files setup
+<<<<<<< HEAD
         mGunShot = (AudioClip)Resources.Load("Sounds/GunFire");
         mWave = (AudioClip)Resources.Load("Sounds/WaveFire");
         mBackground = (AudioClip)Resources.Load("Sounds/DeepSpace");
@@ -55,11 +41,15 @@ public class KeyboardControl : MonoBehaviour {
 		}
 
 		theShip = gameObject.GetComponent<RespawnShip>();
+=======
+        mBackground = (AudioClip)Resources.Load("Sounds/DeepSpaceY");
+        //playme.Play(mBackground, 1f, 1);
+        Play(mBackground, 1f, 1);
+		theShip = gameObject.GetComponent<Ship>();
+>>>>>>> 8903bcb7502521a2d25e8606cb55457b7fb4e110
 	}
 
 	void Update () {
-		//transform.position += Input.GetAxis ("Vertical")  * transform.up * (kHeroSpeed * Time.smoothDeltaTime);
-	
 		// New Movement
 		if (Input.GetAxis("Horizontal") > 0.1f || Input.GetAxis ("Horizontal") < -0.1f ||
 			Input.GetAxis ("Vertical") > 0.1f || Input.GetAxis ("Vertical") < -0.1f) {
@@ -76,6 +66,7 @@ public class KeyboardControl : MonoBehaviour {
 		mousedir = boundsControl.mMainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
 		mousedir.Normalize();
 		transform.up = mousedir;
+<<<<<<< HEAD
 
         #region Wave Blast Weapon control
         // Wave Blast control
@@ -191,6 +182,9 @@ public class KeyboardControl : MonoBehaviour {
 		}
 	}
 	#endregion
+=======
+	} // End of update()
+>>>>>>> 8903bcb7502521a2d25e8606cb55457b7fb4e110
 
     // Audio clip player
     public void Play(AudioClip clip, float volume, float pitch)
