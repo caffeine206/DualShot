@@ -4,8 +4,8 @@ using System.Collections;
 public class WaveBlastBehavior : MonoBehaviour {
 	
 	public float mSpeed = 100f;
-	public float mForce = 40f;
-	private float kWaveLife = 1.2f;
+	public float mForce = 70f;
+	private float kWaveLife = 1.0f;
 	private float kWaveSpawnTime;
 
 	void Start()
@@ -45,7 +45,8 @@ public class WaveBlastBehavior : MonoBehaviour {
 
 	public void SetPowerLevel(int level) {
 		float increase = level * 1.0f;
-		kWaveLife += increase / 4.0f;
-		transform.localScale += new Vector3 (increase * 2.0f, increase * 2.0f, 0.0f);
+		kWaveLife += increase / 8.0f;
+		mForce += 20.0f;
+		transform.localScale += new Vector3 (increase * 3.0f, increase * 3.0f, 0.0f);
 	}
 }
