@@ -12,11 +12,12 @@ public class JoyStickControl : MonoBehaviour {
     public GameObject mWaveProjectile = null;
     public GameObject[] mShotgunProjectile = null;
 
-    private float kHeroSpeed = 1.5f;
+    public float kHeroSpeed = 1500f;
     private Vector3 mClampedPosition;
     private Vector3 mNewDirection;
     private Vector3 mNewRotation;
-    //private Vector3 mDefaultDirection = new Vector3(1,0,0);
+    private Vector3 mLastDirection;
+    private Vector3 mDefaultDirection;  // Only needed for right joystick control
 
     private float mWaveBlastSpawnTime = -1.0f;
     private float kWaveBlastSpawnInterval = 0.3f;
@@ -35,37 +36,49 @@ public class JoyStickControl : MonoBehaviour {
     private float kShotgunSpread = -10.0f;
     private int kShotgunShots = 3;
     private int kMaxShotgunShots = 8;
-    private AudioClip mClip;
+
+    private PlaySound playme;       // For initiation of playing sounds
+    private AudioClip mGunShot;
+    private AudioClip mWave;
+    private AudioClip mBackground;  // "music by audionautix.com"
 
 	// Use this for initialization
     void Start() {
-        // mClip = (AudioClip)Resources.Load ("Sounds/GunShot");
+        // Audio Files setup
+        mGunShot = (AudioClip)Resources.Load("Sounds/GunFire");
+        mWave = (AudioClip)Resources.Load("Sounds/WaveFire");
+        mBackground = (AudioClip)Resources.Load("Sounds/DeepSpace");
+        //playme.Play(mBackground, 1f, 1);
+        Play(mBackground, 1f, 1);
+
+        // Creates gameobects
         if (null == mWaveProjectile)
             mWaveProjectile = Resources.Load("Prefabs/WaveBlastOrange") as GameObject;
         mShotgunProjectile = new GameObject[kMaxShotgunShots + 1];
         for (int i = 0; i <= kMaxShotgunShots; i++) {
             mShotgunProjectile[i] = Resources.Load("Prefabs/ShotgunBlastOrange") as GameObject;
-        }	
+        }
+
+        theShip = gameObject.GetComponent<RespawnShip>();
 	}
 	
 	// Update is called once per frame
     void Update()
     {
         // Player movement
-        mNewDirection = new Vector3(Input.GetAxis("P2Horizontal"), Input.GetAxis("P2Vertical"), 0.0f);
-        transform.position += mNewDirection * kHeroSpeed;  // 
+        Vector2 move = new Vector2(Input.GetAxis("P2Horizontal"), Input.GetAxis("P2Vertical"));
+        rigidbody2D.AddForce(move.normalized * kHeroSpeed);
 
         // Right Stick Aim
-        transform.up = new Vector3(Input.GetAxis("RHorz"), Input.GetAxis("RVert"), 0);
-        //if (Input.GetAxis("RHorz") < 0.1f && Input.GetAxis("RVert") < 0.1f)
-        //{ transform.up = mDefaultDirection; }
+        transform.up = new Vector3(Input.GetAxis("P2RHorz"), Input.GetAxis("P2RVert"), 0);
+        mLastDirection = transform.up;
+        if (Input.GetAxis("P2RHorz") < 0.3f && Input.GetAxis("P2RHorz") > -0.3f &&
+            Input.GetAxis("P2RVert") < 0.3f && Input.GetAxis("P2RVert") > -0.3f)
+        { transform.up = mLastDirection.normalized; }
 
         // Ship clamped to world
         BoundsControl boundsControl = GameObject.Find("GameManager").GetComponent<BoundsControl>();
         boundsControl.ClampAtWorldBounds(this.gameObject, this.renderer.bounds);
-        /*mClampedPosition = new Vector3(Mathf.Clamp(this.transform.position.x, boundsControl.mWorldMin.x, boundsControl.mWorldMax.x),
-        Mathf.Clamp(this.transform.position.y, boundsControl.mWorldMin.y, boundsControl.mWorldMax.y), 0.0f);
-        this.transform.position = mClampedPosition;*/
 
         #region Wave Blast Weapon control
         // Weapon controls
@@ -85,7 +98,8 @@ public class JoyStickControl : MonoBehaviour {
                     mousePos.z = 0;
                     waveBlast.SetForwardDirection(transform.up);
                 }
-                // Play (mClip, .25f, 1);
+                //playme.Play(mWave, 1f, 1);
+                Play(mWave, .5f, 1);
             }
         }
 
@@ -105,6 +119,8 @@ public class JoyStickControl : MonoBehaviour {
                 Vector3 mousePos2 = boundsControl.mMainCamera.ScreenToWorldPoint(Input.mousePosition);
                 mousePos2.z = 0;
                 waveBlast.SetForwardDirection(transform.up);
+                //playme.Play(mWave, 1f, 1);
+                Play(mWave, 1f, 1);
             }
         }
         #endregion
@@ -125,49 +141,23 @@ public class JoyStickControl : MonoBehaviour {
         if (Input.GetButtonUp("P2Fire2") && (Time.realtimeSinceStartup - mShotgunBlastChargeTime) > kShotgunBlastChargeInterval)
         {
             kShotgunTotalChargeTime = Time.realtimeSinceStartup - mShotgunBlastChargeTime;
-            if (kShotgunTotalChargeTime > kShotgunMaxChargeTime)
-            {
-                FireShotgun(8, -60.0f);
-            }
-            else if (kShotgunTotalChargeTime > 1.5f)
-            {
-                FireShotgun(7, -50.0f);
-            }
-            else if (kShotgunTotalChargeTime > 1.1f)
-            {
-                FireShotgun(6, -40.0f);
-            }
-            else if (kShotgunTotalChargeTime > 0.7f)
-            {
-                FireShotgun(5, -30.0f);
-            }
-            else
-            {
-                FireShotgun(4, -20.0f);
-            }
+			if (kShotgunTotalChargeTime > kShotgunMaxChargeTime) {
+				FireShotgun(8, -60.0f);
+			} else if (kShotgunTotalChargeTime > .9f) {
+				FireShotgun(7, -50.0f);
+			} else if (kShotgunTotalChargeTime > .7f) {
+				FireShotgun(6, -40.0f);
+			} else if (kShotgunTotalChargeTime > 0.5f) {
+				FireShotgun(5, -30.0f);
+			} else {
+				FireShotgun(4, -20.0f);
+			}
         }
         #endregion
 
 		StartCoroutine("charging");
     }
-    /*
-    public void Play(AudioClip clip, float volume, float pitch)
-    {
-        //Create an empty game object
-        GameObject go = new GameObject ("Audio: " +  clip.name);
-        LocalGameBehavior boundsControl = GameObject.Find ("GameManager").GetComponent<LocalGameBehavior>();
-        go.transform.position = boundsControl.transform.position;
-        go.transform.parent = boundsControl.transform;
-		
-        //Create the source
-        AudioSource source = go.AddComponent<AudioSource>();
-        source.clip = clip;
-        source.volume = volume;
-        source.pitch = pitch;
-        source.Play ();
-        Destroy (go, clip.length);
-    }
-    */
+ 
     private void FireShotgun(int shots, float spread)
     {
         for (int i = 0; i <= shots; i++)
@@ -179,11 +169,17 @@ public class JoyStickControl : MonoBehaviour {
 
             if (null != shotgunBlast)
             {
-                e.transform.position = transform.position;
-                e.transform.Rotate(transform.forward, spread + (i * shots * 2));
+                if (theShip.powerLevel > 1)
+                    shotgunBlast.SetPowerLevel(theShip.powerLevel);
+                e.transform.position = transform.position + transform.up * 12f;
+                e.transform.up = transform.up;
+                shotgunBlast.AddShotgunSpeed(rigidbody2D.velocity.magnitude);
                 shotgunBlast.SetForwardDirection(e.transform.up);
+                e.transform.Rotate(Vector3.forward, spread + (i * shots * 2));
             }
         }
+        //playme.Play(mGunShot, 1f, 1);
+        Play(mGunShot, 1f, 1);
     }
 
 	#region Charge particle support
@@ -208,4 +204,19 @@ public class JoyStickControl : MonoBehaviour {
 		}
 	}
 	#endregion
+
+    // Audio clip player
+    public void Play(AudioClip clip, float volume, float pitch)
+    {
+        //Create an empty game object
+        GameObject go = new GameObject("Audio: " + clip.name);
+
+        //Create the source
+        AudioSource source = go.AddComponent<AudioSource>();
+        source.clip = clip;
+        source.volume = volume;
+        source.pitch = pitch;
+        source.Play();
+        Destroy(go, clip.length);
+    }
 }

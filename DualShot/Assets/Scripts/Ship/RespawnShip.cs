@@ -19,9 +19,15 @@ public class RespawnShip : MonoBehaviour {
 	//Invulnerability flag.
 	public bool isInvulnerable = false;
 
+    private AudioClip mShipHit;  // For audio clips
+    private AudioClip mShipDead;
+
 	void Start () {
 		if (explosion == null) {
 			explosion = Resources.Load("Prefabs/SmallExplosionParticle") as GameObject;
+
+            mShipHit = (AudioClip)Resources.Load("Sounds/ShipHit");
+            mShipDead = (AudioClip)Resources.Load("Sounds/ShipDead");
 		}
 
 		transform.position = startLocation;
@@ -68,6 +74,8 @@ public class RespawnShip : MonoBehaviour {
 			flames.particleSystem.Clear();
 			
 			gameObject.SetActive(false);
+
+            Play(mShipDead, 1f, 1);
 		}
 	}
 	#endregion
@@ -100,4 +108,19 @@ public class RespawnShip : MonoBehaviour {
 		return currentHealth;
 	}
 	#endregion
+
+    // Audio clip player
+    public void Play(AudioClip clip, float volume, float pitch)
+    {
+        //Create an empty game object
+        GameObject go = new GameObject("Audio: " + clip.name);
+
+        //Create the source
+        AudioSource source = go.AddComponent<AudioSource>();
+        source.clip = clip;
+        source.volume = volume;
+        source.pitch = pitch;
+        source.Play();
+        Destroy(go, clip.length);
+    }
 }

@@ -24,6 +24,9 @@ public class OrbBehavior : MonoBehaviour {
 	
 	private float mSpawnTime;
 	private bool mInvul;
+
+    private PlaySound playme;       // For initiation of playing sounds
+    private AudioClip mHit;
 	
 	#endregion
 
@@ -48,6 +51,8 @@ public class OrbBehavior : MonoBehaviour {
 		
 		mInvul = true;
 		mSpawnTime = Time.realtimeSinceStartup;
+
+        mHit = (AudioClip)Resources.Load("Sounds/OrbCollide"); // Orb colliding sound (with other orbs)
 	}
 	
 	// Update is called once per frame
@@ -119,6 +124,7 @@ public class OrbBehavior : MonoBehaviour {
 			}
 			if (other.gameObject.name == "Orb(Clone)") {
 				health -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
+                Play(mHit, 1f, 1);
 			}
 		}
 	}
@@ -133,6 +139,20 @@ public class OrbBehavior : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Return)) {
 			Destroy(this.gameObject);
 		}
-	
-}
+	}
 
+    // Audio clip player
+    public void Play(AudioClip clip, float volume, float pitch)
+    {
+        //Create an empty game object
+        GameObject go = new GameObject("Audio: " + clip.name);
+
+        //Create the source
+        AudioSource source = go.AddComponent<AudioSource>();
+        source.clip = clip;
+        source.volume = volume;
+        source.pitch = pitch;
+        source.Play();
+        Destroy(go, clip.length);
+    }
+}

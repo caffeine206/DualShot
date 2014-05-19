@@ -4,6 +4,9 @@ using System.Collections;
 public class GlobalBehavior : MonoBehaviour {
 
 	private string mCurrentLevel = "MenuLevel";
+
+    public int DeadBase = 0; // For deciding which base is destroyed
+
 	// Use this for initialization
 	void Start () {
 		DontDestroyOnLoad (this);
