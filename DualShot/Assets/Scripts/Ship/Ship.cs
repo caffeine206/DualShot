@@ -28,12 +28,10 @@ public class Ship : MonoBehaviour {
 	private Vector3 mDefaultDirection;  // Only needed for right joystick control
 	
 	private PlaySound playme;       // For initiation of playing sounds
-	private AudioClip mGunShot;
-	private AudioClip mWave;
-	private AudioClip mBackground;  // "music by audionautix.com"
-
-    private AudioClip mShipHit;  // For audio clips
-    private AudioClip mShipDead;
+    private AudioClip mGunShot1;
+    private AudioClip mGunShot2;
+    private AudioClip mWave;
+    private AudioClip mBackground;  // "music by audionautix.com"
 
 	public GameObject mWaveProjectile = null;
 	public GameObject[] mShotgunProjectile = null;
@@ -55,25 +53,27 @@ public class Ship : MonoBehaviour {
 	private float kShotgunTotalChargeTime = 0.0f;
 	private float kShotgunMaxChargeTime = 1.1f;
 	
-	private float kShotgunSpread = -10.0f;
+	private float kShotgunSpread = -20.0f;
 	private int kShotgunShots = 5;
-	private int kMaxShotgunShots = 8;
+	private int kMaxShotgunShots = 9;
 
 	void Start () {
 		// Initiate ship death and respawn
 		if (explosion == null) {
 			explosion = Resources.Load("Prefabs/SmallExplosionParticle") as GameObject;
 
-            mShipHit = (AudioClip)Resources.Load("Sounds/ShipHit");
-            mShipDead = (AudioClip)Resources.Load("Sounds/ShipDead");
+            //mShipHit = (AudioClip)Resources.Load("Sounds/ShipHit");
+            //mShipDead = (AudioClip)Resources.Load("Sounds/ShipDead");
 		}
 		transform.position = startLocation;
 
-		// Initiate Sounds
-		mGunShot = (AudioClip)Resources.Load("Sounds/GunFire");
-		mWave = (AudioClip)Resources.Load("Sounds/WaveFire");
-		mBackground = (AudioClip)Resources.Load("Sounds/DeepSpaceY");
-		Play (mBackground, 1f, 1);
+        // Audio Files setup
+        mGunShot1 = (AudioClip)Resources.Load("Sounds/shotgun");
+        mGunShot2 = (AudioClip)Resources.Load("Sounds/shotgun2");
+        mWave = (AudioClip)Resources.Load("Sounds/WaveFire");
+        mBackground = (AudioClip)Resources.Load("Sounds/DeepSpace");
+        //playme.Play(mBackground, 1f, 1);
+        Play(mBackground, 1f, 1);
 
 		// Initiate weapons
 		if (null == mWaveProjectile) {
@@ -139,28 +139,32 @@ public class Ship : MonoBehaviour {
 			if (Input.GetAxis("P2RHorz") < 0.3f && Input.GetAxis("P2RHorz") > -0.3f &&
 			    Input.GetAxis("P2RVert") < 0.3f && Input.GetAxis("P2RVert") > -0.3f)
 			{ 
-				transform.up = mLastDirection.normalized;
+				transform.up += mLastDirection.normalized;
 			}
 
 			// Weapon controls
 			if (Input.GetButtonDown("P2Fire1"))
 			{ // this is Left-Control
 				FireWaveBlast(mLastDirection.normalized);
+                Play(mWave, .5f, 1);
 			}
 			
 			if (Input.GetButtonUp("P2Fire1") && (Time.realtimeSinceStartup - mWaveBlastChargeTime) > kWaveBlastSpawnInterval)
 			{
 				FireChargedWaveBlast(mLastDirection.normalized);
+                Play(mWave, .5f, 1);
 			}
 
 			if (Input.GetButtonDown("P2Fire2"))
 			{ // this is Right-Control
 				FireShotgunBlast();
+                Play(mGunShot1, 1f, 1);
 			}
 			
 			if (Input.GetButtonUp("P2Fire2") && (Time.realtimeSinceStartup - mShotgunBlastChargeTime) > kShotgunBlastChargeInterval)
 			{
 				FireChargedShotgunBlast();
+                Play(mGunShot2, 1f, 1);
 			}
 		}
 
@@ -205,7 +209,7 @@ public class Ship : MonoBehaviour {
 			
 			gameObject.SetActive(false);
 
-            Play(mShipDead, 1f, 1);
+            //Play(mShipDead, 1f, 1);
 		}
 	}
 	#endregion
@@ -322,6 +326,7 @@ public class Ship : MonoBehaviour {
 			}
 			mTimeOfLastCharge = Time.realtimeSinceStartup;
 		}
+        Play(mWave, .5f, 1);
 	}
 
 	public void FireShotgunBlast() {
@@ -330,6 +335,7 @@ public class Ship : MonoBehaviour {
 		(Time.realtimeSinceStartup - mWaveBlastSpawnTime) > mAbsoluteWeaponInterval) {
 			mShotgunBlastSpawnTime = Time.realtimeSinceStartup;
 			FireShotgun(kShotgunShots, kShotgunSpread);
+            Play(mGunShot1, 1f, 1);
 		}
 	}
 
@@ -337,15 +343,20 @@ public class Ship : MonoBehaviour {
 		kShotgunTotalChargeTime = Time.realtimeSinceStartup - mShotgunBlastChargeTime;
 		if (Time.realtimeSinceStartup - mTimeOfLastCharge > .1f) {
 			if (kShotgunTotalChargeTime > kShotgunMaxChargeTime) {
-				FireShotgun(9, -70.0f);
+				FireShotgun(9, -80.0f);
+                Play(mGunShot2, 1f, 1);
 			} else if (kShotgunTotalChargeTime > .9f) {
-				FireShotgun(8, -60.0f);
+				FireShotgun(8, -70.0f);
+                Play(mGunShot2, 1f, 1);
 			} else if (kShotgunTotalChargeTime > .7f) {
-				FireShotgun(7, -50.0f);
+				FireShotgun(7, -80.0f);
+                Play(mGunShot2, 1f, 1);
 			} else if (kShotgunTotalChargeTime > .5f) {
-				FireShotgun(6, -40.0f);
+				FireShotgun(6, -50.0f);
+                Play(mGunShot2, 1f, 1);
 			} else {
-				FireShotgun(5, -30.0f);
+				FireShotgun(5, -40.0f);
+                Play(mGunShot2, 1f, 1);
 			} 
 			mTimeOfLastCharge = Time.realtimeSinceStartup;
 		}
@@ -367,8 +378,6 @@ public class Ship : MonoBehaviour {
 				e.transform.Rotate(Vector3.forward, spread + (i * shots * 2));
 			}
 		}
-		//playme.Play(mGunShot, 1f, 1);
-		Play(mGunShot, 1f, 1);
 	}
 
     // Audio clip player
