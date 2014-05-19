@@ -27,6 +27,10 @@ public class OrbBehavior : MonoBehaviour {
 
     private PlaySound playme;       // For initiation of playing sounds
     private AudioClip mHit;
+    private AudioClip mHitLow;
+    private AudioClip mHitLowMid;
+    private AudioClip mHitMid;
+    private AudioClip mHitMidHigh;
 	
 	#endregion
 
@@ -52,7 +56,13 @@ public class OrbBehavior : MonoBehaviour {
 		mInvul = true;
 		mSpawnTime = Time.realtimeSinceStartup;
 
-        mHit = (AudioClip)Resources.Load("Sounds/OrbCollide"); // Orb colliding sound (with other orbs)
+        // Orb collide sounds
+        mHit = (AudioClip)Resources.Load("Sounds/OrbCollide");                  // Orb colliding sound (original)
+        mHitLow = (AudioClip)Resources.Load("Sounds/energy orb low");           // Orb colliding sound (Low)
+        mHitLowMid = (AudioClip)Resources.Load("Sounds/energy orb low mid");    // Orb colliding sound (Low-Mid)
+        mHitMid = (AudioClip)Resources.Load("Sounds/energy orb mid");           // Orb colliding sound (Mid)
+        mHitMidHigh = (AudioClip)Resources.Load("Sounds/energy orb mid high");  // Orb colliding sound (Mid-High)
+
 	}
 	
 	// Update is called once per frame
@@ -119,11 +129,19 @@ public class OrbBehavior : MonoBehaviour {
 			if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)") {
 				health -= 50.0f;
 				Destroy(other.gameObject);
-			}
+                Play(mHitLow, 1f, 1);
+			}/*
 			if (other.gameObject.name == "Orb(Clone)") {
 				health -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
-                Play(mHit, 1f, 1);
-			}
+
+                // Plays different collision sound based on mass size
+                if (this.rigidbody2D.mass >= 10f || other.gameObject.rigidbody2D.mass >= 10f)
+                { Play(mHitLowMid, 1f, 1); }
+                else if (this.rigidbody2D.mass >= 5f || other.gameObject.rigidbody2D.mass >= 5f)
+                { Play(mHitMid, 1f, 1); }
+                else
+                { Play(mHitMidHigh, 1f, 1); }
+			}*/
 		}
 	}
 	void OnTriggerExit2D(Collider2D other) {
