@@ -21,6 +21,7 @@ public class OrbBehavior : MonoBehaviour {
 	private GameObject mObject = null; // The prefab of this object.
 	private BoundsControl mWorld = null;
 	private GameObject mPowerUp = null;
+	private GameObject explosion = null;
 	
 	private float mSpawnTime;
 	private bool mInvul;
@@ -63,6 +64,7 @@ public class OrbBehavior : MonoBehaviour {
         mHitMid = (AudioClip)Resources.Load("Sounds/energy orb mid");           // Orb colliding sound (Mid)
         mHitMidHigh = (AudioClip)Resources.Load("Sounds/energy orb mid high");  // Orb colliding sound (Mid-High)
 
+		explosion = Resources.Load("Prefabs/OrbExplosion") as GameObject;
 	}
 	
 	// Update is called once per frame
@@ -120,6 +122,10 @@ public class OrbBehavior : MonoBehaviour {
 			powerUp.transform.position = transform.position;
 		}
 
+		//Orb explosion
+		//GameObject ex = Instantiate(explosion) as GameObject;
+		//ex.transform.position = transform.position;
+
 		Destroy(this.gameObject);
 		mWorld.Orbs--;
 	}
@@ -130,7 +136,10 @@ public class OrbBehavior : MonoBehaviour {
 				health -= 50.0f;
 				Destroy(other.gameObject);
                 Play(mHitLow, 1f, 1);
-			}/*
+			}
+
+			#region Code for orbs colliding and destroying each other
+			/*
 			if (other.gameObject.name == "Orb(Clone)") {
 				health -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
 
@@ -142,8 +151,10 @@ public class OrbBehavior : MonoBehaviour {
                 else
                 { Play(mHitMidHigh, 1f, 1); }
 			}*/
+			#endregion
 		}
 	}
+
 	void OnTriggerExit2D(Collider2D other) {
 		string otherName = other.gameObject.name;
 		if (otherName == "Top" || otherName == "Bot") {

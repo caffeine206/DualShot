@@ -153,25 +153,21 @@ public class Ship : MonoBehaviour {
 			if (Input.GetButtonDown("P2Fire1"))
 			{ // this is Left-Control
 				FireWaveBlast(transform.up);
-                Play(mWave, .5f, 1);
 			}
 			
 			if (Input.GetButtonUp("P2Fire1") && (Time.realtimeSinceStartup - mWaveBlastChargeTime) > kWaveBlastSpawnInterval)
 			{
 				FireChargedWaveBlast(transform.up);
-                Play(mWave, .5f, 1);
 			}
 
 			if (Input.GetButtonDown("P2Fire2"))
 			{ // this is Right-Control
 				FireShotgunBlast();
-                Play(mGunShot1, 1f, 1);
 			}
 			
 			if (Input.GetButtonUp("P2Fire2") && (Time.realtimeSinceStartup - mShotgunBlastChargeTime) > kShotgunBlastChargeInterval)
 			{
 				FireChargedShotgunBlast();
-                Play(mGunShot2, 1f, 1);
 			}
 		}
 
