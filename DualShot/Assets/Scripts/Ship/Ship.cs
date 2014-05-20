@@ -20,14 +20,11 @@ public class Ship : MonoBehaviour {
 	public bool isInvulnerable = true;
 	public bool isController = false;
 
-	private float kHeroSpeed = 1400f;
+	private float kHeroSpeed = 2500f;
 	private Vector3 mClampedPosition;
 	private Vector3 mNewDirection;
 	private Vector3 mNewRotation;
-	private Vector3 mLastDirection;
-	private Vector3 mDefaultDirection;  // Only needed for right joystick control
 	
-	private PlaySound playme;       // For initiation of playing sounds
     private AudioClip mGunShot1;
     private AudioClip mGunShot2;
     private AudioClip mWave;
@@ -40,7 +37,7 @@ public class Ship : MonoBehaviour {
 	private float mTimeOfLastCharge = 0.0f;
 	
 	private float mWaveBlastSpawnTime = -1.0f;
-	private float kWaveBlastSpawnInterval = 0.32f;
+	private float kWaveBlastSpawnInterval = 0.6f; //0.32
 	private float kWaveBlastChargeInterval = 0.4f;
 	private float mWaveBlastChargeTime = -1.0f;
 	private float kWaveTotalChargeTime = 0.0f;
@@ -57,7 +54,7 @@ public class Ship : MonoBehaviour {
 	private int kShotgunShots = 5;
 	private int kMaxShotgunShots = 9;
 
-	private const float deadZone = 0.3f;
+	RespawnBehavior respawn;
 
 	void Start () {
 		// Initiate ship death and respawn
@@ -101,6 +98,8 @@ public class Ship : MonoBehaviour {
 			else
 				mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastOrange") as GameObject;
 		}
+
+		respawn = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
 	}
 	
 	void Update () {
@@ -108,7 +107,7 @@ public class Ship : MonoBehaviour {
 		BoundsControl boundsControl = GameObject.Find("GameManager").GetComponent<BoundsControl>();
 		boundsControl.ClampAtWorldBounds(this.gameObject, this.renderer.bounds);
 
-		if (isController == false) {
+		if (isController == false && !respawn.GameIsPaused()) {
 			// Ship mouse aim
 			Vector2 mousedir;
 			mousedir = boundsControl.mMainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
@@ -140,33 +139,26 @@ public class Ship : MonoBehaviour {
 				FireChargedShotgunBlast();
 			}
 
-		} else if (isController == true) {
+		} else if (isController == true && !respawn.GameIsPaused()) {
 			// Player movement
 			Vector2 move = new Vector2(Input.GetAxis("P2Horizontal"), Input.GetAxis("P2Vertical"));
 			rigidbody2D.AddForce(move.normalized * kHeroSpeed);
-			
-			//Vector2 move = new Vector2(Input.GetAxis("P2Horizontal"), Input.GetAxis("P2Vertical"));
-			//rigidbody2D.AddForce(move.normalized * kHeroSpeed);
+			//transform.position += Input.GetAxis ("P2Vertical") * transform.up * (50f * Time.smoothDeltaTime);
+			//transform.position += Input.GetAxis ("P2Horizontal") * transform.up * (50f * Time.smoothDeltaTime);
 			
 			// Right Stick Aim
-			transform.up = new Vector3(Input.GetAxis("P2RHorz"), Input.GetAxis("P2RVert"), 0);
-			mLastDirection = transform.up;
-			if (Input.GetAxis("P2RHorz") > deadZone && Input.GetAxis("P2RHorz") < -deadZone &&
-			    Input.GetAxis("P2RVert") > deadZone && Input.GetAxis("P2RVert") < -deadZone)
-			{ 
-				transform.up += mLastDirection.normalized;
-			}
+			transform.up += new Vector3(Input.GetAxis("P2RHorz"), Input.GetAxis("P2RVert"), 0);			
 
 			// Weapon controls
 			if (Input.GetButtonDown("P2Fire1"))
 			{ // this is Left-Control
-				FireWaveBlast(mLastDirection.normalized);
+				FireWaveBlast(transform.up);
                 Play(mWave, .5f, 1);
 			}
 			
 			if (Input.GetButtonUp("P2Fire1") && (Time.realtimeSinceStartup - mWaveBlastChargeTime) > kWaveBlastSpawnInterval)
 			{
-				FireChargedWaveBlast(mLastDirection.normalized);
+				FireChargedWaveBlast(transform.up);
                 Play(mWave, .5f, 1);
 			}
 
@@ -183,7 +175,9 @@ public class Ship : MonoBehaviour {
 			}
 		}
 
-		Charging();
+		if (!respawn.GameIsPaused()) {
+			Charging();
+		}
 	}
 
 	#region Collision with orbs and pickup powerups

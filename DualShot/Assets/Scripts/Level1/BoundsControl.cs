@@ -57,11 +57,6 @@ public class BoundsControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.Escape))
-		{
-			Application.LoadLevel(0);
-		}
-		
 		#region Orb Spawner Logic
 		if ( Input.GetKeyDown(KeyCode.F2)) { // Manual Spawner
 			SpawnOrbs();

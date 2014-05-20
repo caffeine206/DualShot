@@ -31,7 +31,7 @@ public class RespawnBehavior : MonoBehaviour {
 	void Update () {
 		Reset();
 		
-		if (Input.GetKeyDown(KeyCode.Return) && !count.GetIsCounting()) {
+		if (Input.GetKeyDown(KeyCode.Escape) && !count.GetIsCounting()) {
 			Pause();
 		}
 	}
