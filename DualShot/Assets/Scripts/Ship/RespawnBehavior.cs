@@ -10,17 +10,30 @@ using System.Collections;
 public class RespawnBehavior : MonoBehaviour {
 
 	private GameObject respawnParticle;
-	//The length of invulnerability after respawn.
+	private GameObject pauseCamera;
+	private CountdownTimer count;
 	private const float invulnTime = 5f;
+	private bool isPaused = false;
 	
 	void Start () {
 		if (respawnParticle == null) {
 			respawnParticle = Resources.Load("Prefabs/RespawnParticle") as GameObject;
 		}
+
+		pauseCamera = GameObject.Find("PauseMenuCamera");
+		pauseCamera.gameObject.SetActive(false);
+
+		count = GameObject.Find("Countdown").GetComponent<CountdownTimer>();
+
+		Time.timeScale = 0f;
 	}
 	
 	void Update () {
 		Reset();
+		
+		if (Input.GetKeyDown(KeyCode.Return) && !count.GetIsCounting()) {
+			Pause();
+		}
 	}
 
 	#region Respawn support
@@ -66,9 +79,29 @@ public class RespawnBehavior : MonoBehaviour {
 
 	#region Reset the current session
 	private void Reset() {
-		if (Input.GetKeyDown(KeyCode.Return)) {
+		if (Input.GetKeyDown(KeyCode.F1)) {
 			Application.LoadLevel(1);
 		}
+	}
+	#endregion
+
+	#region Pause the game
+	public void Pause() {
+		if (!isPaused) {
+			Time.timeScale = 0f;
+			isPaused = true;
+			pauseCamera.gameObject.SetActive(true);
+		} else if (isPaused) {
+			Time.timeScale = 1f;
+			isPaused = false;
+			pauseCamera.gameObject.SetActive(false);
+		}
+	}
+	#endregion
+
+	#region Check to see if game is paused
+	public bool GameIsPaused() {
+		return isPaused;
 	}
 	#endregion
 }

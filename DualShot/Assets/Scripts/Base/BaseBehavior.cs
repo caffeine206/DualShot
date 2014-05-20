@@ -9,6 +9,8 @@ public class BaseBehavior : MonoBehaviour {
 	
 	public const float HEALTH = 20f;
 	public float currentHealth = HEALTH;
+
+	public bool isInvulnerable = false;
 	
 	public Camera mCamera = null;
 
@@ -55,7 +57,7 @@ public class BaseBehavior : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
-		if (other.gameObject.name == "Orb(Clone)" || other.gameObject.name == "Orb") {
+		if ((other.gameObject.name == "Orb(Clone)" || other.gameObject.name == "Orb") && !isInvulnerable) {
 			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
             Play(mBaseHit, 1f, 1);
 		}

@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LoadMenu : MonoBehaviour {
+public class StartLevel1 : MonoBehaviour {
 
-	private AudioClip mBaseHit;
+    private AudioClip mBaseHit;
 
 	void Start () {
 		mBaseHit = (AudioClip)Resources.Load("Sounds/BaseHit");
@@ -31,7 +31,7 @@ public class LoadMenu : MonoBehaviour {
 
     void OnMouseUp()
     {
-        Application.LoadLevel(0);  // Menu
+        Application.LoadLevel(1);
     }
 	
 	// Audio clip player

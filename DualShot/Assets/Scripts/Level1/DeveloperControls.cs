@@ -9,7 +9,8 @@ public class DeveloperControls : MonoBehaviour {
 	private BaseBehavior orangeCity;
 	private GUIText status;
 	private GUIText controls;
-	private bool shipsInvulnerable;
+	private bool shipsInvulnerable = true;
+	private bool citiesInvulnerable = false;
 
 	void Start () {
 		periwinkle = GameObject.Find("PeriwinkleShip").GetComponent<Ship>();
@@ -18,14 +19,15 @@ public class DeveloperControls : MonoBehaviour {
 		orangeCity = GameObject.Find("OrangeCity").GetComponent<BaseBehavior>();
 		status = GameObject.Find("Status").GetComponent<GUIText>();
 		controls = GameObject.Find("Controls").GetComponent<GUIText>();
-		shipsInvulnerable = false;
 
 		controls.text = 
 			"1: Destroy Periwinkle ship"
 			+ "\n2: Destroy OrangeRed ship"
 			+ "\n3: Destroy Periwinkle city"
 			+ "\n4: Destroy OrangeRed city"
-			+ "\n5: Turn on invinciblity"
+			+ "\n5: Turn on ship invincibility"
+			+ "\n6: Turn on city invincibility"
+			+ "\nF1: Destroy all orbs"
 			+ "\nF2: Spawn more orbs"
 			+ "\nEnter: Reset scene"
 			+ "\nEscape: Return to main menu";
@@ -34,7 +36,8 @@ public class DeveloperControls : MonoBehaviour {
 	void Update () {
 		KillShip();
 		KillCity();
-		Invincibility();
+		ShipInvincibility();
+		CityInvulnerable();
 		UpdateStatus();
 	}
 
@@ -44,7 +47,8 @@ public class DeveloperControls : MonoBehaviour {
 			+ "\nOrangeRed health: " + orangeRed.GetCurrentHealth()
 			+ "\nPeriwinkle city health: " + blueCity.currentHealth
 			+ "\nOrangeRed city health: " + orangeCity.currentHealth
-			+ "\nInvincibility: " + shipsInvulnerable;
+			+ "\nShip Invincibility: " + shipsInvulnerable
+			+ "\nCity Invincibility: " + citiesInvulnerable;
 	}
 
 	#region Destroy the ships
@@ -68,8 +72,8 @@ public class DeveloperControls : MonoBehaviour {
 	}
 	#endregion
 
-	#region Turn on invincibility
-	private void Invincibility() {
+	#region Turn on ship invincibility
+	private void ShipInvincibility() {
 		if (Input.GetKeyDown(KeyCode.Alpha5) && !shipsInvulnerable) {
 			periwinkle.isInvulnerable = true;
 			orangeRed.isInvulnerable = true;
@@ -78,6 +82,20 @@ public class DeveloperControls : MonoBehaviour {
 			periwinkle.isInvulnerable = false;
 			orangeRed.isInvulnerable = false;
 			shipsInvulnerable = false;
+		}
+	}
+	#endregion
+
+	#region Turn on base invincibility
+	private void CityInvulnerable() {
+		if (Input.GetKeyDown(KeyCode.Alpha6) && !citiesInvulnerable) {
+			blueCity.isInvulnerable = true;
+			orangeCity.isInvulnerable = true;
+			citiesInvulnerable = true;
+		} else if(Input.GetKeyDown(KeyCode.Alpha6) && citiesInvulnerable) {
+			blueCity.isInvulnerable = false;
+			orangeCity.isInvulnerable = false;
+			citiesInvulnerable = false;
 		}
 	}
 	#endregion
