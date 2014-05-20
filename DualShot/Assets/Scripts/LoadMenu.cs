@@ -31,6 +31,7 @@ public class LoadMenu : MonoBehaviour {
 
     void OnMouseUp()
     {
+		Time.timeScale = 1f;
         Application.LoadLevel(0);  // Menu
     }
 	
