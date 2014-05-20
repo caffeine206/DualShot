@@ -31,6 +31,6 @@ public class LoadCredits : MonoBehaviour {
 
     void OnMouseUp()
     {
-        Application.LoadLevel(6);  // Credits
+        Application.LoadLevel(5);  // Credits
     }
 }

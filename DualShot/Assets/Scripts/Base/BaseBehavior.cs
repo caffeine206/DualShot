@@ -60,6 +60,7 @@ public class BaseBehavior : MonoBehaviour {
 		if ((other.gameObject.name == "Orb(Clone)" || other.gameObject.name == "Orb") && !isInvulnerable) {
 			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
             Play(mBaseHit, 1f, 1);
+			Destroy(other.gameObject);
 		}
 	}
 

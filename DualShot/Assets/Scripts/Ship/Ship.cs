@@ -20,7 +20,7 @@ public class Ship : MonoBehaviour {
 	public bool isInvulnerable = true;
 	public bool isController = false;
 
-	public float kHeroSpeed = 140f;
+	private float kHeroSpeed = 1400f;
 	private Vector3 mClampedPosition;
 	private Vector3 mNewDirection;
 	private Vector3 mNewRotation;
@@ -57,7 +57,7 @@ public class Ship : MonoBehaviour {
 	private int kShotgunShots = 5;
 	private int kMaxShotgunShots = 9;
 
-	private const float deadZone = 99999f;
+	private const float deadZone = 0.3f;
 
 	void Start () {
 		// Initiate ship death and respawn
