@@ -1,40 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LoadMenu : MonoBehaviour {
+public class ResumeGame : MonoBehaviour {
 
+	RespawnBehavior resume;
 	private AudioClip mBaseHit;
 
 	void Start () {
+		resume = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
 		mBaseHit = (AudioClip)Resources.Load("Sounds/BaseHit");
 	}
 	
 	void Update () {
-	
+		
 	}
 
-    // To highlight button text when mouse is over collider
-    void OnMouseOver()
-    {
-        renderer.material.color = Color.green;
-    }
-	
+	void OnMouseUp() {
+		resume.Pause();
+	}
+
 	void OnMouseEnter() {
 		Play(mBaseHit, 1f, 1);
 	}
-	
-    // To de-highlight button text when mouse is over collider
-    void OnMouseExit()
+
+	void OnMouseOver() {
+        renderer.material.color = Color.green;
+    }
+
+	void OnMouseExit()
     {
         renderer.material.color = Color.white;
     }
 
-    void OnMouseUp()
-    {
-		Time.timeScale = 1f;
-        Application.LoadLevel(0);  // Menu
-    }
-	
 	// Audio clip player
 	public void Play(AudioClip clip, float volume, float pitch) {
 		//Create an empty game object

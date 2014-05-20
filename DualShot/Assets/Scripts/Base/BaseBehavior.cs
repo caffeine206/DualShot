@@ -9,6 +9,8 @@ public class BaseBehavior : MonoBehaviour {
 	
 	public const float HEALTH = 20f;
 	public float currentHealth = HEALTH;
+
+	public bool isInvulnerable = false;
 	
 	private BaseSpriteManager spriteMan = null;
 	private int numSprites = 24; // This is the total number of sprites, includes the final once which will is the dieing sprite
@@ -69,7 +71,7 @@ public class BaseBehavior : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
-		if (other.gameObject.name == "Orb(Clone)" || other.gameObject.name == "Orb") {
+		if ((other.gameObject.name == "Orb(Clone)" || other.gameObject.name == "Orb") && !isInvulnerable) {
 			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
 			Debug.Log("Base Health: " + currentHealth);
 

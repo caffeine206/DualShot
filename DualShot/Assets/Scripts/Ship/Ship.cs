@@ -11,7 +11,7 @@ public class Ship : MonoBehaviour {
 	private GameObject explosion = null;
 	//The start location of the ship. Currently set to the middle of the screen because
 	//I'm not sure were we want to spawn the ship. Spawn points can be set in the inspector.
-	public Vector3 startLocation = new Vector3(0f, 0f, 0f);
+	private Vector3 startLocation = new Vector3(0f, 0f, 0f);
 	//The middle of our world. Used to reorient the ships to their default direction after respawning.
 	private Vector3 originOfWorld = new Vector3(0f, 0f, 0f);
 	//Tracks the powerup level of the ship.
@@ -57,6 +57,8 @@ public class Ship : MonoBehaviour {
 	private int kShotgunShots = 5;
 	private int kMaxShotgunShots = 9;
 
+	private const float deadZone = 99999f;
+
 	void Start () {
 		// Initiate ship death and respawn
 		if (explosion == null) {
@@ -65,6 +67,16 @@ public class Ship : MonoBehaviour {
             //mShipHit = (AudioClip)Resources.Load("Sounds/ShipHit");
             //mShipDead = (AudioClip)Resources.Load("Sounds/ShipDead");
 		}
+		
+		float sizeX = Camera.main.orthographicSize * Camera.main.aspect;
+
+		if (gameObject.name == "OrangeRedShip") {
+			startLocation -= new Vector3(sizeX - 40f, 0f, 0f);
+		} 
+		else if (gameObject.name == "PeriwinkleShip") {
+			startLocation += new Vector3(sizeX - 40f, 0f, 0f);
+		}
+		
 		transform.position = startLocation;
 
         // Audio Files setup
@@ -133,11 +145,14 @@ public class Ship : MonoBehaviour {
 			Vector2 move = new Vector2(Input.GetAxis("P2Horizontal"), Input.GetAxis("P2Vertical"));
 			rigidbody2D.AddForce(move.normalized * kHeroSpeed);
 			
+			//Vector2 move = new Vector2(Input.GetAxis("P2Horizontal"), Input.GetAxis("P2Vertical"));
+			//rigidbody2D.AddForce(move.normalized * kHeroSpeed);
+			
 			// Right Stick Aim
 			transform.up = new Vector3(Input.GetAxis("P2RHorz"), Input.GetAxis("P2RVert"), 0);
 			mLastDirection = transform.up;
-			if (Input.GetAxis("P2RHorz") < 0.3f && Input.GetAxis("P2RHorz") > -0.3f &&
-			    Input.GetAxis("P2RVert") < 0.3f && Input.GetAxis("P2RVert") > -0.3f)
+			if (Input.GetAxis("P2RHorz") > deadZone && Input.GetAxis("P2RHorz") < -deadZone &&
+			    Input.GetAxis("P2RVert") > deadZone && Input.GetAxis("P2RVert") < -deadZone)
 			{ 
 				transform.up += mLastDirection.normalized;
 			}
@@ -243,8 +258,6 @@ public class Ship : MonoBehaviour {
 	}
 	#endregion
 
-
-	
 	#region Charge particle support
 	private void Charging() {
 		if (gameObject.name == "PeriwinkleShip") {
