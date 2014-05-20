@@ -10,6 +10,10 @@ public class BaseBehavior : MonoBehaviour {
 	public const float HEALTH = 20f;
 	public float currentHealth = HEALTH;
 	
+	private BaseSpriteManager spriteMan = null;
+	private int numSprites = 24; // This is the total number of sprites, includes the final once which will is the dieing sprite
+	private SpriteActionDefinition BaseAnimation = new SpriteActionDefinition( 0, 0, 1, 5f, false);
+	
 	public Camera mCamera = null;
 
     private AudioClip mBaseHit;
@@ -19,7 +23,12 @@ public class BaseBehavior : MonoBehaviour {
 		if (mCamera == null) {
 			mCamera = Camera.main;
 		}
+		if (spriteMan == null) {
+			spriteMan = GetComponent<BaseSpriteManager>();
+		}
 
+		spriteMan.mCurrentSpriteAction = BaseAnimation;
+	
 		float sizeX = mCamera.orthographicSize * mCamera.aspect;
 
 		if ( gameObject.name == "OrangeCity") {
@@ -51,13 +60,17 @@ public class BaseBehavior : MonoBehaviour {
 	}
 	
 	void Update () {
+		
+		if ( currentHealth / HEALTH > (1 / numSprites - 1) * spriteMan.getSpriteNum())
+		{
+			spriteMan.nextSprite();
+		}
 		Win();
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
 		if (other.gameObject.name == "Orb(Clone)" || other.gameObject.name == "Orb") {
 			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
-<<<<<<< HEAD:DualShot/Assets/Scripts/Mode1/BaseBehavior.cs
 			Debug.Log("Base Health: " + currentHealth);
 
             // Experimental audio play
@@ -66,17 +79,16 @@ public class BaseBehavior : MonoBehaviour {
             //source.volume = 1;
             //source.Play();
             //Destroy(go, mBaseHit.length);
-=======
->>>>>>> 8903bcb7502521a2d25e8606cb55457b7fb4e110:DualShot/Assets/Scripts/Level1/BaseBehavior.cs
             Play(mBaseHit, 1f, 1);
 		}
 	}
 
 	private void Win() {
 		if (currentHealth <= 0f) {
-			currentHealth = HEALTH;
+			
+			spriteMan.nextSprite();
 			StartCoroutine("EXPLOSIVE_VICTORY");
-<<<<<<< HEAD:DualShot/Assets/Scripts/Mode1/BaseBehavior.cs
+/*
             Play(mBaseDead, 1f, 1);
 
             // Testing for win screen
@@ -91,9 +103,8 @@ public class BaseBehavior : MonoBehaviour {
                 Application.LoadLevel(3);
             }
 
-=======
+            */
             StartCoroutine("WinScreen");
->>>>>>> 8903bcb7502521a2d25e8606cb55457b7fb4e110:DualShot/Assets/Scripts/Level1/BaseBehavior.cs
 		}
 	}
 
