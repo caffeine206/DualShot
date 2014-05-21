@@ -7,8 +7,8 @@ public class BaseBehavior : MonoBehaviour {
 	private GameObject smallExplosion2 = null;
 	private GameObject bigExplosion2 = null;
 	
-	public const float HEALTH = 20f;
-	public float currentHealth = HEALTH;
+	private const float HEALTH = 100f;
+	private float currentHealth = HEALTH;
 
 	public bool isInvulnerable = false;
 	
@@ -62,8 +62,8 @@ public class BaseBehavior : MonoBehaviour {
 	}
 	
 	void Update () {
-		int spritePer = spriteMan.getSpriteNum();
-		if ( currentHealth / HEALTH < 1 - ((float)spriteMan.getSpriteNum() / ((float)numSprites - 1)) && spriteMan.getSpriteNum() < numSprites - 2)
+		int spritePer = spriteMan.SpriteNum;
+		if ( currentHealth / HEALTH < 1 - ((float)spriteMan.SpriteNum / ((float)numSprites - 1)) && spriteMan.SpriteNum < numSprites - 2)
 		{
 			spriteMan.nextSprite();
 		}

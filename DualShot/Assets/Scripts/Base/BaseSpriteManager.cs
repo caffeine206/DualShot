@@ -193,6 +193,13 @@ public class BaseSpriteManager : MonoBehaviour {
 				mCurrentActionNum ++;
 			mMyRenderer.sprite = mSpriteLine[mCurrentActionNum];
 		}
-		public int getSpriteNum() { return mCurrentActionNum; }
+		public void setSprite() 
+		{
+			mMyRenderer.sprite = mSpriteLine[mCurrentActionNum];
+		}
+		public int SpriteNum { 
+			get { return mCurrentActionNum;}
+		 	set { mCurrentActionNum = value; }
+		 }
 		
 }
