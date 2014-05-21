@@ -20,53 +20,56 @@ public class Ship : MonoBehaviour {
 	public bool isInvulnerable = true;
 	public bool isController = false;
 
-	public float kHeroSpeed = 140f;
+	private float kHeroSpeed = 2500f;
 	private Vector3 mClampedPosition;
 	private Vector3 mNewDirection;
 	private Vector3 mNewRotation;
-	private Vector3 mLastDirection;
-	private Vector3 mDefaultDirection;  // Only needed for right joystick control
-	
-	private PlaySound playme;       // For initiation of playing sounds
-    private AudioClip mGunShot1;
-    private AudioClip mGunShot2;
-    private AudioClip mWave;
     private AudioClip mBackground;  // "music by audionautix.com"
 
 	public GameObject mWaveProjectile = null;
 	public GameObject[] mShotgunProjectile = null;
+	private bool hasFired = false;
+	private bool isCharging = false;
 
 	private float mAbsoluteWeaponInterval = .4f;
 	private float mTimeOfLastCharge = 0.0f;
 	
-	private float mWaveBlastSpawnTime = -1.0f;
-	private float kWaveBlastSpawnInterval = 0.32f;
-	private float kWaveBlastChargeInterval = 0.4f;
+	private float mWaveBlastSpawnTime = -0.0f;
+	private float kWaveBlastSpawnInterval = 0.5f; //0.32
+	private float kWaveBlastChargeInterval = .5f;
 	private float mWaveBlastChargeTime = -1.0f;
 	private float kWaveTotalChargeTime = 0.0f;
 	private float kWaveMaxChargeTime = 1.5f;
+	private float mWaveBlastLastCharge = -1.0f;
 	
 	private float mShotgunBlastSpawnTime = -1.0f;
-	private float kShotgunBlastSpawnInterval = 0.6f;
-	private float kShotgunBlastChargeInterval = 0.4f;
+	private float kShotgunBlastSpawnInterval = 0.8f;
+	private float kShotgunBlastChargeInterval = 0.5f;
 	private float mShotgunBlastChargeTime = -1.0f;
 	private float kShotgunTotalChargeTime = 0.0f;
 	private float kShotgunMaxChargeTime = 1.1f;
-	
-	private float kShotgunSpread = -20.0f;
-	private int kShotgunShots = 5;
+	private float mShotgunBlastLastCharge = -1.0f;
+	private float kShotgunPowerInterval = .2f;
+
+	private const int kMinShotgunShots = 5;
+	private const float kMinShotgunSpread = -20.0f;
+
+	private float kShotgunSpread = kMinShotgunSpread;
+	private int kShotgunShots = kMinShotgunShots;
 	private int kMaxShotgunShots = 9;
 
-	private const float deadZone = 99999f;
+	Fire fire;
+	Vector2 mousedir;
+
+	RespawnBehavior respawn;
 
 	void Start () {
 		// Initiate ship death and respawn
 		if (explosion == null) {
 			explosion = Resources.Load("Prefabs/SmallExplosionParticle") as GameObject;
-
-            //mShipHit = (AudioClip)Resources.Load("Sounds/ShipHit");
-            //mShipDead = (AudioClip)Resources.Load("Sounds/ShipDead");
 		}
+
+		fire = GetComponent<Fire>();
 		
 		float sizeX = Camera.main.orthographicSize * Camera.main.aspect;
 
@@ -78,41 +81,22 @@ public class Ship : MonoBehaviour {
 		}
 		
 		transform.position = startLocation;
+		
+        mBackground = (AudioClip)Resources.Load("Sounds/DualShotGameplay");
+        //Play(mBackground, 1f, 1);
 
-        // Audio Files setup
-        mGunShot1 = (AudioClip)Resources.Load("Sounds/shotgun");
-        mGunShot2 = (AudioClip)Resources.Load("Sounds/shotgun2");
-        mWave = (AudioClip)Resources.Load("Sounds/WaveFire");
-        mBackground = (AudioClip)Resources.Load("Sounds/DeepSpace");
-        //playme.Play(mBackground, 1f, 1);
-        Play(mBackground, 1f, 1);
-
-		// Initiate weapons
-		if (null == mWaveProjectile) {
-			if (gameObject.name == "PeriwinkleShip")
-				mWaveProjectile = Resources.Load ("Prefabs/WaveBlastBlue") as GameObject;
-			else
-				mWaveProjectile = Resources.Load ("Prefabs/WaveBlastOrange") as GameObject;
-		}
-		mShotgunProjectile = new GameObject[kMaxShotgunShots + 1];
-		for (int i = 0; i <= kMaxShotgunShots; i++) {
-			if (gameObject.name == "PeriwinkleShip")
-				mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastBlue") as GameObject;
-			else
-				mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastOrange") as GameObject;
-		}
+		respawn = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
 	}
 	
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.Z))
-			powerLevel++;
-		DieCheck(); // Check if ship is dead
+
+		//No longer necessary. Maybe.
+		//DieCheck(); // Check if ship is dead
 		BoundsControl boundsControl = GameObject.Find("GameManager").GetComponent<BoundsControl>();
 		boundsControl.ClampAtWorldBounds(this.gameObject, this.renderer.bounds);
-
-		if (isController == false) {
+		
+		if (isController == false && !respawn.GameIsPaused()) {
 			// Ship mouse aim
-			Vector2 mousedir;
 			mousedir = boundsControl.mMainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
 			mousedir.Normalize();
 			transform.up = mousedir;
@@ -123,69 +107,68 @@ public class Ship : MonoBehaviour {
 				rigidbody2D.AddForce ( move.normalized * kHeroSpeed);
 			}
 
-			if (Input.GetMouseButtonDown(0)) {
-				FireWaveBlast(mousedir);
+			// Wave Blast single click
+			if (Input.GetButtonDown("Fire1")) {
+				StartWaveBlast();
+				StartCoroutine("WaveBlastChargeCoroutine");
+				mWaveBlastChargeTime = Time.realtimeSinceStartup;
 			}
-			// Wave Blast Charge
-			if (Input.GetMouseButtonUp (0) && (Time.realtimeSinceStartup - mWaveBlastChargeTime) > (kWaveBlastChargeInterval)) 
-			{
-				FireChargedWaveBlast(mousedir);
+
+			// Wave Blast Charge fire
+			if (Input.GetButtonUp("Fire1")) {
+				StopCoroutine("WaveBlastChargeCoroutine");
+				StopChargeParticle();
+				FireChargedWaveBlast();
 			}
-			
-			// Shotgun Blast control
-			if (Input.GetMouseButtonDown(1)) { // this is Right-Control
-				FireShotgunBlast();
+
+			// Shotgun Blast single click
+			if (Input.GetButtonDown("Fire2")) {
+				StartShotgunBlast();
+				StartCoroutine("ShotgunBlastChargeCoroutine");
 			}
+
 			// Shotgun Blast charge control
-			if (Input.GetMouseButtonUp(1) && (Time.realtimeSinceStartup - mShotgunBlastChargeTime) > kShotgunBlastChargeInterval) 
-			{
+			if (Input.GetButtonUp("Fire2")) {
+				StopCoroutine("ShotgunBlastChargeCoroutine");
+				StopChargeParticle();
 				FireChargedShotgunBlast();
 			}
 
-		} else if (isController == true) {
+		} else if (isController == true && !respawn.GameIsPaused()) {
 			// Player movement
 			Vector2 move = new Vector2(Input.GetAxis("P2Horizontal"), Input.GetAxis("P2Vertical"));
 			rigidbody2D.AddForce(move.normalized * kHeroSpeed);
 			
-			//Vector2 move = new Vector2(Input.GetAxis("P2Horizontal"), Input.GetAxis("P2Vertical"));
-			//rigidbody2D.AddForce(move.normalized * kHeroSpeed);
-			
 			// Right Stick Aim
-			transform.up = new Vector3(Input.GetAxis("P2RHorz"), Input.GetAxis("P2RVert"), 0);
-			mLastDirection = transform.up;
-			if (Input.GetAxis("P2RHorz") > deadZone && Input.GetAxis("P2RHorz") < -deadZone &&
-			    Input.GetAxis("P2RVert") > deadZone && Input.GetAxis("P2RVert") < -deadZone)
-			{ 
-				transform.up += mLastDirection.normalized;
+			transform.up += new Vector3(Input.GetAxis("P2RHorz"), Input.GetAxis("P2RVert"), 0);			
+
+			// Wave blast single click
+			if (Input.GetButtonDown("P2Fire1")) {
+				StartWaveBlast();
+			    StartCoroutine("WaveBlastChargeCoroutine");
+			    mWaveBlastChargeTime = Time.realtimeSinceStartup;
 			}
 
-			// Weapon controls
-			if (Input.GetButtonDown("P2Fire1"))
-			{ // this is Left-Control
-				FireWaveBlast(mLastDirection.normalized);
-                Play(mWave, .5f, 1);
-			}
-			
-			if (Input.GetButtonUp("P2Fire1") && (Time.realtimeSinceStartup - mWaveBlastChargeTime) > kWaveBlastSpawnInterval)
-			{
-				FireChargedWaveBlast(mLastDirection.normalized);
-                Play(mWave, .5f, 1);
+			// Wave blast charge
+			if (Input.GetButtonUp("P2Fire1")) {
+				StopCoroutine("WaveBlastChargeCoroutine");
+				StopChargeParticle();
+				FireChargedWaveBlast();
 			}
 
-			if (Input.GetButtonDown("P2Fire2"))
-			{ // this is Right-Control
-				FireShotgunBlast();
-                Play(mGunShot1, 1f, 1);
+			// Shotgun single click
+			if (Input.GetButtonDown("P2Fire2")) { // this is Right-Control
+				StartShotgunBlast();
+				StartCoroutine("ShotgunBlastChargeCoroutine");
 			}
-			
-			if (Input.GetButtonUp("P2Fire2") && (Time.realtimeSinceStartup - mShotgunBlastChargeTime) > kShotgunBlastChargeInterval)
-			{
+
+			// Shotgun charge
+			if (Input.GetButtonUp("P2Fire2")) {
+				StopCoroutine("ShotgunBlastChargeCoroutine");
+				StopChargeParticle();
 				FireChargedShotgunBlast();
-                Play(mGunShot2, 1f, 1);
 			}
 		}
-
-		Charging();
 	}
 
 	#region Collision with orbs and pickup powerups
@@ -260,142 +243,117 @@ public class Ship : MonoBehaviour {
 	}
 	#endregion
 
-	#region Charge particle support
-	private void Charging() {
-		if (gameObject.name == "PeriwinkleShip") {
-			if (Input.GetButtonDown("Fire1") || Input.GetButtonDown("Fire2")) {
-				StartCoroutine("ChargeCoroutine");
-			} else if (Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire2")) {
-				StopCharge();
-			}
-		} else if (gameObject.name == "OrangeRedShip") {
-			if (Input.GetButtonDown("P2Fire1") || Input.GetButtonDown("P2Fire2")) {
-				StartCoroutine("ChargeCoroutine");
-			} else if (Input.GetButtonUp("P2Fire1") || Input.GetButtonUp("P2Fire2")) {
-				StopCharge();
-			}
+	#region Wave blast single/charge fire support
+	private void StartWaveBlast() {
+		if (!hasFired) {
+			if (isController == true)
+				fire.FireWaveBlast(transform.up, this.gameObject, powerLevel);
+			else
+				fire.FireWaveBlast(mousedir, this.gameObject, powerLevel);
+			StartCoroutine("WaveBlastStallTime");
 		}
 	}
-	
-	IEnumerator ChargeCoroutine() {
+
+	IEnumerator WaveBlastStallTime() {
+		hasFired = true;
+		yield return new WaitForSeconds(kWaveBlastSpawnInterval);
+		hasFired = false;
+	}
+
+	IEnumerator WaveBlastChargeCoroutine() {
+		if (!isCharging) {
+			yield return new WaitForSeconds(kWaveBlastChargeInterval);
+			isCharging = true;
+			mWaveBlastChargeTime = Time.realtimeSinceStartup;
+			StartCoroutine("ChargeParticleCoroutine");
+		}
+	}
+
+	private void FireChargedWaveBlast() {
+		if (isCharging) {
+			kWaveTotalChargeTime = Time.realtimeSinceStartup - mWaveBlastChargeTime;
+			if (kWaveTotalChargeTime > kWaveMaxChargeTime)
+				kWaveTotalChargeTime = kWaveMaxChargeTime;
+			if (isController == true)
+				fire.FireChargedWaveBlast(transform.up, this.gameObject, powerLevel, kWaveTotalChargeTime);
+			else
+				fire.FireChargedWaveBlast(mousedir, this.gameObject, powerLevel, kWaveTotalChargeTime);
+			isCharging = false;
+			StartCoroutine("WaveBlastStallTime");
+		}
+	}
+	#endregion
+
+	#region Shotgun blast single/charge fire support
+	private void StartShotgunBlast() {
+		if (!hasFired) {
+			fire.FireShotgunBlast(this.gameObject, powerLevel);
+			StartCoroutine("ShotgunBlastStallTime");
+		}
+	}
+
+	IEnumerator ShotgunBlastStallTime() {
+		hasFired = true;
+		yield return new WaitForSeconds(kShotgunBlastSpawnInterval);
+		hasFired = false;
+	}
+
+	IEnumerator ShotgunBlastChargeCoroutine() {
+		if (!isCharging) {
+			yield return new WaitForSeconds(kShotgunBlastChargeInterval);
+			isCharging = true;
+			StartCoroutine("ChargeParticleCoroutine");
+			yield return new WaitForSeconds(kShotgunPowerInterval);
+			kShotgunShots++;
+			kShotgunSpread = -35.0f;
+			yield return new WaitForSeconds(kShotgunPowerInterval);
+			kShotgunShots++;
+			kShotgunSpread = -45.0f;
+			yield return new WaitForSeconds(kShotgunPowerInterval);
+			kShotgunShots++;
+			kShotgunSpread = -70.0f;
+			yield return new WaitForSeconds(kShotgunPowerInterval);
+			kShotgunShots++;
+			kShotgunSpread = -80.0f;
+		}
+	}
+
+	private void FireChargedShotgunBlast() {
+		if (isCharging) {
+			fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel);
+			isCharging = false;
+			StartCoroutine("ShotgunBlastStallTime");
+		}
+		kShotgunShots = kMinShotgunShots;
+		kShotgunSpread = kMinShotgunSpread;
+	}
+	#endregion
+
+	#region Charge PARTICLE support
+	IEnumerator ChargeParticleCoroutine() {
 		Transform theCharge = transform.Find("Charge");
-		
-		yield return new WaitForSeconds(0.4f);
+
 		theCharge.particleSystem.enableEmission = true;
 		theCharge.particleSystem.startSize = 1.5f;
-		yield return new WaitForSeconds(0.1f);
+		yield return new WaitForSeconds(0.2f);
 		theCharge.particleSystem.startSize = 2f;
 		yield return new WaitForSeconds(0.2f);
 		theCharge.particleSystem.startSize = 2.5f;
 		yield return new WaitForSeconds(0.2f);
 		theCharge.particleSystem.startSize = 3f;
-		yield return new WaitForSeconds(0.3f);
+		yield return new WaitForSeconds(0.2f);
 		theCharge.particleSystem.startSize = 3.5f;
 	}
 
-	private void StopCharge() {
+	private void StopChargeParticle() {
 		Transform theCharge = transform.Find("Charge");
-		StopCoroutine("ChargeCoroutine");
+		StopCoroutine("ChargeParticleCoroutine");
 		theCharge.particleSystem.startSize = 1.5f;
 		theCharge.particleSystem.enableEmission = false;
 	}
-
 	#endregion
 
-	public void FireWaveBlast(Vector2 mousedir) {
-		mWaveBlastChargeTime = Time.realtimeSinceStartup;
-		if (((Time.realtimeSinceStartup - mWaveBlastSpawnTime) > kWaveBlastSpawnInterval) &&
-			(Time.realtimeSinceStartup - mShotgunBlastSpawnTime) > mAbsoluteWeaponInterval)
-		{
-			GameObject e = Instantiate(mWaveProjectile) as GameObject;
-			WaveBlastBehavior waveBlast = e.GetComponent<WaveBlastBehavior>();
-			
-			mWaveBlastSpawnTime = Time.realtimeSinceStartup;
-			if (null != waveBlast) {
-				if (powerLevel > 1)
-					waveBlast.SetPowerLevel(powerLevel);
-				e.transform.position = transform.position;
-				waveBlast.SetForwardDirection(mousedir);
-			}
-			Play(mWave, .5f, 1);
-		}
-	}
-
-	public void FireChargedWaveBlast(Vector2 mousedir) {
-		kWaveTotalChargeTime = Time.realtimeSinceStartup - mWaveBlastChargeTime;
-		if (Time.realtimeSinceStartup - mTimeOfLastCharge > .1f) {
-			if (kWaveTotalChargeTime > kWaveMaxChargeTime)
-				kWaveTotalChargeTime = kWaveMaxChargeTime;
-			
-			GameObject e = Instantiate(mWaveProjectile) as GameObject;
-			WaveBlastBehavior waveBlast = e.GetComponent<WaveBlastBehavior>();
-			if (null != waveBlast) {
-				if (powerLevel > 1)
-					waveBlast.SetPowerLevel(powerLevel);
-				waveBlast.mSpeed += (waveBlast.mSpeed * kWaveTotalChargeTime) / 2.0f;
-				waveBlast.mForce += kWaveTotalChargeTime * 20.0f;
-				e.transform.localScale += new Vector3(kWaveTotalChargeTime * 2, kWaveTotalChargeTime * 2, 0.0f);
-				e.transform.position = transform.position;
-				waveBlast.SetForwardDirection(mousedir);
-				Play(mWave, 1f, 1);
-			}
-			mTimeOfLastCharge = Time.realtimeSinceStartup;
-		}
-        Play(mWave, .5f, 1);
-	}
-
-	public void FireShotgunBlast() {
-		mShotgunBlastChargeTime = Time.realtimeSinceStartup;
-		if (((Time.realtimeSinceStartup - mShotgunBlastSpawnTime) > kShotgunBlastSpawnInterval) &&
-		(Time.realtimeSinceStartup - mWaveBlastSpawnTime) > mAbsoluteWeaponInterval) {
-			mShotgunBlastSpawnTime = Time.realtimeSinceStartup;
-			FireShotgun(kShotgunShots, kShotgunSpread);
-            Play(mGunShot1, 1f, 1);
-		}
-	}
-
-	public void FireChargedShotgunBlast() {
-		kShotgunTotalChargeTime = Time.realtimeSinceStartup - mShotgunBlastChargeTime;
-		if (Time.realtimeSinceStartup - mTimeOfLastCharge > .1f) {
-			if (kShotgunTotalChargeTime > kShotgunMaxChargeTime) {
-				FireShotgun(9, -80.0f);
-                Play(mGunShot2, 1f, 1);
-			} else if (kShotgunTotalChargeTime > .9f) {
-				FireShotgun(8, -70.0f);
-                Play(mGunShot2, 1f, 1);
-			} else if (kShotgunTotalChargeTime > .7f) {
-				FireShotgun(7, -80.0f);
-                Play(mGunShot2, 1f, 1);
-			} else if (kShotgunTotalChargeTime > .5f) {
-				FireShotgun(6, -50.0f);
-                Play(mGunShot2, 1f, 1);
-			} else {
-				FireShotgun(5, -40.0f);
-                Play(mGunShot2, 1f, 1);
-			} 
-			mTimeOfLastCharge = Time.realtimeSinceStartup;
-		}
-	}
-
-	// Shotgun firing
-	private void FireShotgun(int shots, float spread) {
-		for (int i = 0; i <= shots; i++) {
-			GameObject e = Instantiate(mShotgunProjectile[i]) as GameObject;
-			ShotgunBlastBehavior shotgunBlast = e.GetComponent<ShotgunBlastBehavior>();
-			
-			if (null != shotgunBlast) {
-				if (powerLevel > 1)
-					shotgunBlast.SetPowerLevel(powerLevel);
-				e.transform.position = transform.position + transform.up * 12f;
-				e.transform.up = transform.up;
-				shotgunBlast.AddShotgunSpeed(rigidbody2D.velocity.magnitude);
-				shotgunBlast.SetForwardDirection(e.transform.up);
-				e.transform.Rotate(Vector3.forward, spread + (i * shots * 2));
-			}
-		}
-	}
-
-    // Audio clip player
+	// Audio clip player
     public void Play(AudioClip clip, float volume, float pitch)
     {
         //Create an empty game object

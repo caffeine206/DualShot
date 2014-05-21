@@ -52,25 +52,28 @@ public class BoundsControl : MonoBehaviour {
 		mWorldBound = new Bounds (Vector3.zero, Vector3.one);
 		UpdateWorldBound ();
 		#endregion	
-			
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.Escape))
-		{
-			Application.LoadLevel(0);
-		}
-		
 		#region Orb Spawner Logic
+		//Disabled for demo.
+		/*
 		if ( Input.GetKeyDown(KeyCode.F2)) { // Manual Spawner
 			SpawnOrbs();
 		}
-		
+		*/
+
 		// Automated spawner. Uses the metrics of time since last spawn and limits the number of orbs on the screen.
 		if ( Time.realtimeSinceStartup - mLastSpawn > mSpawnTime && mCurOrbs < mMaxOrbs ) {
 			SpawnOrbs();
 			mLastSpawn = Time.realtimeSinceStartup;
+			//Added this to increase wave frequency.
+			//mSpawnTime = mSpawnTime - 2f;
+
+			//if (mSpawnTime < 0f) {
+			//	mSpawnTime = 0f;
+			//}
 		}
 		#endregion
 		/*
@@ -94,15 +97,20 @@ public class BoundsControl : MonoBehaviour {
 
 		//mEcho.text = "Total Orbs: " + mCurOrbs + "\ncur < max: " + (mCurOrbs < mMaxOrbs);
 		
-		reset();
+		//reset();
+		
+		//Added
+		Debug.Log("Current Orbs: " + mCurOrbs + " Spawn Time: " + mSpawnTime);
 	}
 
+	/*
 	private void reset() {
 		if (Input.GetKey(KeyCode.Return)) {
 			mCurOrbs = 0;
 		}
 	}
-	
+	*/
+
 	void Awake() {
 		if (null == sTheGameState) { // not here yet
 			CreateGlobalManager();
@@ -252,6 +260,9 @@ public class BoundsControl : MonoBehaviour {
 			float spawnMass = Random.Range (mSpawnMinSize, mSpawnMaxSize);
 			ThrowOrb(spawnPoint, spawnDir, spawnMass);
 		}
+
+		//Added
+		Orbs += mSpawnNum;
 	}
 	
 	private void ThrowOrb(Vector2 pos, Vector2 dir, float mass) {

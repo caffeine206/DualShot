@@ -29,9 +29,7 @@ public class RespawnBehavior : MonoBehaviour {
 	}
 	
 	void Update () {
-		Reset();
-		
-		if (Input.GetKeyDown(KeyCode.Return) && !count.GetIsCounting()) {
+		if (Input.GetKeyDown(KeyCode.Escape) && !count.GetIsCounting()) {
 			Pause();
 		}
 	}
@@ -78,11 +76,13 @@ public class RespawnBehavior : MonoBehaviour {
 	#endregion
 
 	#region Reset the current session
+	/*
 	private void Reset() {
 		if (Input.GetKeyDown(KeyCode.F1)) {
 			Application.LoadLevel(1);
 		}
 	}
+	*/
 	#endregion
 
 	#region Pause the game

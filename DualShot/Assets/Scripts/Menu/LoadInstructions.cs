@@ -29,6 +29,6 @@ public class LoadInstructions : MonoBehaviour {
 
     void OnMouseUp()
     {
-        Application.LoadLevel(5);  // Instructions
+        Application.LoadLevel(6);  // Instructions
     }
 }
