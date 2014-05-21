@@ -57,6 +57,7 @@
      <Compile Include="Assets\Scripts\Level1\ResumeGame.cs" />
      <Compile Include="Assets\Scripts\Level1\VictoryClap.cs" />
      <Compile Include="Assets\Scripts\LoadMenu.cs" />
+     <Compile Include="Assets\Scripts\Menu\ButtonMouseOver.cs" />
      <Compile Include="Assets\Scripts\Menu\LoadControls.cs" />
      <Compile Include="Assets\Scripts\Menu\LoadCredits.cs" />
      <Compile Include="Assets\Scripts\Menu\LoadInstructions.cs" />
@@ -73,6 +74,7 @@
      <Compile Include="Assets\Scripts\Weapons\PowerUpBehavior.cs" />
      <Compile Include="Assets\Scripts\Weapons\ShotgunBlastBehavior.cs" />
      <Compile Include="Assets\Scripts\Weapons\WaveBlastBehavior.cs" />
+     <Compile Include="Assets\ShieldSprite.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -62,6 +62,7 @@ public class Ship : MonoBehaviour {
 	Vector2 mousedir;
 
 	RespawnBehavior respawn;
+	CountdownTimer count;
 
 	void Start () {
 		// Initiate ship death and respawn
@@ -74,10 +75,10 @@ public class Ship : MonoBehaviour {
 		float sizeX = Camera.main.orthographicSize * Camera.main.aspect;
 
 		if (gameObject.name == "OrangeRedShip") {
-			startLocation -= new Vector3(sizeX - 40f, 0f, 0f);
+			startLocation -= new Vector3(sizeX - 50f, 0f, 0f);
 		} 
 		else if (gameObject.name == "PeriwinkleShip") {
-			startLocation += new Vector3(sizeX - 40f, 0f, 0f);
+			startLocation += new Vector3(sizeX - 50f, 0f, 0f);
 		}
 		
 		transform.position = startLocation;
@@ -86,6 +87,7 @@ public class Ship : MonoBehaviour {
         //Play(mBackground, 1f, 1);
 
 		respawn = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
+		count = GameObject.Find("Countdown").GetComponent<CountdownTimer>();
 	}
 	
 	void Update () {
@@ -95,7 +97,7 @@ public class Ship : MonoBehaviour {
 		BoundsControl boundsControl = GameObject.Find("GameManager").GetComponent<BoundsControl>();
 		boundsControl.ClampAtWorldBounds(this.gameObject, this.renderer.bounds);
 		
-		if (isController == false && !respawn.GameIsPaused()) {
+		if (isController == false && !respawn.GameIsPaused() && !count.GetIsCounting()) {
 			// Ship mouse aim
 			mousedir = boundsControl.mMainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
 			mousedir.Normalize();
@@ -134,7 +136,7 @@ public class Ship : MonoBehaviour {
 				FireChargedShotgunBlast();
 			}
 
-		} else if (isController == true && !respawn.GameIsPaused()) {
+		} else if (isController == true && !respawn.GameIsPaused() && !count.GetIsCounting()) {
 			// Player movement
 			Vector2 move = new Vector2(Input.GetAxis("P2Horizontal"), Input.GetAxis("P2Vertical"));
 			rigidbody2D.AddForce(move.normalized * kHeroSpeed);

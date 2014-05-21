@@ -137,6 +137,10 @@ public class OrbBehavior : MonoBehaviour {
 				Destroy(other.gameObject);
                 Play(mHitLow, 1f, 1);
 			}
+			if (other.gameObject.name == "OrangeRedShip" || other.gameObject.name == "PeriwinkleShip" ) {
+				ShieldSprite shield = other.gameObject.GetComponentInChildren<ShieldSprite>();
+				shield.mImpactTime = Time.realtimeSinceStartup;
+			}
 
 			#region Code for orbs colliding and destroying each other
 			/*

@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StartLevel1 : MonoBehaviour {
+public class ButtonMouseOver : MonoBehaviour {
 
-    private AudioClip mHover;
+	private AudioClip mHover;
     private TextMesh tm;
 
 	void Start () {
@@ -15,15 +15,7 @@ public class StartLevel1 : MonoBehaviour {
 	
 	}
 
-    // To highlight button text when mouse is over collider
-    void OnMouseOver()
-    {
-        
-
-    }
-	
 	void OnMouseEnter() {
-        //tm.fontStyle = FontStyle.Bold;
         tm.fontSize = 55;
 		Play(mHover, 0.25f, 1);
 	}
@@ -31,16 +23,9 @@ public class StartLevel1 : MonoBehaviour {
     // To de-highlight button text when mouse is over collider
     void OnMouseExit()
     {
-        //renderer.material.color = Color.white;
-        tm.fontStyle = FontStyle.Normal;
         tm.fontSize = 50;
     }
 
-    void OnMouseUp()
-    {
-        Application.LoadLevel(1);
-    }
-	
 	// Audio clip player
 	public void Play(AudioClip clip, float volume, float pitch) {
 		//Create an empty game object

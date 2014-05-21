@@ -23,7 +23,7 @@ public class LoadMenu : MonoBehaviour {
 	
 	void OnMouseEnter() {
         tm.fontSize = 55;
-		Play(mHover, 1f, 1);
+		Play(mHover, 0.25f, 1);
 	}
 	
     // To de-highlight button text when mouse is over collider

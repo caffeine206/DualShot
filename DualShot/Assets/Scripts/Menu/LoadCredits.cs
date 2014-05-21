@@ -39,7 +39,7 @@ public class LoadCredits : MonoBehaviour
     {
         //tm.fontStyle = FontStyle.Bold;
         tm.fontSize = 55;
-        Play(mHover, 1f, 1);
+        Play(mHover, 0.25f, 1);
     }
 
 
