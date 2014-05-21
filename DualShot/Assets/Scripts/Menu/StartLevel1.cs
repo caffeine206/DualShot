@@ -1,41 +1,46 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ResumeGame : MonoBehaviour {
+public class StartLevel1 : MonoBehaviour {
 
-	RespawnBehavior resume;
     private AudioClip mHover;
     private TextMesh tm;
 
 	void Start () {
-		resume = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
-        mHover = (AudioClip)Resources.Load("Sounds/BaseHit");
+		mHover = (AudioClip)Resources.Load("Sounds/BaseHit");
         tm = GetComponent<TextMesh>();
 	}
 	
 	void Update () {
-		
+	
 	}
 
-	void OnMouseUp() {
-		resume.Pause();
-	}
+    // To highlight button text when mouse is over collider
+    void OnMouseOver()
+    {
+        
 
+    }
+	
 	void OnMouseEnter() {
-        tm.fontSize = 55;   // Changes font size
+        //tm.fontStyle = FontStyle.Bold;
+        tm.fontSize = 55;
 		Play(mHover, 1f, 1);
 	}
-
-	void OnMouseOver() {
-        //renderer.material.color = Color.green;
-    }
-
-	void OnMouseExit()
+	
+    // To de-highlight button text when mouse is over collider
+    void OnMouseExit()
     {
         //renderer.material.color = Color.white;
+        tm.fontStyle = FontStyle.Normal;
         tm.fontSize = 50;
     }
 
+    void OnMouseUp()
+    {
+        Application.LoadLevel(1);
+    }
+	
 	// Audio clip player
 	public void Play(AudioClip clip, float volume, float pitch) {
 		//Create an empty game object

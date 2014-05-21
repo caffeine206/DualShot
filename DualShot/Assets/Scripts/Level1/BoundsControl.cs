@@ -8,8 +8,8 @@ public class BoundsControl : MonoBehaviour {
 	private float mMinSpawnTime = 3f;
 	private int mMaxOrbs = 20;
 	public int mSpawnNum = 6;
-	public int mSpawnMinSize = 1;
-	public int mSpawnMaxSize = 15;
+	public float mSpawnMinSize = 1f;
+	public float mSpawnMaxSize = 15f;
 	public float mSpawnSpread = 20f;
 	public float mSpawnSpeed = 30f;
 	public float mSpawnStagger = 10f;

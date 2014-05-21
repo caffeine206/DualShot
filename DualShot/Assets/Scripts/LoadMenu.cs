@@ -3,10 +3,12 @@ using System.Collections;
 
 public class LoadMenu : MonoBehaviour {
 
-	private AudioClip mBaseHit;
+	private AudioClip mHover;
+    private TextMesh tm;
 
 	void Start () {
-		mBaseHit = (AudioClip)Resources.Load("Sounds/BaseHit");
+		mHover = (AudioClip)Resources.Load("Sounds/BaseHit");
+        tm = GetComponent<TextMesh>();
 	}
 	
 	void Update () {
@@ -16,17 +18,18 @@ public class LoadMenu : MonoBehaviour {
     // To highlight button text when mouse is over collider
     void OnMouseOver()
     {
-        renderer.material.color = Color.green;
+        
     }
 	
 	void OnMouseEnter() {
-		Play(mBaseHit, 1f, 1);
+        tm.fontSize = 55;
+		Play(mHover, 1f, 1);
 	}
 	
     // To de-highlight button text when mouse is over collider
     void OnMouseExit()
     {
-        renderer.material.color = Color.white;
+        tm.fontSize = 50;
     }
 
     void OnMouseUp()

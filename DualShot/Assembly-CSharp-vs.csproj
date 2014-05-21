@@ -62,6 +62,7 @@
      <Compile Include="Assets\Scripts\Menu\LoadInstructions.cs" />
      <Compile Include="Assets\Scripts\Menu\MainMenuMovingStars.cs" />
      <Compile Include="Assets\Scripts\Menu\Quit.cs" />
+     <Compile Include="Assets\Scripts\Menu\StartLevel1.cs" />
      <Compile Include="Assets\Scripts\PlaySound.cs" />
      <Compile Include="Assets\Scripts\Ship\Fire.cs" />
      <Compile Include="Assets\Scripts\Ship\FiringBehavior.cs" />
