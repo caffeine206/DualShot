@@ -69,7 +69,11 @@ public class BoundsControl : MonoBehaviour {
 			SpawnOrbs();
 			mLastSpawn = Time.realtimeSinceStartup;
 			//Added this to increase wave frequency.
-			mSpawnTime = mSpawnTime - 2f;
+			//mSpawnTime = mSpawnTime - 2f;
+
+			//if (mSpawnTime < 0f) {
+			//	mSpawnTime = 0f;
+			//}
 		}
 		#endregion
 		/*
@@ -94,6 +98,9 @@ public class BoundsControl : MonoBehaviour {
 		//mEcho.text = "Total Orbs: " + mCurOrbs + "\ncur < max: " + (mCurOrbs < mMaxOrbs);
 		
 		//reset();
+		
+		//Added
+		Debug.Log("Current Orbs: " + mCurOrbs + " Spawn Time: " + mSpawnTime);
 	}
 
 	/*
@@ -253,6 +260,9 @@ public class BoundsControl : MonoBehaviour {
 			float spawnMass = Random.Range (mSpawnMinSize, mSpawnMaxSize);
 			ThrowOrb(spawnPoint, spawnDir, spawnMass);
 		}
+
+		//Added
+		Orbs += mSpawnNum;
 	}
 	
 	private void ThrowOrb(Vector2 pos, Vector2 dir, float mass) {

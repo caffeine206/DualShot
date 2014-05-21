@@ -15,37 +15,49 @@ public class CountdownTimer : MonoBehaviour {
 		transform.GetComponent<TextMesh>().text = " ";
 		transform.GetComponent<TextMesh>().text = maxCountdown.ToString();
 		lastCount = Time.realtimeSinceStartup;
-		wave = (AudioClip)Resources.Load("Sounds/WaveFire");
+		wave = (AudioClip)Resources.Load("Sounds/DaikoSingle");
 		Play(wave, 1f, 1);
 	}
 
-	void Awake() {
-		
-	}
-	
 	void Update () {
 		Countdown();
 	}
 
 	private void Countdown() {
+		/*
 		if (Time.realtimeSinceStartup >= lastCount + interval && maxCountdown == 0) {
 			isCounting = false;
 			gameObject.SetActive(false);
 		}
-		
+		*/
 		if (Time.realtimeSinceStartup >= lastCount + interval && isCounting) {
 			lastCount = Time.realtimeSinceStartup;
 			maxCountdown--;
 			
-			if (maxCountdown != 0) {
+			if (maxCountdown == 2) {
+				wave = Resources.Load("Sounds/DaikoSingleLoud") as AudioClip;
+				Play(wave, 1f, 1);
+				transform.GetComponent<TextMesh>().text = maxCountdown.ToString();
+			} else if (maxCountdown == 1) {
+				wave = Resources.Load("Sounds/DaikoSingle") as AudioClip;
 				Play(wave, 1f, 1);
 				transform.GetComponent<TextMesh>().text = maxCountdown.ToString();
 			} else if (maxCountdown == 0) {
+				wave = Resources.Load("Sounds/DaikoDrumRoll") as AudioClip;
 				Play(wave, 1f, 1);
 				transform.GetComponent<TextMesh>().text = "Go!";
 				Time.timeScale = 1f;
+				StartCoroutine("BackgroundMusic");
 			}
 		}
+	}
+
+	IEnumerator BackgroundMusic() {
+		yield return new WaitForSeconds(1f);
+		wave = Resources.Load("Sounds/DualShotGameplay") as AudioClip;
+		Play(wave, 1f, 1);
+		isCounting = false;
+		gameObject.SetActive(false);
 	}
 
 	public bool GetIsCounting() {

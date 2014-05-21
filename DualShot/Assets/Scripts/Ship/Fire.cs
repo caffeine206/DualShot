@@ -24,7 +24,7 @@ public class Fire : MonoBehaviour {
         // Audio Files setup
         mGunShot1 = (AudioClip)Resources.Load("Sounds/shotgun");
         mGunShot2 = (AudioClip)Resources.Load("Sounds/shotgun2");
-        mWave = (AudioClip)Resources.Load("Sounds/WaveFire");
+        mWave = (AudioClip)Resources.Load("Sounds/WaveBlaster");
 
 		// Initiate weapons
 		if (null == mWaveProjectile) {
@@ -55,7 +55,7 @@ public class Fire : MonoBehaviour {
 			e.transform.position = ship.transform.position;
 			waveBlast.SetForwardDirection(mousedir);
 		}
-		Play(mWave, .5f, 1);
+		Play(mWave, 1f, 1);
 	}
 	
 	public void FireChargedWaveBlast(Vector2 mousedir, GameObject ship, int powerLevel, float kWaveTotalChargeTime) {

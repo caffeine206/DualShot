@@ -87,7 +87,6 @@ public class OrbBehavior : MonoBehaviour {
 		} else {
 			Destroy(this.gameObject);
 			mWorld.Orbs--;
-
 		}
 	}
 	
@@ -113,6 +112,7 @@ public class OrbBehavior : MonoBehaviour {
 			e.transform.up = rigidbody2D.velocity.normalized;
 			
 			e.transform.localScale = Vector2.one * newMass;
+			mWorld.Orbs++;
 		}
 		
 
@@ -127,7 +127,7 @@ public class OrbBehavior : MonoBehaviour {
 		//ex.transform.position = transform.position;
 
 		Destroy(this.gameObject);
-		mWorld.Orbs--;
+		//mWorld.Orbs--;
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
@@ -136,6 +136,8 @@ public class OrbBehavior : MonoBehaviour {
 				health -= 50.0f;
 				Destroy(other.gameObject);
                 Play(mHitLow, 1f, 1);
+				//Added
+				mWorld.Orbs--;
 			}
 
 			#region Code for orbs colliding and destroying each other

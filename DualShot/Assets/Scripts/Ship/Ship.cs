@@ -82,8 +82,8 @@ public class Ship : MonoBehaviour {
 		
 		transform.position = startLocation;
 		
-        mBackground = (AudioClip)Resources.Load("Sounds/DeepSpace");
-        Play(mBackground, 1f, 1);
+        mBackground = (AudioClip)Resources.Load("Sounds/DualShotGameplay");
+        //Play(mBackground, 1f, 1);
 
 		respawn = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
 	}
