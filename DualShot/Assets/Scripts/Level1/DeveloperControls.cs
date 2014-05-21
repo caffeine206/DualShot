@@ -45,7 +45,7 @@ public class DeveloperControls : MonoBehaviour {
 		status.text = 
 			"Periwinkle health: " + periwinkle.GetCurrentHealth()
 			+ "\nOrangeRed health: " + orangeRed.GetCurrentHealth()
-			+ "\nPeriwinkle city health: " + blueCity.currentHealth
+			+ "\nPeriwinkle city health: " + blueCity.currentHealth / 20f
 			+ "\nOrangeRed city health: " + orangeCity.currentHealth
 			+ "\nShip Invincibility: " + shipsInvulnerable
 			+ "\nCity Invincibility: " + citiesInvulnerable;

@@ -46,34 +46,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-     <Compile Include="Assets\Scripts\BaseSpriteManager.cs" />
-     <Compile Include="Assets\Scripts\Level1\BaseBehavior.cs" />
-     <Compile Include="Assets\Scripts\Level1\BoundsControl.cs" />
-     <Compile Include="Assets\Scripts\Level1\GlobalBehavior.cs" />
-     <Compile Include="Assets\Scripts\Level1\OrbBehavior.cs" />
-     <Compile Include="Assets\Scripts\Level1\PowerUpBehavior.cs" />
-     <Compile Include="Assets\Scripts\LoadControls.cs" />
-     <Compile Include="Assets\Scripts\LoadCredits.cs" />
-     <Compile Include="Assets\Scripts\LoadInstructions.cs" />
-     <Compile Include="Assets\Scripts\LoadMenu.cs" />
-     <Compile Include="Assets\Scripts\PlaySound.cs" />
-     <Compile Include="Assets\Scripts\Quit.cs" />
-     <Compile Include="Assets\Scripts\Ship\DestroyExplosion.cs" />
-     <Compile Include="Assets\Scripts\Ship\DeveloperControls.cs" />
-     <Compile Include="Assets\Scripts\Ship\FiringBehavior.cs" />
-     <Compile Include="Assets\Scripts\Ship\JoyStickControl.cs" />
-     <Compile Include="Assets\Scripts\Ship\KeyboardControl.cs" />
-     <Compile Include="Assets\Scripts\Ship\RespawnBehavior.cs" />
-     <Compile Include="Assets\Scripts\Ship\RespawnShip.cs" />
-     <Compile Include="Assets\Scripts\Ship\Ship.cs" />
-     <Compile Include="Assets\Scripts\Ship\ShotgunBlastBehavior.cs" />
-     <Compile Include="Assets\Scripts\Ship\WaveBlastBehavior.cs" />
-     <Compile Include="Assets\Scripts\ShipSprites.cs" />
-     <Compile Include="Assets\Scripts\StartLevel1.cs" />
-     <Compile Include="Assets\Scripts\VictoryClap.cs" />
-=======
      <Compile Include="Assets\Scripts\Base\BaseBehavior.cs" />
+     <Compile Include="Assets\Scripts\Base\BaseSpriteManager.cs" />
      <Compile Include="Assets\Scripts\DestroyExplosion.cs" />
      <Compile Include="Assets\Scripts\Level1\BoundsControl.cs" />
      <Compile Include="Assets\Scripts\Level1\CountdownTimer.cs" />
@@ -88,16 +62,15 @@
      <Compile Include="Assets\Scripts\Menu\LoadInstructions.cs" />
      <Compile Include="Assets\Scripts\Menu\MainMenuMovingStars.cs" />
      <Compile Include="Assets\Scripts\Menu\Quit.cs" />
-     <Compile Include="Assets\Scripts\Menu\StartLevel1.cs" />
      <Compile Include="Assets\Scripts\PlaySound.cs" />
      <Compile Include="Assets\Scripts\Ship\FiringBehavior.cs" />
      <Compile Include="Assets\Scripts\Ship\RespawnBehavior.cs" />
      <Compile Include="Assets\Scripts\Ship\Ship.cs" />
+     <Compile Include="Assets\Scripts\ShipSprites.cs" />
      <Compile Include="Assets\Scripts\TextMeshFixer.cs" />
      <Compile Include="Assets\Scripts\Weapons\PowerUpBehavior.cs" />
      <Compile Include="Assets\Scripts\Weapons\ShotgunBlastBehavior.cs" />
      <Compile Include="Assets\Scripts\Weapons\WaveBlastBehavior.cs" />
->>>>>>> 924f4c2773d84eb83eed5743f7ad35724cc108af
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

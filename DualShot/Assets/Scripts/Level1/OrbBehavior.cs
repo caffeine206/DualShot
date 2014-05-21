@@ -150,17 +150,7 @@ public class OrbBehavior : MonoBehaviour {
 			collider2D.isTrigger = false;
 		}
 	}
-<<<<<<< HEAD:DualShot/Assets/Scripts/Mode1/OrbBehavior.cs
 
-	private void DestroyAllOrbs() {
-		if (Input.GetKeyDown(KeyCode.Return)) {
-			Destroy(this.gameObject);
-		}
-	}
-
-=======
-	
->>>>>>> 8903bcb7502521a2d25e8606cb55457b7fb4e110:DualShot/Assets/Scripts/Level1/OrbBehavior.cs
     // Audio clip player
     public void Play(AudioClip clip, float volume, float pitch)
     {

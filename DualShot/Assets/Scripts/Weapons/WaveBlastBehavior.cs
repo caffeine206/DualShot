@@ -7,14 +7,41 @@ public class WaveBlastBehavior : MonoBehaviour {
 	public float mForce = 70f;
 	private float kWaveLife = 1.0f;
 	private float kWaveSpawnTime;
+	private int mCurSrite = 0;
+	
+	private BaseSpriteManager mSpriteManager = null;
 
 	void Start()
 	{
 		kWaveSpawnTime = Time.realtimeSinceStartup;
+		
+		if ( mSpriteManager == null ) {
+			mSpriteManager = GetComponent<BaseSpriteManager>();
+		}
 	}
 
 	// Update is called once per frame
 	void Update () {
+		float percentLife = 1 - ((Time.realtimeSinceStartup - kWaveSpawnTime) / kWaveLife);
+		
+		Debug.Log (percentLife);
+		if (percentLife < 0.95f && mCurSrite == 0) {
+			mSpriteManager.nextSprite();
+			mCurSrite++;
+		} else if (percentLife < 0.90f && mCurSrite == 1) {
+			mSpriteManager.nextSprite();
+			mCurSrite++;
+		} else if (percentLife < 0.8f && mCurSrite == 2) {
+			mSpriteManager.nextSprite();
+			mCurSrite++;
+		} else if (percentLife < 0.2f && mCurSrite == 3) {
+			mSpriteManager.nextSprite();
+			mCurSrite++;
+		} else if (percentLife < 0.1f && mCurSrite == 4) {
+			mSpriteManager.nextSprite();
+			mCurSrite++;
+		}
+	
 		if ((Time.realtimeSinceStartup - kWaveSpawnTime) > kWaveLife) {
 			Destroy(this.gameObject);
 		}
@@ -39,10 +66,7 @@ public class WaveBlastBehavior : MonoBehaviour {
 			/*Vector2 dir = other.transform.position - transform.position;
 			dir.Normalize();*/
 			other.rigidbody2D.AddForce(mSpeed * transform.up * mForce);
-<<<<<<< HEAD
-=======
 			//other.gameObject.rigidbody2D.AddForce(mSpeed * transform.up * mForce);
->>>>>>> 8903bcb7502521a2d25e8606cb55457b7fb4e110
 		}
 	}
 
@@ -50,6 +74,7 @@ public class WaveBlastBehavior : MonoBehaviour {
 		float increase = level * 1.0f;
 		kWaveLife += increase / 8.0f;
 		mForce += 20.0f;
-		transform.localScale += new Vector3 (increase * 3.0f, increase * 3.0f, 0.0f);
+		transform.localScale *= 1f + (0.25f * increase);
+//		transform.localScale += new Vector3 (increase * 1.25f, increase * 1.25f, 0.0f);
 	}
 }

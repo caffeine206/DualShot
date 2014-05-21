@@ -62,8 +62,8 @@ public class BaseBehavior : MonoBehaviour {
 	}
 	
 	void Update () {
-		
-		if ( currentHealth / HEALTH > (1 / numSprites - 1) * spriteMan.getSpriteNum())
+		int spritePer = spriteMan.getSpriteNum();
+		if ( currentHealth / HEALTH < 1 - ((float)spriteMan.getSpriteNum() / ((float)numSprites - 1)) && spriteMan.getSpriteNum() < numSprites - 2)
 		{
 			spriteMan.nextSprite();
 		}
@@ -160,19 +160,4 @@ public class BaseBehavior : MonoBehaviour {
 	public void Suicide() {
 		currentHealth = 0f;
 	}
-
-    // Audio clip player
-    public void Play(AudioClip clip, float volume, float pitch)
-    {
-        //Create an empty game object
-        GameObject go = new GameObject("Audio: " + clip.name);
-
-        //Create the source
-        AudioSource source = go.AddComponent<AudioSource>();
-        source.clip = clip;
-        source.volume = volume;
-        source.pitch = pitch;
-        source.Play();
-        Destroy(go, clip.length);
-    }
 }

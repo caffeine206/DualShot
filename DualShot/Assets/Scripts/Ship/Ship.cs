@@ -104,6 +104,8 @@ public class Ship : MonoBehaviour {
 	}
 	
 	void Update () {
+		if (Input.GetKeyDown(KeyCode.Z))
+			powerLevel++;
 		DieCheck(); // Check if ship is dead
 		BoundsControl boundsControl = GameObject.Find("GameManager").GetComponent<BoundsControl>();
 		boundsControl.ClampAtWorldBounds(this.gameObject, this.renderer.bounds);
