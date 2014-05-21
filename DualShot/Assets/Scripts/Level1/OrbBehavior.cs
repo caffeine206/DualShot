@@ -51,7 +51,7 @@ public class OrbBehavior : MonoBehaviour {
 		float mass = rigidbody2D.mass;
 		float diameter = Mathf.Sqrt(mass) * kScale;
 		transform.localScale = new Vector3(diameter, diameter);
-			mWorld.Orbs++;
+		mWorld.Orbs++;
 			
 		
 		mInvul = true;
@@ -112,7 +112,6 @@ public class OrbBehavior : MonoBehaviour {
 			e.transform.up = rigidbody2D.velocity.normalized;
 			
 			e.transform.localScale = Vector2.one * newMass;
-			mWorld.Orbs++;
 		}
 		
 
@@ -125,9 +124,10 @@ public class OrbBehavior : MonoBehaviour {
 		//Orb explosion
 		//GameObject ex = Instantiate(explosion) as GameObject;
 		//ex.transform.position = transform.position;
-
+		
+		mWorld.Orbs--;
 		Destroy(this.gameObject);
-		//mWorld.Orbs--;
+		
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
@@ -136,8 +136,6 @@ public class OrbBehavior : MonoBehaviour {
 				health -= 50.0f;
 				Destroy(other.gameObject);
                 Play(mHitLow, 1f, 1);
-				//Added
-				mWorld.Orbs--;
 			}
 
 			#region Code for orbs colliding and destroying each other

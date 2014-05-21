@@ -31,7 +31,7 @@ public class BaseBehavior : MonoBehaviour {
 
 		spriteMan.mCurrentSpriteAction = BaseAnimation;
 	
-		float sizeX = mCamera.orthographicSize * mCamera.aspect;
+		float sizeX = (mCamera.orthographicSize * mCamera.aspect) * 0.98f;
 
 		if ( gameObject.name == "OrangeCity") {
 			transform.position -= new Vector3(sizeX, 0);

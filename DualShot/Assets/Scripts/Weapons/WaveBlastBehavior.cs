@@ -24,7 +24,7 @@ public class WaveBlastBehavior : MonoBehaviour {
 	void Update () {
 		float percentLife = 1 - ((Time.realtimeSinceStartup - kWaveSpawnTime) / kWaveLife);
 		
-		Debug.Log (percentLife);
+//		Debug.Log (percentLife);
 		if (percentLife < 0.95f && mCurSrite == 0) {
 			mSpriteManager.nextSprite();
 			mCurSrite++;

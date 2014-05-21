@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class BoundsControl : MonoBehaviour {
 
 	// Vars for Asteroid Spawning
-	public float mSpawnTime = 15f;
-	public int mMaxOrbs = 25;
+	private float mSpawnTime = 10f;
+	private float mMinSpawnTime = 3f;
+	private int mMaxOrbs = 20;
 	public int mSpawnNum = 6;
 	public int mSpawnMinSize = 1;
 	public int mSpawnMaxSize = 15;
@@ -13,13 +14,18 @@ public class BoundsControl : MonoBehaviour {
 	public float mSpawnSpeed = 30f;
 	public float mSpawnStagger = 10f;
 	
+	private float mRampInterval = 15f;
+	private float mlastRamp;
+	private float mTimeInterval = 0.25f;
+	private float mMassInterval = 5f;
+	
 	public GameObject mOrb = null;
 	//public GUIText mEcho = null;
-	protected float mMass = 1;
+	protected float mMass = 1f;
 	protected float mVelocity = 50f;
 	
 	protected int mCurOrbs;
-	protected float mLastSpawn = 0; // The last time that orbs were spawned
+	protected float mLastSpawn = 0f; // The last time that orbs were spawned
 
 
 	#region World Bound support
@@ -35,12 +41,17 @@ public class BoundsControl : MonoBehaviour {
 	
 	// Global Manager
     protected static GlobalBehavior sTheGameState = null;
+    private RespawnBehavior pause = null;
 	
 	// Use this for initialization
 	void Start () {
 		if (mOrb == null) {
 			mOrb = (GameObject) Resources.Load ("Prefabs/Orb");                
 		}
+		if (pause == null) {
+			pause = GetComponent<RespawnBehavior>();
+		}
+		mlastRamp = Time.realtimeSinceStartup;
 		/*
 		if (mEcho == null) {
 			mEcho = GameObject.Find ("GUI Text").GetComponent<GUIText>();
@@ -52,6 +63,8 @@ public class BoundsControl : MonoBehaviour {
 		mWorldBound = new Bounds (Vector3.zero, Vector3.one);
 		UpdateWorldBound ();
 		#endregion	
+		
+		SpawnOrbs();
 	}
 	
 	// Update is called once per frame
@@ -65,7 +78,16 @@ public class BoundsControl : MonoBehaviour {
 		*/
 
 		// Automated spawner. Uses the metrics of time since last spawn and limits the number of orbs on the screen.
-		if ( Time.realtimeSinceStartup - mLastSpawn > mSpawnTime && mCurOrbs < mMaxOrbs ) {
+		 
+		if ( Time.realtimeSinceStartup - mlastRamp > mRampInterval ) {
+			mlastRamp = Time.realtimeSinceStartup;
+			/*if ( mSpawnTime > mMinSpawnTime ) { 
+				mSpawnTime -= mTimeInterval;
+				}*/
+			mSpawnMinSize += mMassInterval;
+		}
+		
+		if ( Time.realtimeSinceStartup - mLastSpawn > mSpawnTime && mCurOrbs < mMaxOrbs && !pause.GameIsPaused() ) {
 			SpawnOrbs();
 			mLastSpawn = Time.realtimeSinceStartup;
 			//Added this to increase wave frequency.
@@ -262,7 +284,6 @@ public class BoundsControl : MonoBehaviour {
 		}
 
 		//Added
-		Orbs += mSpawnNum;
 	}
 	
 	private void ThrowOrb(Vector2 pos, Vector2 dir, float mass) {
