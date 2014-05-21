@@ -67,9 +67,6 @@ public class Ship : MonoBehaviour {
 		// Initiate ship death and respawn
 		if (explosion == null) {
 			explosion = Resources.Load("Prefabs/SmallExplosionParticle") as GameObject;
-
-            //mShipHit = (AudioClip)Resources.Load("Sounds/ShipHit");
-            //mShipDead = (AudioClip)Resources.Load("Sounds/ShipDead");
 		}
 
 		fire = GetComponent<Fire>();
@@ -86,14 +83,14 @@ public class Ship : MonoBehaviour {
 		transform.position = startLocation;
 		
         mBackground = (AudioClip)Resources.Load("Sounds/DeepSpace");
-        //playme.Play(mBackground, 1f, 1);
         Play(mBackground, 1f, 1);
 
 		respawn = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
 	}
 	
 	void Update () {
-		DieCheck(); // Check if ship is dead
+		//No longer necessary. Maybe.
+		//DieCheck(); // Check if ship is dead
 		BoundsControl boundsControl = GameObject.Find("GameManager").GetComponent<BoundsControl>();
 		boundsControl.ClampAtWorldBounds(this.gameObject, this.renderer.bounds);
 		
@@ -110,27 +107,27 @@ public class Ship : MonoBehaviour {
 			}
 
 			// Wave Blast single click
-			if (Input.GetMouseButtonDown(0)) {
+			if (Input.GetButtonDown("Fire1")) {
 				StartWaveBlast();
 				StartCoroutine("WaveBlastChargeCoroutine");
 				mWaveBlastChargeTime = Time.realtimeSinceStartup;
 			}
 
 			// Wave Blast Charge fire
-			if (Input.GetMouseButtonUp(0)) {
+			if (Input.GetButtonUp("Fire1")) {
 				StopCoroutine("WaveBlastChargeCoroutine");
 				StopChargeParticle();
 				FireChargedWaveBlast();
 			}
 
 			// Shotgun Blast single click
-			if (Input.GetMouseButtonDown(1)) {
+			if (Input.GetButtonDown("Fire2")) {
 				StartShotgunBlast();
 				StartCoroutine("ShotgunBlastChargeCoroutine");
 			}
 
 			// Shotgun Blast charge control
-			if (Input.GetMouseButtonUp(1)) {
+			if (Input.GetButtonUp("Fire2")) {
 				StopCoroutine("ShotgunBlastChargeCoroutine");
 				StopChargeParticle();
 				FireChargedShotgunBlast();
@@ -245,6 +242,7 @@ public class Ship : MonoBehaviour {
 	}
 	#endregion
 
+	#region Wave blast single/charge fire support
 	private void StartWaveBlast() {
 		if (!hasFired) {
 			if (isController == true)
@@ -283,7 +281,9 @@ public class Ship : MonoBehaviour {
 			StartCoroutine("WaveBlastStallTime");
 		}
 	}
+	#endregion
 
+	#region Shotgun blast single/charge fire support
 	private void StartShotgunBlast() {
 		if (!hasFired) {
 			fire.FireShotgunBlast(this.gameObject, powerLevel);
@@ -326,19 +326,21 @@ public class Ship : MonoBehaviour {
 		kShotgunShots = kMinShotgunShots;
 		kShotgunSpread = kMinShotgunSpread;
 	}
-	
+	#endregion
+
+	#region Charge PARTICLE support
 	IEnumerator ChargeParticleCoroutine() {
 		Transform theCharge = transform.Find("Charge");
 
 		theCharge.particleSystem.enableEmission = true;
 		theCharge.particleSystem.startSize = 1.5f;
-		yield return new WaitForSeconds(0.1f);
+		yield return new WaitForSeconds(0.2f);
 		theCharge.particleSystem.startSize = 2f;
 		yield return new WaitForSeconds(0.2f);
 		theCharge.particleSystem.startSize = 2.5f;
 		yield return new WaitForSeconds(0.2f);
 		theCharge.particleSystem.startSize = 3f;
-		yield return new WaitForSeconds(0.3f);
+		yield return new WaitForSeconds(0.2f);
 		theCharge.particleSystem.startSize = 3.5f;
 	}
 
@@ -348,8 +350,9 @@ public class Ship : MonoBehaviour {
 		theCharge.particleSystem.startSize = 1.5f;
 		theCharge.particleSystem.enableEmission = false;
 	}
+	#endregion
 
-    // Audio clip player
+	// Audio clip player
     public void Play(AudioClip clip, float volume, float pitch)
     {
         //Create an empty game object

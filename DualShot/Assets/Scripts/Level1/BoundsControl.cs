@@ -52,20 +52,24 @@ public class BoundsControl : MonoBehaviour {
 		mWorldBound = new Bounds (Vector3.zero, Vector3.one);
 		UpdateWorldBound ();
 		#endregion	
-			
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		#region Orb Spawner Logic
+		//Disabled for demo.
+		/*
 		if ( Input.GetKeyDown(KeyCode.F2)) { // Manual Spawner
 			SpawnOrbs();
 		}
-		
+		*/
+
 		// Automated spawner. Uses the metrics of time since last spawn and limits the number of orbs on the screen.
 		if ( Time.realtimeSinceStartup - mLastSpawn > mSpawnTime && mCurOrbs < mMaxOrbs ) {
 			SpawnOrbs();
 			mLastSpawn = Time.realtimeSinceStartup;
+			//Added this to increase wave frequency.
+			mSpawnTime = mSpawnTime - 2f;
 		}
 		#endregion
 		/*
@@ -89,15 +93,17 @@ public class BoundsControl : MonoBehaviour {
 
 		//mEcho.text = "Total Orbs: " + mCurOrbs + "\ncur < max: " + (mCurOrbs < mMaxOrbs);
 		
-		reset();
+		//reset();
 	}
 
+	/*
 	private void reset() {
 		if (Input.GetKey(KeyCode.Return)) {
 			mCurOrbs = 0;
 		}
 	}
-	
+	*/
+
 	void Awake() {
 		if (null == sTheGameState) { // not here yet
 			CreateGlobalManager();
