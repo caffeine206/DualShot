@@ -38,6 +38,8 @@ public class StartLevel1 : MonoBehaviour {
 
     void OnMouseUp()
     {
+    	//GlobalBehavior glob = GameObject.Find ("GameStateManager").GetComponent<GlobalBehavior>();
+    	//glob.SetCurrentLevel("Dual Level");
         Application.LoadLevel(1);
     }
 	

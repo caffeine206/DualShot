@@ -3,8 +3,9 @@ using System.Collections;
 
 public class BoundsControl : MonoBehaviour {
 
+	#region Asteroid Spawner
 	// Vars for Asteroid Spawning
-	private float mSpawnTime = 10f;
+	private float mSpawnTime = 12f;
 	private float mMinSpawnTime = 3f;
 	private int mMaxOrbs = 20;
 	public int mSpawnNum = 6;
@@ -26,7 +27,7 @@ public class BoundsControl : MonoBehaviour {
 	
 	protected int mCurOrbs;
 	protected float mLastSpawn = 0f; // The last time that orbs were spawned
-
+	#endregion
 
 	#region World Bound support
 	// Top, Bot, Left, and Right are built to provide
@@ -45,6 +46,7 @@ public class BoundsControl : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+	//sTheGameState.
 		if (mOrb == null) {
 			mOrb = (GameObject) Resources.Load ("Prefabs/Orb");                
 		}
@@ -254,6 +256,14 @@ public class BoundsControl : MonoBehaviour {
 			CreateGlobalManager();
 			return sTheGameState;
 		} }
+	public void blueWin() {
+		sTheGameState.BlueWins++;
+		sTheGameState.RoundNum++;
+	}
+	public void orangeWin() {
+		sTheGameState.OrangeWins++;
+		sTheGameState.RoundNum++;
+	}
 	
 	#endregion
 

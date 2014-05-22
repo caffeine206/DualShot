@@ -64,8 +64,8 @@ public class Fire : MonoBehaviour {
 		if (null != waveBlast) {
 			if (powerLevel > 1)
 				waveBlast.SetPowerLevel(powerLevel);
-			waveBlast.mSpeed += (waveBlast.mSpeed * kWaveTotalChargeTime) / 2.0f;
-			waveBlast.mForce += kWaveTotalChargeTime * 20.0f;
+			waveBlast.mSpeed += (waveBlast.mSpeed * kWaveTotalChargeTime) / 3.0f;
+			waveBlast.mForce += kWaveTotalChargeTime * 15.0f;
 			e.transform.localScale += new Vector3(kWaveTotalChargeTime * 2, kWaveTotalChargeTime * 2, 0.0f);
 			e.transform.position = ship.transform.position;
 			waveBlast.SetForwardDirection(mousedir);

@@ -11,8 +11,15 @@ public class DeveloperControls : MonoBehaviour {
 	private GUIText controls;
 	private bool shipsInvulnerable = true;
 	private bool citiesInvulnerable = false;
+	private GlobalBehavior global = null;
 
 	void Start () {
+		
+		if ( global == null) {
+			global = GameObject.Find("GlobalStateManager").GetComponent<GlobalBehavior>();
+			global.PrintCurrentLevel();
+		}
+	
 		periwinkle = GameObject.Find("PeriwinkleShip").GetComponent<Ship>();
 		orangeRed = GameObject.Find("OrangeRedShip").GetComponent<Ship>();
 		blueCity = GameObject.Find("BlueCity").GetComponent<BaseBehavior>();
@@ -43,8 +50,8 @@ public class DeveloperControls : MonoBehaviour {
 
 	private void UpdateStatus() {
 		status.text = 
-			"Periwinkle health: " + periwinkle.GetCurrentHealth()
-			+ "\nOrangeRed health: " + orangeRed.GetCurrentHealth()
+			"Periwinkle wins: " + global.BlueWins
+			+ "\nOrangeRed wins: " + global.OrangeWins
 			+ "\nShip Invincibility: " + shipsInvulnerable
 			+ "\nCity Invincibility: " + citiesInvulnerable;
 	}

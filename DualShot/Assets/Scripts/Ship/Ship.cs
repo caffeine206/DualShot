@@ -143,7 +143,7 @@ public class Ship : MonoBehaviour {
 			
 			// Right Stick Aim
 			transform.up += new Vector3(Input.GetAxis("P2RHorz"), Input.GetAxis("P2RVert"), 0);			
-
+			
 			// Wave blast single click
 			if (Input.GetButtonDown("P2Fire1")) {
 				StartWaveBlast();

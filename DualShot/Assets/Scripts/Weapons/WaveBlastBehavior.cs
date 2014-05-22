@@ -3,9 +3,9 @@ using System.Collections;
 
 public class WaveBlastBehavior : MonoBehaviour {
 	
-	public float mSpeed = 100f;
+	public float mSpeed = 200f;
 	public float mForce = 70f;
-	private float kWaveLife = 1.0f;
+	private float kWaveLife = 0.33f;
 	private float kWaveSpawnTime;
 	private int mCurSrite = 0;
 	
@@ -50,7 +50,7 @@ public class WaveBlastBehavior : MonoBehaviour {
 		BoundsControl boundsControl = GameObject.Find ("GameManager").GetComponent<BoundsControl>();
 		BoundsControl.WorldBoundStatus status =
             boundsControl.ObjectCollideWorldBound(GetComponent<Renderer>().bounds);
-		if (status != BoundsControl.WorldBoundStatus.Inside) {
+		if (status == BoundsControl.WorldBoundStatus.Outside) {
 			Destroy(this.gameObject);
 		}
 	}
@@ -77,4 +77,5 @@ public class WaveBlastBehavior : MonoBehaviour {
 		transform.localScale *= 1f + (0.25f * increase);
 //		transform.localScale += new Vector3 (increase * 1.25f, increase * 1.25f, 0.0f);
 	}
+	
 }
