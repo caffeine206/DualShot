@@ -19,19 +19,21 @@ public class OrbBehavior : MonoBehaviour {
 	#region PrivateVar
 	// Use this for initialization
 	private GameObject mObject = null; // The prefab of this object.
-	private BoundsControl mWorld = null;
+	private WorldBehavior mWorld = null;
 	private GameObject mPowerUp = null;
-	private GameObject explosion = null;
+	//private GameObject explosion = null;
 	
 	private float mSpawnTime;
 	private bool mInvul;
+	
+	
 
     private PlaySound playme;       // For initiation of playing sounds
-    private AudioClip mHit;
+    //private AudioClip mHit;
     private AudioClip mHitLow;
-    private AudioClip mHitLowMid;
+    /*private AudioClip mHitLowMid;
     private AudioClip mHitMid;
-    private AudioClip mHitMidHigh;
+    private AudioClip mHitMidHigh;*/
 	
 	#endregion
 
@@ -41,7 +43,7 @@ public class OrbBehavior : MonoBehaviour {
 			mObject = (GameObject) Resources.Load ("Prefabs/Orb");
 		}
 		if (mWorld == null) {
-			mWorld = GameObject.Find("GameManager").GetComponent<BoundsControl>();
+			mWorld = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
 		}
 		if (mPowerUp == null) {
 			mPowerUp = (GameObject) Resources.Load ("Prefabs/PowerUp");
@@ -58,13 +60,13 @@ public class OrbBehavior : MonoBehaviour {
 		mSpawnTime = Time.realtimeSinceStartup;
 
         // Orb collide sounds
-        mHit = (AudioClip)Resources.Load("Sounds/OrbCollide");                  // Orb colliding sound (original)
+        //mHit = (AudioClip)Resources.Load("Sounds/OrbCollide");                  // Orb colliding sound (original)
         mHitLow = (AudioClip)Resources.Load("Sounds/energy orb low");           // Orb colliding sound (Low)
-        mHitLowMid = (AudioClip)Resources.Load("Sounds/energy orb low mid");    // Orb colliding sound (Low-Mid)
+        /*mHitLowMid = (AudioClip)Resources.Load("Sounds/energy orb low mid");    // Orb colliding sound (Low-Mid)
         mHitMid = (AudioClip)Resources.Load("Sounds/energy orb mid");           // Orb colliding sound (Mid)
         mHitMidHigh = (AudioClip)Resources.Load("Sounds/energy orb mid high");  // Orb colliding sound (Mid-High)
 
-		explosion = Resources.Load("Prefabs/OrbExplosion") as GameObject;
+		explosion = Resources.Load("Prefabs/OrbExplosion") as GameObject;*/
 	}
 	
 	// Update is called once per frame

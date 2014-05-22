@@ -118,8 +118,6 @@ public class BaseSpriteManager : MonoBehaviour {
 			Rect totalTexResolution = mMyRenderer.sprite.textureRect;
 			
 			// this is the padded sprite element sizes
-			int elmWidthWithBlank = (int)(totalTexResolution.width / mColumnInSheet);
-			int elmHeightWithBlank = (int)(totalTexResolution.height / mRowInSheet);
 			
 			Rect spriteRect = new Rect();
 			spriteRect.x = 0;

@@ -6,7 +6,7 @@ public class GlobalBehavior : MonoBehaviour {
 	private string mCurrentLevel = "MenuLevel";
 	private int mOrWins = 0, // OrangeWins
 				mBlWins = 0, // BlueWins
-				mRounds = 0,	// Rounds total
+				mBestOf = 3,	// Rounds total
 				mRoundNum = 1;	// Cur Round starting at one
 
     public int DeadBase = 0; // For deciding which base is destroyed
@@ -18,7 +18,6 @@ public class GlobalBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
 	}
 
 	public void SetCurrentLevel(string level){
@@ -36,9 +35,9 @@ public class GlobalBehavior : MonoBehaviour {
 		get { return mBlWins; }
 		set { mBlWins = value; }
 	}
-	public int Rounds {
-		get { return mRounds; }
-		set { mRounds = value; }
+	public int BestOf {
+		get { return mBestOf; }
+		set { mBestOf = value; }
 	}
 	public int RoundNum {
 		get { return mRoundNum; }

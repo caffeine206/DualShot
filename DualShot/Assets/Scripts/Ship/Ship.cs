@@ -4,6 +4,7 @@ using System.Collections;
 public class Ship : MonoBehaviour {
 
 	//Keeps track of the max health of a player.
+	public string controller;
 	private const float HEALTH = 20f;
 	//Keeps track of the current health of the player. Set to public for testing purposes.
 	private float currentHealth = HEALTH;
@@ -24,31 +25,31 @@ public class Ship : MonoBehaviour {
 	private Vector3 mClampedPosition;
 	private Vector3 mNewDirection;
 	private Vector3 mNewRotation;
-    private AudioClip mBackground;  // "music by audionautix.com"
+    //private AudioClip mBackground;  // "music by audionautix.com"
 
 	public GameObject mWaveProjectile = null;
 	public GameObject[] mShotgunProjectile = null;
 	private bool hasFired = false;
 	private bool isCharging = false;
 
-	private float mAbsoluteWeaponInterval = .4f;
-	private float mTimeOfLastCharge = 0.0f;
+	//private float mAbsoluteWeaponInterval = .4f;
+	//private float mTimeOfLastCharge = 0.0f;
 	
-	private float mWaveBlastSpawnTime = -0.0f;
+	//private float mWaveBlastSpawnTime = -0.0f;
 	private float kWaveBlastSpawnInterval = 0.5f; //0.32
 	private float kWaveBlastChargeInterval = .5f;
 	private float mWaveBlastChargeTime = -1.0f;
 	private float kWaveTotalChargeTime = 0.0f;
 	private float kWaveMaxChargeTime = 1.5f;
-	private float mWaveBlastLastCharge = -1.0f;
+	//private float mWaveBlastLastCharge = -1.0f;
 	
-	private float mShotgunBlastSpawnTime = -1.0f;
+	//private float mShotgunBlastSpawnTime = -1.0f;
 	private float kShotgunBlastSpawnInterval = 0.8f;
 	private float kShotgunBlastChargeInterval = 0.5f;
-	private float mShotgunBlastChargeTime = -1.0f;
-	private float kShotgunTotalChargeTime = 0.0f;
-	private float kShotgunMaxChargeTime = 1.1f;
-	private float mShotgunBlastLastCharge = -1.0f;
+	//private float mShotgunBlastChargeTime = -1.0f;
+	//private float kShotgunTotalChargeTime = 0.0f;
+	//private float kShotgunMaxChargeTime = 1.1f;
+	//private float mShotgunBlastLastCharge = -1.0f;
 	private float kShotgunPowerInterval = .2f;
 
 	private const int kMinShotgunShots = 5;
@@ -56,7 +57,7 @@ public class Ship : MonoBehaviour {
 
 	private float kShotgunSpread = kMinShotgunSpread;
 	private int kShotgunShots = kMinShotgunShots;
-	private int kMaxShotgunShots = 9;
+	//private int kMaxShotgunShots = 9;
 
 	Fire fire;
 	Vector2 mousedir;
@@ -68,6 +69,10 @@ public class Ship : MonoBehaviour {
 		// Initiate ship death and respawn
 		if (explosion == null) {
 			explosion = Resources.Load("Prefabs/SmallExplosionParticle") as GameObject;
+		}
+		string[] joysticks = Input.GetJoystickNames();
+		foreach( string i in joysticks ) {
+			Debug.Log (i);
 		}
 
 		fire = GetComponent<Fire>();
@@ -83,7 +88,7 @@ public class Ship : MonoBehaviour {
 		
 		transform.position = startLocation;
 		
-        mBackground = (AudioClip)Resources.Load("Sounds/DualShotGameplay");
+        //mBackground = (AudioClip)Resources.Load("Sounds/DualShotGameplay");
         //Play(mBackground, 1f, 1);
 
 		respawn = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
@@ -94,12 +99,12 @@ public class Ship : MonoBehaviour {
 
 		//No longer necessary. Maybe.
 		//DieCheck(); // Check if ship is dead
-		BoundsControl boundsControl = GameObject.Find("GameManager").GetComponent<BoundsControl>();
-		boundsControl.ClampAtWorldBounds(this.gameObject, this.renderer.bounds);
+		WorldBehavior WorldBehavior = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
+		WorldBehavior.ClampAtWorldBounds(this.gameObject, this.renderer.bounds);
 		
 		if (isController == false && !respawn.GameIsPaused() && !count.GetIsCounting()) {
 			// Ship mouse aim
-			mousedir = boundsControl.mMainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+			mousedir = WorldBehavior.mMainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
 			mousedir.Normalize();
 			transform.up = mousedir;
 
@@ -136,36 +141,37 @@ public class Ship : MonoBehaviour {
 				FireChargedShotgunBlast();
 			}
 
-		} else if (isController == true && !respawn.GameIsPaused() && !count.GetIsCounting()) {
+		} else if (isController == true) {
 			// Player movement
-			Vector2 move = new Vector2(Input.GetAxis("P2Horizontal"), Input.GetAxis("P2Vertical"));
+			Vector2 move = new Vector2(Input.GetAxis(controller + "Horizontal"), Input.GetAxis(controller + "Vertical"));
 			rigidbody2D.AddForce(move.normalized * kHeroSpeed);
 			
 			// Right Stick Aim
-			transform.up += new Vector3(Input.GetAxis("P2RHorz"), Input.GetAxis("P2RVert"), 0);			
+			transform.up += new Vector3(Input.GetAxis(controller + "RHorz"), Input.GetAxis(controller + "RVert"), 0);			
 			
 			// Wave blast single click
-			if (Input.GetButtonDown("P2Fire1")) {
+			if (Input.GetButtonDown(controller + "Fire1")) {
 				StartWaveBlast();
 			    StartCoroutine("WaveBlastChargeCoroutine");
 			    mWaveBlastChargeTime = Time.realtimeSinceStartup;
 			}
 
 			// Wave blast charge
-			if (Input.GetButtonUp("P2Fire1")) {
+			if (Input.GetButtonUp(controller + "Fire1")) {
 				StopCoroutine("WaveBlastChargeCoroutine");
 				StopChargeParticle();
+				
 				FireChargedWaveBlast();
 			}
 
 			// Shotgun single click
-			if (Input.GetButtonDown("P2Fire2")) { // this is Right-Control
+			if (Input.GetButtonDown(controller + "Fire2")) { // this is Right-Control
 				StartShotgunBlast();
 				StartCoroutine("ShotgunBlastChargeCoroutine");
 			}
 
 			// Shotgun charge
-			if (Input.GetButtonUp("P2Fire2")) {
+			if (Input.GetButtonUp(controller + "Fire2")) {
 				StopCoroutine("ShotgunBlastChargeCoroutine");
 				StopChargeParticle();
 				FireChargedShotgunBlast();

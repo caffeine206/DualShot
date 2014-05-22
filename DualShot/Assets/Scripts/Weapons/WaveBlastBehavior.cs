@@ -47,10 +47,10 @@ public class WaveBlastBehavior : MonoBehaviour {
 		}
 		transform.position += (mSpeed * Time.smoothDeltaTime) * transform.up;
         //string level = MenuState.TheGameState.getLevel; // Why does my weapon care about my level?
-		BoundsControl boundsControl = GameObject.Find ("GameManager").GetComponent<BoundsControl>();
-		BoundsControl.WorldBoundStatus status =
-            boundsControl.ObjectCollideWorldBound(GetComponent<Renderer>().bounds);
-		if (status == BoundsControl.WorldBoundStatus.Outside) {
+		WorldBehavior WorldBehavior = GameObject.Find ("GameManager").GetComponent<WorldBehavior>();
+		WorldBehavior.WorldBoundStatus status =
+            WorldBehavior.ObjectCollideWorldBound(GetComponent<Renderer>().bounds);
+		if (status == WorldBehavior.WorldBoundStatus.Outside) {
 			Destroy(this.gameObject);
 		}
 	}

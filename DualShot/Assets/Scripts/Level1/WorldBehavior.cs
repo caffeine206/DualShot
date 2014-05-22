@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class BoundsControl : MonoBehaviour {
+public class WorldBehavior : MonoBehaviour {
 
 	#region Asteroid Spawner
 	// Vars for Asteroid Spawning
 	private float mSpawnTime = 12f;
-	private float mMinSpawnTime = 3f;
+	//private float mMinSpawnTime = 3f;
 	private int mMaxOrbs = 20;
 	public int mSpawnNum = 6;
 	public float mSpawnMinSize = 1f;
@@ -17,7 +17,7 @@ public class BoundsControl : MonoBehaviour {
 	
 	private float mRampInterval = 15f;
 	private float mlastRamp;
-	private float mTimeInterval = 0.25f;
+	//private float mTimeInterval = 0.25f;
 	private float mMassInterval = 5f;
 	
 	public GameObject mOrb = null;
@@ -71,6 +71,13 @@ public class BoundsControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		
+		if (Input.GetKeyDown (KeyCode.F7)) {
+			sTheGameState.BlueWins++;
+		}
+		if (Input.GetKeyDown (KeyCode.F8)) {
+			sTheGameState.OrangeWins++;
+		}
 		#region Orb Spawner Logic
 		//Disabled for demo.
 		/*
@@ -122,9 +129,6 @@ public class BoundsControl : MonoBehaviour {
 		//mEcho.text = "Total Orbs: " + mCurOrbs + "\ncur < max: " + (mCurOrbs < mMaxOrbs);
 		
 		//reset();
-		
-		//Added
-		Debug.Log("Current Orbs: " + mCurOrbs + " Spawn Time: " + mSpawnTime);
 	}
 
 	/*
@@ -256,13 +260,24 @@ public class BoundsControl : MonoBehaviour {
 			CreateGlobalManager();
 			return sTheGameState;
 		} }
-	public void blueWin() {
-		sTheGameState.BlueWins++;
+	public void RoundEnd(int winner) {
 		sTheGameState.RoundNum++;
-	}
-	public void orangeWin() {
-		sTheGameState.OrangeWins++;
-		sTheGameState.RoundNum++;
+		
+		if ( winner == 2 ) {
+			sTheGameState.BlueWins++;
+			if (sTheGameState.BlueWins >= sTheGameState.BestOf) {
+				Application.LoadLevel (winner);
+			} else {
+				Application.LoadLevel (1);
+			}
+		} else {
+			sTheGameState.OrangeWins++;
+			if (sTheGameState.OrangeWins >= sTheGameState.BestOf) {
+				Application.LoadLevel (winner);
+			} else {
+				Application.LoadLevel (1);
+			}
+		}
 	}
 	
 	#endregion

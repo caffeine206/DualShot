@@ -12,9 +12,9 @@ public class Fire : MonoBehaviour {
 	public GameObject mWaveProjectile = null;
 	public GameObject[] mShotgunProjectile = null;
 
-	private float kWaveMaxChargeTime = 1.5f;
+	//private float kWaveMaxChargeTime = 1.5f;
 
-	private float kShotgunMaxChargeTime = 1.1f;
+	//private float kShotgunMaxChargeTime = 1.1f;
 	
 	private float kShotgunSpread = -20.0f;
 	private int kShotgunShots = 5;

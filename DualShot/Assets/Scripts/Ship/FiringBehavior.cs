@@ -53,9 +53,9 @@ public class FiringBehavior : MonoBehaviour {
 
 	void Update () {
 		if (gameObject.name == "PeriwinkleShip") {
-			BoundsControl boundsControl = GameObject.Find("GameManager").GetComponent<BoundsControl>();
+			WorldBehavior WorldBehavior = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
 			Vector2 mousedir;
-			mousedir = boundsControl.mMainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+			mousedir = WorldBehavior.mMainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
 			mousedir.Normalize();
 			transform.up = mousedir;
 

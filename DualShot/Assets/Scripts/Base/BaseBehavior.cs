@@ -62,7 +62,6 @@ public class BaseBehavior : MonoBehaviour {
 	}
 	
 	void Update () {
-		int spritePer = spriteMan.SpriteNum;
 		if ( currentHealth / HEALTH < 1 - ((float)spriteMan.SpriteNum / ((float)numSprites - 1)) && spriteMan.SpriteNum < numSprites - 2)
 		{
 			spriteMan.nextSprite();
@@ -72,7 +71,7 @@ public class BaseBehavior : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D other) {
 		if ((other.gameObject.name == "Orb(Clone)" || other.gameObject.name == "Orb") && !isInvulnerable) {
-			BoundsControl bounds = GameObject.Find("GameManager").GetComponent<BoundsControl>();
+			WorldBehavior bounds = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
 			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
 			Debug.Log("Base Health: " + currentHealth);
 
@@ -87,13 +86,12 @@ public class BaseBehavior : MonoBehaviour {
 			bounds.Orbs--;
 		}
 	}
-
 	private void Win() {
 		if (currentHealth <= 0f) {
 			
 			spriteMan.nextSprite();
 			StartCoroutine("EXPLOSIVE_VICTORY");
-/*
+			/*
             Play(mBaseDead, 1f, 1);
 
             // Testing for win screen
@@ -109,22 +107,22 @@ public class BaseBehavior : MonoBehaviour {
             }
 
             */
-            StartCoroutine("WinScreen");
+			StartCoroutine("WinScreen");
 		}
 	}
 
     IEnumerator WinScreen() {
         yield return new WaitForSeconds(4.5f);
-        // Testing for win screen
-        if (gameObject.name == "OrangeCity")
-        {
-            Application.LoadLevel(2);
-        }
-        // If Blue base destroyed, load Level 3
-        if (gameObject.name == "BlueCity")
-        {
-            Application.LoadLevel(3);
-        }
+		WorldBehavior world = GameObject.Find ("GameManager").GetComponent<WorldBehavior>();
+		if (gameObject.name == "OrangeCity")
+		{
+			world.RoundEnd(2);
+		}
+		// If Blue base destroyed, load Level 3
+		if (gameObject.name == "BlueCity")
+		{
+			world.RoundEnd(3);
+		}
     }
 	
 	//For testing purposes.

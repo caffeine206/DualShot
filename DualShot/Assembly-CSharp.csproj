@@ -49,13 +49,13 @@
      <Compile Include="Assets\Scripts\Base\BaseBehavior.cs" />
      <Compile Include="Assets\Scripts\Base\BaseSpriteManager.cs" />
      <Compile Include="Assets\Scripts\DestroyExplosion.cs" />
-     <Compile Include="Assets\Scripts\Level1\BoundsControl.cs" />
      <Compile Include="Assets\Scripts\Level1\CountdownTimer.cs" />
      <Compile Include="Assets\Scripts\Level1\DeveloperControls.cs" />
      <Compile Include="Assets\Scripts\Level1\GlobalBehavior.cs" />
      <Compile Include="Assets\Scripts\Level1\OrbBehavior.cs" />
      <Compile Include="Assets\Scripts\Level1\ResumeGame.cs" />
      <Compile Include="Assets\Scripts\Level1\VictoryClap.cs" />
+     <Compile Include="Assets\Scripts\Level1\WorldBehavior.cs" />
      <Compile Include="Assets\Scripts\LoadMenu.cs" />
      <Compile Include="Assets\Scripts\Menu\ButtonMouseOver.cs" />
      <Compile Include="Assets\Scripts\Menu\LoadControls.cs" />

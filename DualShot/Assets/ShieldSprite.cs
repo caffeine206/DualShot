@@ -13,12 +13,10 @@ public class ShieldSprite : MonoBehaviour {
 		if (spriteMan == null) {
 			spriteMan = GetComponent<BaseSpriteManager>();
 		}
-	
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log (Time.realtimeSinceStartup - mImpactTime < mFlashTime);
 		
 		if (Time.realtimeSinceStartup - mImpactTime < mFlashTime && spriteMan.SpriteNum < 2) {
 			spriteMan.SpriteNum = 2;

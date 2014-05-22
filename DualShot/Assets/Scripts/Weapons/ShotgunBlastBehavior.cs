@@ -20,10 +20,10 @@ public class ShotgunBlastBehavior : MonoBehaviour {
 
 		transform.position += (mSpeed * Time.smoothDeltaTime) * transform.up;
         //string level = MenuState.TheGameState.getLevel;
-		BoundsControl boundsControl = GameObject.Find ("GameManager").GetComponent<BoundsControl>();
-		BoundsControl.WorldBoundStatus status =
-            boundsControl.ObjectCollideWorldBound(GetComponent<Renderer>().bounds);
-		if (status != BoundsControl.WorldBoundStatus.Inside) {
+		WorldBehavior WorldBehavior = GameObject.Find ("GameManager").GetComponent<WorldBehavior>();
+		WorldBehavior.WorldBoundStatus status =
+            WorldBehavior.ObjectCollideWorldBound(GetComponent<Renderer>().bounds);
+		if (status != WorldBehavior.WorldBoundStatus.Inside) {
 			Destroy(this.gameObject);
 		}
 	}
