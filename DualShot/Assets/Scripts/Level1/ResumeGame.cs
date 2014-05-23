@@ -9,7 +9,7 @@ public class ResumeGame : MonoBehaviour {
 
 	void Start () {
 		resume = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
-        mHover = (AudioClip)Resources.Load("Sounds/BaseHit");
+        mHover = (AudioClip)Resources.Load("Sounds/DaikoSingle");
         tm = GetComponent<TextMesh>();
 	}
 	
@@ -27,12 +27,11 @@ public class ResumeGame : MonoBehaviour {
 	}
 
 	void OnMouseOver() {
-        //renderer.material.color = Color.green;
+
     }
 
 	void OnMouseExit()
     {
-        //renderer.material.color = Color.white;
         tm.fontSize = 50;
     }
 
