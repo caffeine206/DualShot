@@ -86,6 +86,7 @@ public class Ship : MonoBehaviour {
 			startLocation += new Vector3(sizeX - 50f, 0f, 0f);
 		}
 		
+		startLocation.y = transform.position.y;
 		transform.position = startLocation;
 		
         //mBackground = (AudioClip)Resources.Load("Sounds/DualShotGameplay");
