@@ -7,7 +7,7 @@ public class LoadMenu : MonoBehaviour {
     private TextMesh tm;
 
 	void Start () {
-		mHover = (AudioClip)Resources.Load("Sounds/BaseHit");
+        mHover = (AudioClip)Resources.Load("Sounds/DaikoSingle");
         tm = GetComponent<TextMesh>();
 	}
 	

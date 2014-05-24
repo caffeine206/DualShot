@@ -3,20 +3,14 @@ using System.Collections;
 
 public class VictoryClap : MonoBehaviour {
 
-    private AudioClip mClap;
-    private AudioClip mCheer;
+    // Instantiate sound clip
+    private AudioClip mVictory;
 
 	// Use this for initialization
 	void Start () {
-        mClap = (AudioClip)Resources.Load("Sounds/SmallCrowdClapping");
-        mCheer = (AudioClip)Resources.Load("Sounds/Applause");
+        mVictory = (AudioClip)Resources.Load("Sounds/TaikoWinScreen");
 
-        int random = Random.Range(0, 9);
-        if (random % 2 == 0)
-        { Play(mClap, 1f, 1); }
-        else
-        { Play(mCheer, 1f, 1); }
-	
+        Play(mVictory, 1f, 1);
 	}
 	
 	// Update is called once per frame

@@ -7,7 +7,7 @@ public class StartLevel1 : MonoBehaviour {
     private TextMesh tm;
 
 	void Start () {
-		mHover = (AudioClip)Resources.Load("Sounds/BaseHit");
+        mHover = (AudioClip)Resources.Load("Sounds/DaikoSingle");
         tm = GetComponent<TextMesh>();
 	}
 	
@@ -17,15 +17,14 @@ public class StartLevel1 : MonoBehaviour {
 
     // To highlight button text when mouse is over collider
     void OnMouseOver()
-    {
-        
+    {   
 
     }
 	
 	void OnMouseEnter() {
         //tm.fontStyle = FontStyle.Bold;
         tm.fontSize = 55;
-		Play(mHover, 0.25f, 1);
+		Play(mHover, 0.5f, 1);
 	}
 	
     // To de-highlight button text when mouse is over collider
