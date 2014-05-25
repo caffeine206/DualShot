@@ -21,6 +21,7 @@ public class OrbBehavior : MonoBehaviour {
 	private GameObject mObject = null; // The prefab of this object.
 	private WorldBehavior mWorld = null;
 	private GameObject mPowerUp = null;
+	private GameObject mSpeedUp = null;
 	//private GameObject explosion = null;
 	
 	private float mSpawnTime;
@@ -47,6 +48,9 @@ public class OrbBehavior : MonoBehaviour {
 		}
 		if (mPowerUp == null) {
 			mPowerUp = (GameObject) Resources.Load ("Prefabs/PowerUp");
+		}
+		if (mSpeedUp == null) {
+			mSpeedUp = (GameObject) Resources.Load ("Prefabs/SpeedUp");
 		}
 		
 		// Set mass and adjust the scale to match
@@ -118,11 +122,15 @@ public class OrbBehavior : MonoBehaviour {
 		
 
 		float random = Random.Range ( 0.0f, 1.0f ); 
-		if (random <= .05) { // 5% chance of power up spawning upon orb death
+		if (random <= .08) { // 08% chance of power up spawning upon orb death
 			GameObject powerUp = (GameObject) Instantiate(mPowerUp);
 			powerUp.transform.position = transform.position;
 		}
-
+		random = Random.Range ( 0.0f, 1.0f ); 
+		if (random <= .08) { // 08% chance of speed up spawning upon orb death
+			GameObject speedUp = (GameObject) Instantiate(mSpeedUp);
+			speedUp.transform.position = transform.position;
+		}
 		//Orb explosion
 		//GameObject ex = Instantiate(explosion) as GameObject;
 		//ex.transform.position = transform.position;
