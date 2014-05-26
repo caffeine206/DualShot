@@ -15,13 +15,20 @@ public class Ship : MonoBehaviour {
 	private Vector3 startLocation = new Vector3(0f, 0f, 0f);
 	//The middle of our world. Used to reorient the ships to their default direction after respawning.
 	private Vector3 originOfWorld = new Vector3(0f, 0f, 0f);
+
 	//Tracks the powerup level of the ship.
 	public int powerLevel = 1;
+	public bool mSpeedUp = false;
+	public float kSpeedBegin = 0.0f;
+	public float kSpeedEnd = 8.0f;
+
 	//Invulnerability flag.
 	public bool isInvulnerable = true;
 	public bool isController = false;
 
-	private float kHeroSpeed = 2500f;
+	private const float kDefaultHeroSpeed = 2500f;
+	private float kHeroSpeed = kDefaultHeroSpeed;
+	private float kSpeedHeroSpeed = 6000f;
 	private Vector3 mClampedPosition;
 	private Vector3 mNewDirection;
 	private Vector3 mNewRotation;
@@ -36,7 +43,9 @@ public class Ship : MonoBehaviour {
 	//private float mTimeOfLastCharge = 0.0f;
 	
 	//private float mWaveBlastSpawnTime = -0.0f;
-	private float kWaveBlastSpawnInterval = 0.5f; //0.32
+	private const float kWaveBlastDefaultSpawnInterval = 0.5f;
+	private float kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval; //0.32
+	private float kWaveBlastSpeedSpawnInterval = 0.15f;
 	private float kWaveBlastChargeInterval = .5f;
 	private float mWaveBlastChargeTime = -1.0f;
 	private float kWaveTotalChargeTime = 0.0f;
@@ -44,7 +53,9 @@ public class Ship : MonoBehaviour {
 	//private float mWaveBlastLastCharge = -1.0f;
 	
 	//private float mShotgunBlastSpawnTime = -1.0f;
-	private float kShotgunBlastSpawnInterval = 0.8f;
+	private const float kShotgunBlastDefaultSpawnInterval = 0.8f;
+	private float kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
+	private float kShotgunBlastSpeedSpawnInterval = 0.2f;
 	private float kShotgunBlastChargeInterval = 0.5f;
 	//private float mShotgunBlastChargeTime = -1.0f;
 	//private float kShotgunTotalChargeTime = 0.0f;
@@ -97,6 +108,14 @@ public class Ship : MonoBehaviour {
 	}
 	
 	void Update () {
+		if (mSpeedUp == true) {
+			if (Time.realtimeSinceStartup - kSpeedBegin > kSpeedEnd) {
+				mSpeedUp = false;
+				kHeroSpeed = kDefaultHeroSpeed;
+				kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
+				kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval;
+			}
+		}
 
 		//No longer necessary. Maybe.
 		//DieCheck(); // Check if ship is dead
@@ -196,6 +215,16 @@ public class Ship : MonoBehaviour {
 				powerLevel = 3;
 			}
 		}
+
+		if (other.gameObject.name == "SpeedUp" || other.gameObject.name == "SpeedUp(Clone)") {
+			Destroy(other.gameObject);
+			kSpeedBegin = Time.realtimeSinceStartup;
+			mSpeedUp = true;
+			kHeroSpeed = kSpeedHeroSpeed;
+			kShotgunBlastSpawnInterval = kShotgunBlastSpeedSpawnInterval;
+			kWaveBlastSpawnInterval = kWaveBlastSpeedSpawnInterval;
+		}
+
 	}
 	#endregion
 
