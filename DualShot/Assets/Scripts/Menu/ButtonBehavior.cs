@@ -11,6 +11,7 @@ public class ButtonBehavior : MonoBehaviour
     private TextMesh tm;
 
     // Camera movement positions for each "scene"
+    private Vector3 GameSettings = new Vector3(0, 80, -9);
     private Vector3 Instructions = new Vector3(0, 60, -9);
     private Vector3 Credits = new Vector3(0, 40, -9);
     private Vector3 Controls = new Vector3(0, 20, -9);
@@ -73,7 +74,7 @@ public class ButtonBehavior : MonoBehaviour
         }
         if (GetComponent<TextMesh>().text == "Exit")
         {
-            
+            Application.Quit();
         }
 
         // Pause menu buttons
@@ -84,6 +85,8 @@ public class ButtonBehavior : MonoBehaviour
         if (GetComponent<TextMesh>().text == "Reset")
         {
             Application.LoadLevel(1);   // Level 1
+            WorldBehavior world = GameObject.Find ("GameManager").GetComponent<WorldBehavior>();
+            
         }
         if (GetComponent<TextMesh>().text == "Quit")
         {

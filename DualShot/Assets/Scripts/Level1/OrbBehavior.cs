@@ -19,7 +19,7 @@ public class OrbBehavior : MonoBehaviour {
 	#region PrivateVar
 	// Use this for initialization
 	private GameObject mObject = null; // The prefab of this object.
-	private WorldBehavior mWorld = null;
+	private AsteroidSpawner mSpawner = null;
 	private GameObject mPowerUp = null;
 	//private GameObject explosion = null;
 	
@@ -42,8 +42,8 @@ public class OrbBehavior : MonoBehaviour {
 		if (mObject == null) {
 			mObject = (GameObject) Resources.Load ("Prefabs/Orb");
 		}
-		if (mWorld == null) {
-			mWorld = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
+		if (mSpawner == null) {
+			mSpawner = GameObject.Find("GameManager").GetComponent<AsteroidSpawner>();
 		}
 		if (mPowerUp == null) {
 			mPowerUp = (GameObject) Resources.Load ("Prefabs/PowerUp");
@@ -53,7 +53,7 @@ public class OrbBehavior : MonoBehaviour {
 		float mass = rigidbody2D.mass;
 		float diameter = Mathf.Sqrt(mass) * kScale;
 		transform.localScale = new Vector3(diameter, diameter);
-		mWorld.Orbs++;
+		mSpawner.Orbs++;
 			
 		
 		mInvul = true;
@@ -88,7 +88,7 @@ public class OrbBehavior : MonoBehaviour {
 			smash(kSize1, kSize2, 2);
 		} else {
 			Destroy(this.gameObject);
-			mWorld.Orbs--;
+			mSpawner.Orbs--;
 		}
 	}
 	
@@ -127,7 +127,7 @@ public class OrbBehavior : MonoBehaviour {
 		//GameObject ex = Instantiate(explosion) as GameObject;
 		//ex.transform.position = transform.position;
 		
-		mWorld.Orbs--;
+		mSpawner.Orbs--;
 		Destroy(this.gameObject);
 		
 	}
