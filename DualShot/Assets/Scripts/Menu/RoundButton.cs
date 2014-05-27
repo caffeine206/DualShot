@@ -24,7 +24,7 @@ public class RoundButton : MonoBehaviour
 		
 		// Associates text mesh component 
 		tm = GetComponent<TextMesh>();
-		buttonNumber = tm.text;
+		buttonNumber = tm.text[0];
 	}
 	
 	// Update is called once per frame

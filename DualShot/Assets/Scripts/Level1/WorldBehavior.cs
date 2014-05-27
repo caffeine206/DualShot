@@ -228,7 +228,7 @@ public class WorldBehavior : MonoBehaviour {
 	public static GlobalBehavior TheGameState { get {
 		if (null == sTheGameState)
 			CreateGlobalManager();
-			return sTheGameState;
+			return sTheGameState; 
 		} }
 	public void RoundEnd(int winner) {
 		sTheGameState.RoundNum++;
