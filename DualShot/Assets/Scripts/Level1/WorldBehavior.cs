@@ -253,10 +253,11 @@ public class WorldBehavior : MonoBehaviour {
 		sTheGameState.BlueWins = 0;
 		sTheGameState.OrangeWins = 0;
 	}
-	public void setRounds( string value ) {
-		RoundButton lastActive = GameObject.Find ("BestOf" + sTheGameState.BestOf ).GetComponent<RoundButton>();
+	public void setRounds( char value ) {
+		RoundButton lastActive = GameObject.Find ("Setup-Rounds" + sTheGameState.BestOf + "Button" ).GetComponent<RoundButton>();
 		lastActive.Deactivate();
-		sTheGameState.BestOf = int.Parse(value);
+		sTheGameState.BestOf = (int)(value) - 48;
+		Debug.Log("RoundNum: " + sTheGameState.BestOf);
 	}
 	
 	#endregion

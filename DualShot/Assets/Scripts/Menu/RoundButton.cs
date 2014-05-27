@@ -9,7 +9,7 @@ public class RoundButton : MonoBehaviour
 	
 	// Instantiate text mesh object for text on buttons
 	private TextMesh tm;
-	private string buttonNumber;
+	private char buttonNumber;
 	
 	private WorldBehavior world = null;
 	private bool Active = false;
@@ -36,21 +36,21 @@ public class RoundButton : MonoBehaviour
 	// To highlight button text when mouse is over collider
 	void OnMouseEnter()
 	{
-		tm.fontSize = 50;
+		tm.fontSize = 70;
 		Play(mHover, 0.5f, 1);
 	}
 	// To de-highlight button text when mouse is over collider
 	void OnMouseExit()
 	{
 		if (!Active) {
-			tm.fontSize = 35;
+			tm.fontSize = 50;
 		}
 	}
 	
 	
 	void OnMouseUp()
 	{
-		tm.fontSize = 50;
+		tm.fontSize = 70;
 		world.setRounds(buttonNumber);
 		isActive = true;
 	}
@@ -61,7 +61,7 @@ public class RoundButton : MonoBehaviour
 	}
 	public void Deactivate () {
 		isActive = false;
-		tm.fontSize = 35;
+		tm.fontSize = 50;
 	}
 	
 	// Audio clip player
