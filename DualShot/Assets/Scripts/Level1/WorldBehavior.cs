@@ -250,7 +250,13 @@ public class WorldBehavior : MonoBehaviour {
 		}
 	}
 	public void resetScore() {
-		
+		sTheGameState.BlueWins = 0;
+		sTheGameState.OrangeWins = 0;
+	}
+	public void setRounds( string value ) {
+		RoundButton lastActive = GameObject.Find ("BestOf" + sTheGameState.BestOf ).GetComponent<RoundButton>();
+		lastActive.Deactivate();
+		sTheGameState.BestOf = int.Parse(value);
 	}
 	
 	#endregion

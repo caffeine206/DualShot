@@ -66,6 +66,7 @@
      <Compile Include="Assets\Scripts\Menu\MainMenuMovingStars.cs" />
      <Compile Include="Assets\Scripts\Menu\MoveMainCamera.cs" />
      <Compile Include="Assets\Scripts\Menu\Quit.cs" />
+     <Compile Include="Assets\Scripts\Menu\RoundButton.cs" />
      <Compile Include="Assets\Scripts\Menu\StartLevel1.cs" />
      <Compile Include="Assets\Scripts\PlaySound.cs" />
      <Compile Include="Assets\Scripts\ShieldSprite.cs" />
@@ -75,7 +76,6 @@
      <Compile Include="Assets\Scripts\Ship\Ship.cs" />
      <Compile Include="Assets\Scripts\ShipSprites.cs" />
      <Compile Include="Assets\Scripts\TextMeshFixer.cs" />
-     <Compile Include="Assets\Scripts\Weapons\PowerUpBehavior.cs" />
      <Compile Include="Assets\Scripts\Weapons\ShotgunBlastBehavior.cs" />
      <Compile Include="Assets\Scripts\Weapons\WaveBlastBehavior.cs" />
   </ItemGroup>

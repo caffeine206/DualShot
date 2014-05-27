@@ -56,39 +56,41 @@ public class ButtonBehavior : MonoBehaviour
         // For button up controls based on the "text" of the button
 
         // Main menu - Controls - Credits - Instructions buttons
-        if (GetComponent<TextMesh>().text == "Controls")
+        if (tm.text == "Controls")
         {
             Camera.main.transform.position = Controls;
         }
-        if (GetComponent<TextMesh>().text == "Credits")
+        if (tm.text == "Credits")
         {
             Camera.main.transform.position = Credits;
         }
-        if (GetComponent<TextMesh>().text == "Instructions")
+        if (tm.text == "Instructions")
         {
             Camera.main.transform.position = Instructions;
         }
-        if (GetComponent<TextMesh>().text == "Main Menu")
+        if (tm.text == "Main Menu")
         {
             Camera.main.transform.position = MainMenu;
         }
-        if (GetComponent<TextMesh>().text == "Exit")
+        if (tm.text == "Exit")
         {
             Application.Quit();
         }
-
+        if (tm.text == "Start") {
+        	Camera.main.transform.position = GameSettings;
+        }
         // Pause menu buttons
-        if (GetComponent<TextMesh>().text == "Resume")
+        if (tm.text == "Resume")
         {
             //resume.Pause();
         }
-        if (GetComponent<TextMesh>().text == "Reset")
+        if (tm.text == "Reset")
         {
+			WorldBehavior world = GameObject.Find ("GameManager").GetComponent<WorldBehavior>();
+			world.resetScore();
             Application.LoadLevel(1);   // Level 1
-            WorldBehavior world = GameObject.Find ("GameManager").GetComponent<WorldBehavior>();
-            
         }
-        if (GetComponent<TextMesh>().text == "Quit")
+        if (tm.text == "Quit")
         {
             Time.timeScale = 1f;
             Application.LoadLevel(0);   // Menu
