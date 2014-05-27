@@ -65,18 +65,18 @@
      <Compile Include="Assets\Scripts\Menu\MainMenuMovingStars.cs" />
      <Compile Include="Assets\Scripts\Menu\MoveMainCamera.cs" />
      <Compile Include="Assets\Scripts\Menu\Quit.cs" />
+     <Compile Include="Assets\Scripts\Menu\SetupButtonBehavior.cs" />
      <Compile Include="Assets\Scripts\Menu\StartLevel1.cs" />
      <Compile Include="Assets\Scripts\PlaySound.cs" />
+     <Compile Include="Assets\Scripts\ShieldSprite.cs" />
      <Compile Include="Assets\Scripts\Ship\Fire.cs" />
      <Compile Include="Assets\Scripts\Ship\FiringBehavior.cs" />
      <Compile Include="Assets\Scripts\Ship\RespawnBehavior.cs" />
      <Compile Include="Assets\Scripts\Ship\Ship.cs" />
      <Compile Include="Assets\Scripts\ShipSprites.cs" />
      <Compile Include="Assets\Scripts\TextMeshFixer.cs" />
-     <Compile Include="Assets\Scripts\Weapons\PowerUpBehavior.cs" />
      <Compile Include="Assets\Scripts\Weapons\ShotgunBlastBehavior.cs" />
      <Compile Include="Assets\Scripts\Weapons\WaveBlastBehavior.cs" />
-     <Compile Include="Assets\ShieldSprite.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
