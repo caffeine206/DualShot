@@ -11,7 +11,7 @@ public class ButtonBehavior : MonoBehaviour
     private TextMesh tm;
 
     // Camera movement positions for each "scene"
-    private Vector3 GameSettings = new Vector3(0, 80, -9);
+    private Vector3 Setup = new Vector3(0, 80, -9);
     private Vector3 Instructions = new Vector3(0, 60, -9);
     private Vector3 Credits = new Vector3(0, 40, -9);
     private Vector3 Controls = new Vector3(0, 20, -9);
@@ -30,11 +30,6 @@ public class ButtonBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        //if (Input.GetKeyDown("escape"))  //When Esc key is pressed down, sends camera to Main Menu
-        //{
-        //    Camera.main.transform.position = MainMenu;
-        //}
 
     }
 
@@ -76,8 +71,9 @@ public class ButtonBehavior : MonoBehaviour
         {
             Application.Quit();
         }
-        if (tm.text == "Start") {
-        	Camera.main.transform.position = GameSettings;
+        if (GetComponent<TextMesh>().text == "Start")
+        {
+            Camera.main.transform.position = Setup;
         }
         // Pause menu buttons
         if (tm.text == "Resume")
