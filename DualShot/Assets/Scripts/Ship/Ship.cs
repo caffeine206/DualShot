@@ -19,6 +19,7 @@ public class Ship : MonoBehaviour {
 	//Tracks the powerup level of the ship.
 	private int powerLevel = 1;
 	private bool mSpeedUp = false;
+<<<<<<< HEAD
 	private float kSpeedBegin = 0.0f;
 	private float kSpeedEnd = 8.0f;
 	
@@ -32,6 +33,24 @@ public class Ship : MonoBehaviour {
 	public bool isInvulnerable = true;
 	public bool isController = false;
 	
+=======
+	private float kSpeedMass = 2.0f;
+	private float kSpeedBegin = 0.0f;
+	private float kSpeedEnd = 8.0f;
+
+	private float kDefaultMass = 4.0f;
+	public bool mGrowUp = false;
+	private float mGrowScale = 2.5f;
+	private float kGrowSpeed = 6000f;
+	private float mGrowMass = 7.0f;
+	private float kGrowBegin = 0.0f;
+	private float kGrowEnd = 8.0f;
+
+	//Invulnerability flag.
+	public bool isInvulnerable = true;
+	public bool isController = false;
+
+>>>>>>> fcf28c31f067369bec996b52410734212430323f
 	private const float kDefaultHeroSpeed = 3000f;
 	private float kHeroSpeed = kDefaultHeroSpeed;
 	private float kSpeedHeroSpeed = 9000f;
@@ -81,10 +100,19 @@ public class Ship : MonoBehaviour {
 	
 	RespawnBehavior respawn;
 	CountdownTimer count;
+<<<<<<< HEAD
 	
 	private GameObject powerupPickup = null;
 	private GameObject speedupPickup = null;
 	private GameObject speedupParticle = null;
+=======
+
+	private GameObject powerupPickup = null;
+	private GameObject speedupPickup = null;
+	private GameObject speedupParticle = null;
+	private GameObject growupPickup = null;
+	private GameObject growupParticle = null;
+>>>>>>> fcf28c31f067369bec996b52410734212430323f
 	
 	void Start () {
 		// Initiate ship death and respawn
@@ -118,10 +146,21 @@ public class Ship : MonoBehaviour {
 		if (powerupPickup == null) {
 			powerupPickup = Resources.Load("Prefabs/PowerupPickup") as GameObject;
 		}
+<<<<<<< HEAD
 		
 		if (speedupPickup == null) {
 			speedupPickup = Resources.Load("Prefabs/SpeedupPickup") as GameObject;
 		}
+=======
+
+		if (speedupPickup == null) {
+			speedupPickup = Resources.Load("Prefabs/SpeedupPickup") as GameObject;
+		}
+
+		if (growupPickup == null) {
+			growupPickup = Resources.Load("Prefabs/GrowupPickup") as GameObject;
+		}
+>>>>>>> fcf28c31f067369bec996b52410734212430323f
 	}
 	
 	void Update () {
@@ -132,9 +171,26 @@ public class Ship : MonoBehaviour {
 			if (Time.realtimeSinceStartup - kSpeedBegin > kSpeedEnd) {
 				mSpeedUp = false;
 				kHeroSpeed = kDefaultHeroSpeed;
+				rigidbody.mass += kSpeedMass;
 				kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
 				kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval;
 				Destroy(speedupParticle);
+<<<<<<< HEAD
+=======
+			}
+		}
+
+		if (mGrowUp == true) {
+			if (growupParticle != null) {
+				growupParticle.transform.position = transform.position;
+			}
+			if (Time.realtimeSinceStartup - kGrowBegin > kGrowEnd) {
+				mGrowUp = false;
+				kHeroSpeed = kDefaultHeroSpeed;
+				transform.localScale -= new Vector3(mGrowScale, mGrowScale, 0.0f);
+				Destroy(growupParticle);
+				rigidbody2D.mass = kDefaultMass;
+>>>>>>> fcf28c31f067369bec996b52410734212430323f
 			}
 		}
 		
@@ -160,6 +216,7 @@ public class Ship : MonoBehaviour {
 			
 			if (Input.GetAxisRaw("Horizontal") > 0f || Input.GetAxisRaw("Horizontal") < 0f ||
 			    Input.GetAxisRaw("Vertical") > 0f || Input.GetAxisRaw("Vertical") < 0f) {
+<<<<<<< HEAD
 				Vector2 move = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 				rigidbody2D.AddForce (move.normalized * kHeroSpeed);
 			}
@@ -179,6 +236,27 @@ public class Ship : MonoBehaviour {
 			}
 			*/
 			
+=======
+				Vector2 move = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+				rigidbody2D.AddForce (move.normalized * kHeroSpeed);
+			}
+			
+			/*
+			if (Input.GetAxis("Horizontal") > 0.1f || Input.GetAxis("Horizontal") < -0.1f ||
+				Input.GetAxis("Vertical") > 0.1f || Input.GetAxis("Vertical") < -0.1f) {
+				Vector2 move = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+				rigidbody2D.AddForce(move.normalized * kHeroSpeed);
+			}
+			*/
+			//Enable with GetAxisRaw instead of GetAxis for the movement for exact controls.
+			/*
+			if (Input.GetAxisRaw("Horizontal") == 0f && Input.GetAxisRaw("Vertical") == 0f) {
+				rigidbody2D.velocity = Vector3.zero;
+				rigidbody2D.angularVelocity = 0f;
+			}
+			*/
+
+>>>>>>> fcf28c31f067369bec996b52410734212430323f
 			// Wave Blast single click
 			if (Input.GetButtonDown("Fire1")) {
 				StartWaveBlast();
@@ -269,12 +347,16 @@ public class Ship : MonoBehaviour {
 			Destroy(other.gameObject);
 			kSpeedBegin = Time.realtimeSinceStartup;
 			mSpeedUp = true;
-			kHeroSpeed = kSpeedHeroSpeed;
+			if (mGrowUp == false) {
+				rigidbody2D.mass = kSpeedMass;
+				kHeroSpeed = kSpeedHeroSpeed;
+			}
 			kShotgunBlastSpawnInterval = kShotgunBlastSpeedSpawnInterval;
 			kWaveBlastSpawnInterval = kWaveBlastSpeedSpawnInterval;
 			if (speedupParticle == null) {
 				speedupParticle = Instantiate(speedupPickup) as GameObject;
 			}
+<<<<<<< HEAD
 		}
 		
 		if ((other.gameObject.name == "GrowUp" || other.gameObject.name == "GrowUp(Clone)") && mGrowUp == false) {
@@ -285,6 +367,22 @@ public class Ship : MonoBehaviour {
 			rigidbody2D.mass += mGrowMass;
 			mGrowUp = true;
 		}
+=======
+		}
+
+		if (other.gameObject.name == "GrowUp" || other.gameObject.name == "GrowUp(Clone)") {
+			Destroy(other.gameObject);
+			kGrowBegin = Time.realtimeSinceStartup;
+			kHeroSpeed = kGrowSpeed;
+			if (mGrowUp == false)
+				transform.localScale += new Vector3(mGrowScale, mGrowScale, 0.0f);
+			rigidbody2D.mass = mGrowMass;
+			mGrowUp = true;
+			if (growupParticle == null) {
+				growupParticle = Instantiate(growupPickup) as GameObject;
+			}
+		}
+>>>>>>> fcf28c31f067369bec996b52410734212430323f
 	}
 	#endregion
 	

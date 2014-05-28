@@ -18,7 +18,6 @@ public class GlobalBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
 	}
 
 	public void SetCurrentLevel(string level){

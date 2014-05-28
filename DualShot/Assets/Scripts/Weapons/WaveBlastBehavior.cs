@@ -59,16 +59,12 @@ public class WaveBlastBehavior : MonoBehaviour {
 	{
 		transform.up = f;
 	}
-	
+
+	/*
 	void OnTriggerEnter2D(Collider2D other) {
-		if (other.gameObject.name == "Orb" || other.gameObject.name == "Orb(Clone)") {
-			//Debug.Log("Push");
-			/*Vector2 dir = other.transform.position - transform.position;
-			dir.Normalize();*/
-			other.rigidbody2D.AddForce(mSpeed * transform.up * mForce);
-			//other.gameObject.rigidbody2D.AddForce(mSpeed * transform.up * mForce);
-		}
+
 	}
+	*/
 
 	public void SetPowerLevel(int level) {
 		float increase = level * 1.0f;

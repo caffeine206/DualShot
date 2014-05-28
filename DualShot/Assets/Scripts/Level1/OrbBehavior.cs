@@ -10,7 +10,7 @@ public class OrbBehavior : MonoBehaviour {
 	public float kSize3 = 10;
 	public float kScale = 1f; // the constant for determining the diameter, might be Pi 
 
-	public float kExplodeForce = 25f;
+	public float kExplodeForce = 15f;
 	public float mInvulTime = 1f;
 	public float health = 100.0f;
 	public const int kPieces = 2;
@@ -19,10 +19,11 @@ public class OrbBehavior : MonoBehaviour {
 	#region PrivateVar
 	// Use this for initialization
 	private GameObject mObject = null; // The prefab of this object.
-	private AsteroidSpawner mSpawner = null;
+	private WorldBehavior mWorld = null;
 	private GameObject mPowerUp = null;
 	private GameObject mSpeedUp = null;
-	//private GameObject explosion = null;
+	private GameObject mGrowUp = null;
+	private GameObject explosion = null;
 	
 	private float mSpawnTime;
 	private bool mInvul;
@@ -43,8 +44,8 @@ public class OrbBehavior : MonoBehaviour {
 		if (mObject == null) {
 			mObject = (GameObject) Resources.Load ("Prefabs/Orb");
 		}
-		if (mSpawner == null) {
-			mSpawner = GameObject.Find("GameManager").GetComponent<AsteroidSpawner>();
+		if (mWorld == null) {
+			mWorld = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
 		}
 		if (mPowerUp == null) {
 			mPowerUp = (GameObject) Resources.Load ("Prefabs/PowerUp");
@@ -52,12 +53,15 @@ public class OrbBehavior : MonoBehaviour {
 		if (mSpeedUp == null) {
 			mSpeedUp = (GameObject) Resources.Load ("Prefabs/SpeedUp");
 		}
+		if (mGrowUp == null) {
+			mGrowUp = (GameObject) Resources.Load ("Prefabs/GrowUp");
+		}
 		
 		// Set mass and adjust the scale to match
 		float mass = rigidbody2D.mass;
 		float diameter = Mathf.Sqrt(mass) * kScale;
 		transform.localScale = new Vector3(diameter, diameter);
-		mSpawner.Orbs++;
+		mWorld.Orbs++;
 			
 		
 		mInvul = true;
@@ -71,32 +75,32 @@ public class OrbBehavior : MonoBehaviour {
         mHitMidHigh = (AudioClip)Resources.Load("Sounds/energy orb mid high");  // Orb colliding sound (Mid-High)
 
 		explosion = Resources.Load("Prefabs/OrbExplosion") as GameObject;*/
+
+		if (explosion == null) {
+			explosion = Resources.Load("Prefabs/OrbExplosion") as GameObject;
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
-		if (health <= 0) {
-			explode();
-		}
 		if ( mInvul && Time.realtimeSinceStartup - mSpawnTime > mInvulTime )
 		{
 			mInvul = false;
 		}
 	}
 
-	private void explode() {
+	private void explode(GameObject other) {
 		if (rigidbody2D.mass > kSize3) {
-			smash(kSize2, kSize3, 2);
+			smash(kSize2, kSize3, 2, other);
 		} else if (rigidbody2D.mass > kSize2) {
-			smash(kSize1, kSize2, 2);
+			smash(kSize1, kSize2, 2, other);
 		} else {
 			Destroy(this.gameObject);
-			mSpawner.Orbs--;
+			mWorld.Orbs--;
 		}
 	}
 	
-	private void smash(float minSize, float maxSize, int pieces) {
+	private void smash(float minSize, float maxSize, int pieces, GameObject other) {
 		// get a new mass for the object
 		// This is a steaming mess that I need to clean up somehow
 		
@@ -112,44 +116,52 @@ public class OrbBehavior : MonoBehaviour {
 			e.transform.up = rigidbody2D.velocity; // Calculate new velocity
 			e.transform.up.Normalize();
 			e.transform.Rotate(0,0, rotatepiece + Random.Range (0f, 180f / pieces));
-			
+
+			ShotgunBlastBehavior shot = other.GetComponent<ShotgunBlastBehavior>();
 			e.transform.position = transform.position + e.transform.up * Mathf.Sqrt(newMass) / kScale;
 			e.rigidbody2D.velocity = (Vector2)(e.transform.up * kExplodeForce) + rigidbody2D.velocity;
+			e.rigidbody2D.velocity += (Vector2) shot.transform.up * 10.0f;
 			e.transform.up = rigidbody2D.velocity.normalized;
+
+
+			e.rigidbody2D.AddForce(shot.transform.up * 1000.0f);
 			
 			e.transform.localScale = Vector2.one * newMass;
 		}
 		
+		
+		float random = Random.Range (0.0f, 1.0f); 
+		
+		if (random <= 0.15f) {
+			float powerupSelect = Random.Range(0.0f, 1.0f);
 
-		float random = Random.Range ( 0.0f, 1.0f ); 
-		if (random <= .08) { // 08% chance of power up spawning upon orb death
-			GameObject powerUp = (GameObject) Instantiate(mPowerUp);
-			powerUp.transform.position = transform.position;
+			if (powerupSelect > 0.0f && powerupSelect <= 0.33f) {
+				GameObject powerUp = (GameObject) Instantiate(mPowerUp);
+				powerUp.transform.position = transform.position;
+			} else if (powerupSelect > 0.33f && powerupSelect <= 0.66f) {
+				GameObject speedUp = (GameObject) Instantiate(mSpeedUp);
+				speedUp.transform.position = transform.position;
+			} else {
+				GameObject growUp = (GameObject) Instantiate(mGrowUp);
+				growUp.transform.position = transform.position;
+			}
 		}
-		random = Random.Range ( 0.0f, 1.0f ); 
-		if (random <= .08) { // 08% chance of speed up spawning upon orb death
-			GameObject speedUp = (GameObject) Instantiate(mSpeedUp);
-			speedUp.transform.position = transform.position;
-		}
-		//Orb explosion
-		//GameObject ex = Instantiate(explosion) as GameObject;
-		//ex.transform.position = transform.position;
 		
-		mSpawner.Orbs--;
+		mWorld.Orbs--;
 		Destroy(this.gameObject);
-		
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
 		if (!mInvul) {
-			if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)") {
-				health -= 50.0f;
-				Destroy(other.gameObject);
-                Play(mHitLow, 1f, 1);
-			}
 			if (other.gameObject.name == "OrangeRedShip" || other.gameObject.name == "PeriwinkleShip" ) {
 				ShieldSprite shield = other.gameObject.GetComponentInChildren<ShieldSprite>();
 				shield.mImpactTime = Time.realtimeSinceStartup;
+			}
+			
+			if (other.gameObject.name == "OrangeCity" || other.gameObject.name == "BlueCity") {
+				//Orb explosion
+				GameObject ex = Instantiate(explosion) as GameObject;
+				ex.transform.position = transform.position;
 			}
 
 			#region Code for orbs colliding and destroying each other
@@ -166,6 +178,32 @@ public class OrbBehavior : MonoBehaviour {
                 { Play(mHitMidHigh, 1f, 1); }
 			}*/
 			#endregion
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D other) {
+		if (!mInvul) {
+			if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)") {
+				health -= 50.0f;
+				Destroy(other.gameObject);
+				Play(mHitLow, 1f, 1);
+				//Orb explosion
+				GameObject ex = Instantiate(explosion) as GameObject;
+				ex.transform.position = transform.position;
+
+				if (health <= 0) {
+					explode(other.gameObject);
+				}
+			}
+		}
+
+		if (other.gameObject.name == "WaveBlastBlue(Clone)" || other.gameObject.name == "WaveBlastOrange(Clone)") {
+			Debug.Log("WaveBlastPush");
+			/*Vector2 dir = other.transform.position - transform.position;
+			dir.Normalize();*/
+			WaveBlastBehavior wave = other.GetComponent<WaveBlastBehavior>();
+			rigidbody2D.AddForce(wave.mSpeed * wave.transform.up * wave.mForce);
+			//other.gameObject.rigidbody2D.AddForce(mSpeed * transform.up * mForce);
 		}
 	}
 
