@@ -16,11 +16,17 @@ public class Ship : MonoBehaviour {
 	//The middle of our world. Used to reorient the ships to their default direction after respawning.
 	private Vector3 originOfWorld = new Vector3(0f, 0f, 0f);
 
+	private float mGrowScale = 2.5f;
+
 	//Tracks the powerup level of the ship.
-	public int powerLevel = 1;
-	public bool mSpeedUp = false;
-	public float kSpeedBegin = 0.0f;
-	public float kSpeedEnd = 8.0f;
+	private int powerLevel = 1;
+	private bool mSpeedUp = false;
+	private float kSpeedBegin = 0.0f;
+	private float kSpeedEnd = 8.0f;
+
+	public bool mGrowUp = false;
+	private float kGrowBegin = 0.0f;
+	private float kGrowEnd = 8.0f;
 
 	//Invulnerability flag.
 	public bool isInvulnerable = true;
@@ -53,7 +59,7 @@ public class Ship : MonoBehaviour {
 	//private float mWaveBlastLastCharge = -1.0f;
 	
 	//private float mShotgunBlastSpawnTime = -1.0f;
-	private const float kShotgunBlastDefaultSpawnInterval = 0.8f;
+	private const float kShotgunBlastDefaultSpawnInterval = 0.7f;
 	private float kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
 	private float kShotgunBlastSpeedSpawnInterval = 0.2f;
 	private float kShotgunBlastChargeInterval = 0.5f;
@@ -114,6 +120,13 @@ public class Ship : MonoBehaviour {
 				kHeroSpeed = kDefaultHeroSpeed;
 				kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
 				kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval;
+			}
+		}
+
+		if (mGrowUp == true) {
+			if (Time.realtimeSinceStartup - kGrowBegin > kGrowEnd) {
+				mGrowUp = false;
+				transform.localScale -= new Vector3(mGrowScale, mGrowScale, 0.0f);
 			}
 		}
 
@@ -225,6 +238,12 @@ public class Ship : MonoBehaviour {
 			kWaveBlastSpawnInterval = kWaveBlastSpeedSpawnInterval;
 		}
 
+		if ((other.gameObject.name == "GrowUp" || other.gameObject.name == "GrowUp(Clone)") && mGrowUp == false) {
+			Destroy(other.gameObject);
+			kGrowBegin = Time.realtimeSinceStartup;
+			transform.localScale += new Vector3(mGrowScale, mGrowScale, 0.0f);
+			mGrowUp = true;
+		}
 	}
 	#endregion
 
