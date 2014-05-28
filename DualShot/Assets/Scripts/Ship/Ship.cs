@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Ship : MonoBehaviour {
-
+	
 	//Keeps track of the max health of a player.
 	public string controller;
 	private const float HEALTH = 20f;
@@ -15,30 +15,36 @@ public class Ship : MonoBehaviour {
 	private Vector3 startLocation = new Vector3(0f, 0f, 0f);
 	//The middle of our world. Used to reorient the ships to their default direction after respawning.
 	private Vector3 originOfWorld = new Vector3(0f, 0f, 0f);
-
+	
 	//Tracks the powerup level of the ship.
-	public int powerLevel = 1;
-	public bool mSpeedUp = false;
-	public float kSpeedBegin = 0.0f;
-	public float kSpeedEnd = 8.0f;
-
+	private int powerLevel = 1;
+	private bool mSpeedUp = false;
+	private float kSpeedBegin = 0.0f;
+	private float kSpeedEnd = 8.0f;
+	
+	public bool mGrowUp = false;
+	private float mGrowScale = 2.5f;
+	private float mGrowMass = 3.0f;
+	private float kGrowBegin = 0.0f;
+	private float kGrowEnd = 8.0f;
+	
 	//Invulnerability flag.
 	public bool isInvulnerable = true;
 	public bool isController = false;
-
-	private const float kDefaultHeroSpeed = 2500f;
+	
+	private const float kDefaultHeroSpeed = 3000f;
 	private float kHeroSpeed = kDefaultHeroSpeed;
-	private float kSpeedHeroSpeed = 6000f;
+	private float kSpeedHeroSpeed = 9000f;
 	private Vector3 mClampedPosition;
 	private Vector3 mNewDirection;
 	private Vector3 mNewRotation;
-    //private AudioClip mBackground;  // "music by audionautix.com"
-
+	//private AudioClip mBackground;  // "music by audionautix.com"
+	
 	public GameObject mWaveProjectile = null;
 	public GameObject[] mShotgunProjectile = null;
 	private bool hasFired = false;
 	private bool isCharging = false;
-
+	
 	//private float mAbsoluteWeaponInterval = .4f;
 	//private float mTimeOfLastCharge = 0.0f;
 	
@@ -53,7 +59,7 @@ public class Ship : MonoBehaviour {
 	//private float mWaveBlastLastCharge = -1.0f;
 	
 	//private float mShotgunBlastSpawnTime = -1.0f;
-	private const float kShotgunBlastDefaultSpawnInterval = 0.8f;
+	private const float kShotgunBlastDefaultSpawnInterval = 0.5f;
 	private float kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
 	private float kShotgunBlastSpeedSpawnInterval = 0.2f;
 	private float kShotgunBlastChargeInterval = 0.5f;
@@ -62,20 +68,24 @@ public class Ship : MonoBehaviour {
 	//private float kShotgunMaxChargeTime = 1.1f;
 	//private float mShotgunBlastLastCharge = -1.0f;
 	private float kShotgunPowerInterval = .2f;
-
+	
 	private const int kMinShotgunShots = 5;
 	private const float kMinShotgunSpread = -20.0f;
-
+	
 	private float kShotgunSpread = kMinShotgunSpread;
 	private int kShotgunShots = kMinShotgunShots;
 	//private int kMaxShotgunShots = 9;
-
+	
 	Fire fire;
 	Vector2 mousedir;
-
+	
 	RespawnBehavior respawn;
 	CountdownTimer count;
-
+	
+	private GameObject powerupPickup = null;
+	private GameObject speedupPickup = null;
+	private GameObject speedupParticle = null;
+	
 	void Start () {
 		// Initiate ship death and respawn
 		if (explosion == null) {
@@ -85,11 +95,11 @@ public class Ship : MonoBehaviour {
 		foreach( string i in joysticks ) {
 			Debug.Log (i);
 		}
-
+		
 		fire = GetComponent<Fire>();
 		
 		float sizeX = Camera.main.orthographicSize * Camera.main.aspect;
-
+		
 		if (gameObject.name == "OrangeRedShip") {
 			startLocation -= new Vector3(sizeX - 50f, 0f, 0f);
 		} 
@@ -100,23 +110,43 @@ public class Ship : MonoBehaviour {
 		startLocation.y = transform.position.y;
 		transform.position = startLocation;
 		
-        //mBackground = (AudioClip)Resources.Load("Sounds/DualShotGameplay");
-        //Play(mBackground, 1f, 1);
-
+		//mBackground = (AudioClip)Resources.Load("Sounds/DualShotGameplay");
+		//Play(mBackground, 1f, 1);
+		
 		respawn = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
 		count = GameObject.Find("Countdown").GetComponent<CountdownTimer>();
+		if (powerupPickup == null) {
+			powerupPickup = Resources.Load("Prefabs/PowerupPickup") as GameObject;
+		}
+		
+		if (speedupPickup == null) {
+			speedupPickup = Resources.Load("Prefabs/SpeedupPickup") as GameObject;
+		}
 	}
 	
 	void Update () {
 		if (mSpeedUp == true) {
+			if (speedupParticle != null) {
+				speedupParticle.transform.position = transform.position;
+			}
 			if (Time.realtimeSinceStartup - kSpeedBegin > kSpeedEnd) {
 				mSpeedUp = false;
 				kHeroSpeed = kDefaultHeroSpeed;
 				kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
 				kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval;
+				Destroy(speedupParticle);
 			}
 		}
-
+		
+		if (mGrowUp == true) {
+			if (Time.realtimeSinceStartup - kGrowBegin > kGrowEnd) {
+				mGrowUp = false;
+				kHeroSpeed = kDefaultHeroSpeed;
+				transform.localScale -= new Vector3(mGrowScale, mGrowScale, 0.0f);
+				rigidbody2D.mass -= mGrowMass;
+			}
+		}
+		
 		//No longer necessary. Maybe.
 		//DieCheck(); // Check if ship is dead
 		WorldBehavior WorldBehavior = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
@@ -127,43 +157,59 @@ public class Ship : MonoBehaviour {
 			mousedir = WorldBehavior.mMainCamera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
 			mousedir.Normalize();
 			transform.up = mousedir;
-
-			if (Input.GetAxis("Horizontal") > 0.1f || Input.GetAxis ("Horizontal") < -0.1f ||
-			    Input.GetAxis ("Vertical") > 0.1f || Input.GetAxis ("Vertical") < -0.1f) {
+			
+			if (Input.GetAxisRaw("Horizontal") > 0f || Input.GetAxisRaw("Horizontal") < 0f ||
+			    Input.GetAxisRaw("Vertical") > 0f || Input.GetAxisRaw("Vertical") < 0f) {
 				Vector2 move = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-				rigidbody2D.AddForce ( move.normalized * kHeroSpeed);
+				rigidbody2D.AddForce (move.normalized * kHeroSpeed);
 			}
-
+			
+			/*
+			if (Input.GetAxis("Horizontal") > 0.1f || Input.GetAxis("Horizontal") < -0.1f ||
+				Input.GetAxis("Vertical") > 0.1f || Input.GetAxis("Vertical") < -0.1f) {
+				Vector2 move = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+				rigidbody2D.AddForce(move.normalized * kHeroSpeed);
+			}
+			*/
+			//Enable with GetAxisRaw instead of GetAxis for the movement for exact controls.
+			/*
+			if (Input.GetAxisRaw("Horizontal") == 0f && Input.GetAxisRaw("Vertical") == 0f) {
+				rigidbody2D.velocity = Vector3.zero;
+				rigidbody2D.angularVelocity = 0f;
+			}
+			*/
+			
 			// Wave Blast single click
 			if (Input.GetButtonDown("Fire1")) {
 				StartWaveBlast();
 				StartCoroutine("WaveBlastChargeCoroutine");
 				mWaveBlastChargeTime = Time.realtimeSinceStartup;
 			}
-
+			
 			// Wave Blast Charge fire
 			if (Input.GetButtonUp("Fire1")) {
 				StopCoroutine("WaveBlastChargeCoroutine");
 				StopChargeParticle();
 				FireChargedWaveBlast();
 			}
-
+			
 			// Shotgun Blast single click
 			if (Input.GetButtonDown("Fire2")) {
 				StartShotgunBlast();
 				StartCoroutine("ShotgunBlastChargeCoroutine");
 			}
-
+			
 			// Shotgun Blast charge control
 			if (Input.GetButtonUp("Fire2")) {
 				StopCoroutine("ShotgunBlastChargeCoroutine");
 				StopChargeParticle();
 				FireChargedShotgunBlast();
 			}
-
+			
 		} else if (isController == true) {
 			// Player movement
-			Vector2 move = new Vector2(Input.GetAxis(controller + "Horizontal"), Input.GetAxis(controller + "Vertical"));
+			//Vector2 move = new Vector2(Input.GetAxis(controller + "Horizontal"), Input.GetAxis(controller + "Vertical"));
+			Vector2 move = new Vector2(Input.GetAxisRaw(controller + "Horizontal"), Input.GetAxisRaw(controller + "Vertical"));
 			rigidbody2D.AddForce(move.normalized * kHeroSpeed);
 			
 			// Right Stick Aim
@@ -172,10 +218,10 @@ public class Ship : MonoBehaviour {
 			// Wave blast single click
 			if (Input.GetButtonDown(controller + "Fire1")) {
 				StartWaveBlast();
-			    StartCoroutine("WaveBlastChargeCoroutine");
-			    mWaveBlastChargeTime = Time.realtimeSinceStartup;
+				StartCoroutine("WaveBlastChargeCoroutine");
+				mWaveBlastChargeTime = Time.realtimeSinceStartup;
 			}
-
+			
 			// Wave blast charge
 			if (Input.GetButtonUp(controller + "Fire1")) {
 				StopCoroutine("WaveBlastChargeCoroutine");
@@ -183,13 +229,13 @@ public class Ship : MonoBehaviour {
 				
 				FireChargedWaveBlast();
 			}
-
+			
 			// Shotgun single click
 			if (Input.GetButtonDown(controller + "Fire2")) { // this is Right-Control
 				StartShotgunBlast();
 				StartCoroutine("ShotgunBlastChargeCoroutine");
 			}
-
+			
 			// Shotgun charge
 			if (Input.GetButtonUp(controller + "Fire2")) {
 				StopCoroutine("ShotgunBlastChargeCoroutine");
@@ -198,14 +244,14 @@ public class Ship : MonoBehaviour {
 			}
 		}
 	}
-
+	
 	#region Collision with orbs and pickup powerups
 	void OnCollisionEnter2D(Collision2D other) {
 		if (other.gameObject.name == "Orb(Clone)" && !isInvulnerable) {
 			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * 
-					other.gameObject.rigidbody2D.mass) / 100.0f);
+			                   other.gameObject.rigidbody2D.mass) / 100.0f);
 		}
-
+		
 		if (other.gameObject.name == "PowerUp" || other.gameObject.name == "PowerUp(Clone)") {
 			Destroy(other.gameObject);
 			
@@ -214,8 +260,11 @@ public class Ship : MonoBehaviour {
 			if (powerLevel > 3) {
 				powerLevel = 3;
 			}
+			GameObject pickup = Instantiate(powerupPickup) as GameObject;
+			pickup.transform.position = transform.position;
+			pickup.particleEmitter.Emit(150);
 		}
-
+		
 		if (other.gameObject.name == "SpeedUp" || other.gameObject.name == "SpeedUp(Clone)") {
 			Destroy(other.gameObject);
 			kSpeedBegin = Time.realtimeSinceStartup;
@@ -223,11 +272,22 @@ public class Ship : MonoBehaviour {
 			kHeroSpeed = kSpeedHeroSpeed;
 			kShotgunBlastSpawnInterval = kShotgunBlastSpeedSpawnInterval;
 			kWaveBlastSpawnInterval = kWaveBlastSpeedSpawnInterval;
+			if (speedupParticle == null) {
+				speedupParticle = Instantiate(speedupPickup) as GameObject;
+			}
 		}
-
+		
+		if ((other.gameObject.name == "GrowUp" || other.gameObject.name == "GrowUp(Clone)") && mGrowUp == false) {
+			Destroy(other.gameObject);
+			kGrowBegin = Time.realtimeSinceStartup;
+			kHeroSpeed = kSpeedHeroSpeed * 2;
+			transform.localScale += new Vector3(mGrowScale, mGrowScale, 0.0f);
+			rigidbody2D.mass += mGrowMass;
+			mGrowUp = true;
+		}
 	}
 	#endregion
-
+	
 	#region Ship dies
 	private void DieCheck() {
 		if (currentHealth <= 0f) {
@@ -246,12 +306,12 @@ public class Ship : MonoBehaviour {
 			flames.particleSystem.Clear();
 			
 			gameObject.SetActive(false);
-
-            //Play(mShipDead, 1f, 1);
+			
+			//Play(mShipDead, 1f, 1);
 		}
 	}
 	#endregion
-
+	
 	#region Reset the ship
 	public void Reset() {
 		transform.position = startLocation;
@@ -266,21 +326,21 @@ public class Ship : MonoBehaviour {
 		powerLevel = 0;
 	}
 	#endregion
-
+	
 	#region Small useful functions
 	public void RestoreHealth() {
 		currentHealth = HEALTH;
 	}
-
+	
 	public void Suicide() {
 		currentHealth = 0f;
 	}
-
+	
 	public float GetCurrentHealth() {
 		return currentHealth;
 	}
 	#endregion
-
+	
 	#region Wave blast single/charge fire support
 	private void StartWaveBlast() {
 		if (!hasFired) {
@@ -291,13 +351,13 @@ public class Ship : MonoBehaviour {
 			StartCoroutine("WaveBlastStallTime");
 		}
 	}
-
+	
 	IEnumerator WaveBlastStallTime() {
 		hasFired = true;
 		yield return new WaitForSeconds(kWaveBlastSpawnInterval);
 		hasFired = false;
 	}
-
+	
 	IEnumerator WaveBlastChargeCoroutine() {
 		if (!isCharging) {
 			yield return new WaitForSeconds(kWaveBlastChargeInterval);
@@ -306,7 +366,7 @@ public class Ship : MonoBehaviour {
 			StartCoroutine("ChargeParticleCoroutine");
 		}
 	}
-
+	
 	private void FireChargedWaveBlast() {
 		if (isCharging) {
 			kWaveTotalChargeTime = Time.realtimeSinceStartup - mWaveBlastChargeTime;
@@ -321,21 +381,25 @@ public class Ship : MonoBehaviour {
 		}
 	}
 	#endregion
-
+	
 	#region Shotgun blast single/charge fire support
 	private void StartShotgunBlast() {
 		if (!hasFired) {
-			fire.FireShotgunBlast(this.gameObject, powerLevel);
+			if (!mGrowUp) {
+				fire.FireShotgunBlast(this.gameObject, powerLevel, 15f);
+			} else {
+				fire.FireShotgunBlast(this.gameObject, powerLevel, 30f);
+			}
 			StartCoroutine("ShotgunBlastStallTime");
 		}
 	}
-
+	
 	IEnumerator ShotgunBlastStallTime() {
 		hasFired = true;
 		yield return new WaitForSeconds(kShotgunBlastSpawnInterval);
 		hasFired = false;
 	}
-
+	
 	IEnumerator ShotgunBlastChargeCoroutine() {
 		if (!isCharging) {
 			yield return new WaitForSeconds(kShotgunBlastChargeInterval);
@@ -355,10 +419,14 @@ public class Ship : MonoBehaviour {
 			kShotgunSpread = -80.0f;
 		}
 	}
-
+	
 	private void FireChargedShotgunBlast() {
 		if (isCharging) {
-			fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel);
+			if (!mGrowUp) {
+				fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel, 15f);
+			} else {
+				fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel, 30f);
+			}
 			isCharging = false;
 			StartCoroutine("ShotgunBlastStallTime");
 		}
@@ -366,11 +434,11 @@ public class Ship : MonoBehaviour {
 		kShotgunSpread = kMinShotgunSpread;
 	}
 	#endregion
-
+	
 	#region Charge PARTICLE support
 	IEnumerator ChargeParticleCoroutine() {
 		Transform theCharge = transform.Find("Charge");
-
+		
 		theCharge.particleSystem.enableEmission = true;
 		theCharge.particleSystem.startSize = 1.5f;
 		yield return new WaitForSeconds(0.2f);
@@ -382,7 +450,7 @@ public class Ship : MonoBehaviour {
 		yield return new WaitForSeconds(0.2f);
 		theCharge.particleSystem.startSize = 3.5f;
 	}
-
+	
 	private void StopChargeParticle() {
 		Transform theCharge = transform.Find("Charge");
 		StopCoroutine("ChargeParticleCoroutine");
@@ -390,19 +458,19 @@ public class Ship : MonoBehaviour {
 		theCharge.particleSystem.enableEmission = false;
 	}
 	#endregion
-
+	
 	// Audio clip player
-    public void Play(AudioClip clip, float volume, float pitch)
-    {
-        //Create an empty game object
-        GameObject go = new GameObject("Audio: " + clip.name);
-
-        //Create the source
-        AudioSource source = go.AddComponent<AudioSource>();
-        source.clip = clip;
-        source.volume = volume;
-        source.pitch = pitch;
-        source.Play();
-        Destroy(go, clip.length);
-    }
+	public void Play(AudioClip clip, float volume, float pitch)
+	{
+		//Create an empty game object
+		GameObject go = new GameObject("Audio: " + clip.name);
+		
+		//Create the source
+		AudioSource source = go.AddComponent<AudioSource>();
+		source.clip = clip;
+		source.volume = volume;
+		source.pitch = pitch;
+		source.Play();
+		Destroy(go, clip.length);
+	}
 }

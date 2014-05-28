@@ -73,28 +73,13 @@ public class Fire : MonoBehaviour {
 		}
 	}
 	
-	public void FireShotgunBlast(GameObject ship, int powerLevel) {
-		FireShotgun(kShotgunShots, kShotgunSpread, ship, powerLevel);
+	public void FireShotgunBlast(GameObject ship, int powerLevel, float displacement) {
+		FireShotgun(kShotgunShots, kShotgunSpread, ship, powerLevel, displacement);
 		Play(mGunShot1, 1f, 1);
 	}
 
-	/*
-	public void FireChargedShotgunBlast(GameObject ship, int powerLevel, float kShotgunTotalChargeTime) {
-		if (kShotgunTotalChargeTime > kShotgunMaxChargeTime) {
-			FireShotgun(9, -80.0f, ship, powerLevel);
-		} else if (kShotgunTotalChargeTime > .9f) {
-			FireShotgun(8, -70.0f, ship, powerLevel);
-		} else if (kShotgunTotalChargeTime > .7f) {
-			FireShotgun(7, -45.0f, ship, powerLevel);
-		} else {
-			FireShotgun(6, -35.0f, ship, powerLevel);
-		} 
-
-	}
-	*/
-	
 	// Shotgun firing
-	public void FireShotgun(int shots, float spread, GameObject ship, int powerLevel) {
+	public void FireShotgun(int shots, float spread, GameObject ship, int powerLevel, float displacement) {
 		for (int i = 0; i <= shots; i++) {
 			GameObject e = Instantiate(mShotgunProjectile[i]) as GameObject;
 			ShotgunBlastBehavior shotgunBlast = e.GetComponent<ShotgunBlastBehavior>();
@@ -102,7 +87,7 @@ public class Fire : MonoBehaviour {
 			if (null != shotgunBlast) {
 				if (powerLevel > 1)
 					shotgunBlast.SetPowerLevel(powerLevel);
-				e.transform.position = ship.transform.position + ship.transform.up * 14f;
+				e.transform.position = ship.transform.position + ship.transform.up * displacement; //displacement, was 14f
 				e.transform.up = ship.transform.up;
 				shotgunBlast.AddShotgunSpeed(rigidbody2D.velocity.magnitude);
 				shotgunBlast.SetForwardDirection(e.transform.up);

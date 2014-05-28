@@ -11,6 +11,7 @@ public class BaseBehavior : MonoBehaviour {
 	private float currentHealth = HEALTH;
 
 	public bool isInvulnerable = false;
+	public bool alive = true;
 	
 	private BaseSpriteManager spriteMan = null;
 	private int numSprites = 24; // This is the total number of sprites, includes the final once which will is the dieing sprite
@@ -20,13 +21,35 @@ public class BaseBehavior : MonoBehaviour {
 
     private AudioClip mBaseHit;
     private AudioClip mBaseDead;
+   
+	
+	// Targets for the Round Counters
+	
+	private Vector3	BluePoint1, BluePoint2, BluePoint3,
+					OrangePoint1, OrangePoint2, OrangePoint3;
+	
+	private GameObject blueRoundWin, orangeRoundWin;
 
 	void Start () {
+		Camera mcamera = Camera.main;
+		float aspectSize = mcamera.aspect * mcamera.orthographicSize;
+		BluePoint1 = new Vector3( aspectSize * .95f, 92f);
+		BluePoint2 = new Vector3( aspectSize * .9f, 92f);
+		BluePoint3 = new Vector3( aspectSize * .95f, 82f);
+		OrangePoint1 = new Vector3( -aspectSize * .95f, 92f);
+		OrangePoint2 = new Vector3( -aspectSize * .9f, 92f);
+		OrangePoint3 = new Vector3( -aspectSize * .95f, 82f);
 		if (mCamera == null) {
 			mCamera = Camera.main;
 		}
 		if (spriteMan == null) {
 			spriteMan = GetComponent<BaseSpriteManager>();
+		}
+		if (blueRoundWin == null) {
+			blueRoundWin = (GameObject)Resources.Load ("Prefabs/BlueRoundCounter");
+		}
+		if (orangeRoundWin == null) {
+			orangeRoundWin = (GameObject)Resources.Load ("Prefabs/OrangeRoundCounter");
 		}
 
 		spriteMan.mCurrentSpriteAction = BaseAnimation;
@@ -66,7 +89,9 @@ public class BaseBehavior : MonoBehaviour {
 		{
 			spriteMan.nextSprite();
 		}
-		Win();
+		if (alive) {
+			Win();
+		}
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
@@ -87,7 +112,7 @@ public class BaseBehavior : MonoBehaviour {
 	}
 	private void Win() {
 		if (currentHealth <= 0f) {
-			
+			alive = false;
 			spriteMan.nextSprite();
 			StartCoroutine("EXPLOSIVE_VICTORY");
 			/*
@@ -111,8 +136,29 @@ public class BaseBehavior : MonoBehaviour {
 	}
 
     IEnumerator WinScreen() {
-        yield return new WaitForSeconds(4.5f);
 		WorldBehavior world = GameObject.Find ("GameManager").GetComponent<WorldBehavior>();
+    	if(gameObject.name == "OrangeCity") {
+			GameObject e = (GameObject)	Instantiate(blueRoundWin);
+			e.transform.position = new Vector3(0, -50);
+			if (world.blueScore() == 0){
+				e.GetComponent<RoundCounterBehavior>().mTargetPos = BluePoint1;
+			} else if (world.blueScore() == 1) {
+				e.GetComponent<RoundCounterBehavior>().mTargetPos = BluePoint2;
+			} else {
+				e.GetComponent<RoundCounterBehavior>().mTargetPos = BluePoint3;
+			}
+    	} else {
+			GameObject e = (GameObject)	Instantiate(orangeRoundWin);
+			e.transform.position = new Vector3(0, -50);
+			if (world.orangeScore() == 0) {
+				e.GetComponent<RoundCounterBehavior>().mTargetPos = OrangePoint1;
+			} else if (world.orangeScore() == 1) {
+				e.GetComponent<RoundCounterBehavior>().mTargetPos = OrangePoint2;
+			} else {
+				e.GetComponent<RoundCounterBehavior>().mTargetPos = OrangePoint3;
+			}
+    	}
+        yield return new WaitForSeconds(4.5f);
 		if (gameObject.name == "OrangeCity")
 		{
 			world.RoundEnd(2);

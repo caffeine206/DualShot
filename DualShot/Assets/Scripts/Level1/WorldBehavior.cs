@@ -19,7 +19,16 @@ public class WorldBehavior : MonoBehaviour {
 	// Global Manager
     protected static GlobalBehavior sTheGameState = null;
     private RespawnBehavior pause = null;
+    private GameObject blueRoundWin, orangeRoundWin;
+    
+	private Color orange = new Color( 0, 131, 255);
+	private Color blue = new Color( 127, 255, 0);
 	
+	// Targets for the Round Counters
+	
+	private Vector3	BluePoint1, BluePoint2, BluePoint3,
+	OrangePoint1, OrangePoint2, OrangePoint3;
+						
 	// Use this for initialization
 	void Start () {
 	//sTheGameState.
@@ -27,7 +36,36 @@ public class WorldBehavior : MonoBehaviour {
 		if (pause == null) {
 			pause = GetComponent<RespawnBehavior>();
 		}
+		if (blueRoundWin == null) {
+			blueRoundWin = (GameObject)Resources.Load ("Prefabs/BlueRoundCounter");
+		}
+		if (orangeRoundWin == null) {
+			orangeRoundWin = (GameObject)Resources.Load ("Prefabs/OrangeRoundCounter");
+		}
 		
+		// setup round counters
+		
+		float aspectSize = mMainCamera.aspect * mMainCamera.orthographicSize;
+		BluePoint1 = new Vector3( aspectSize * .95f, 92f);
+		BluePoint2 = new Vector3( aspectSize * .9f, 92f);
+		BluePoint3 = new Vector3( aspectSize * .95f, 82f);
+		OrangePoint1 = new Vector3( -aspectSize * .95f, 92f);
+		OrangePoint2 = new Vector3( -aspectSize * .9f, 92f);
+		OrangePoint3 = new Vector3( -aspectSize * .95f, 82f);
+		
+		if (sTheGameState.BlueWins > 0) {
+			spawnBlueCounter(BluePoint1);
+		} 
+		if (sTheGameState.BlueWins > 1) {
+			spawnBlueCounter(BluePoint2);
+		}
+		
+		if (sTheGameState.OrangeWins > 0) {
+			spawnOrangeCounter(OrangePoint1);
+		}
+		if (sTheGameState.OrangeWins > 1) {
+			spawnOrangeCounter(OrangePoint2);
+		}
 		/*
 		if (mEcho == null) {
 			mEcho = GameObject.Find ("GUI Text").GetComponent<GUIText>();
@@ -232,7 +270,6 @@ public class WorldBehavior : MonoBehaviour {
 		} }
 	public void RoundEnd(int winner) {
 		sTheGameState.RoundNum++;
-		
 		if ( winner == 2 ) {
 			sTheGameState.BlueWins++;
 			if (sTheGameState.BlueWins >= sTheGameState.BestOf) {
@@ -242,6 +279,7 @@ public class WorldBehavior : MonoBehaviour {
 			}
 		} else {
 			sTheGameState.OrangeWins++;
+			
 			if (sTheGameState.OrangeWins >= sTheGameState.BestOf) {
 				Application.LoadLevel (winner);
 			} else {
@@ -257,7 +295,22 @@ public class WorldBehavior : MonoBehaviour {
 		RoundButton lastActive = GameObject.Find ("Setup-Rounds" + sTheGameState.BestOf + "Button" ).GetComponent<RoundButton>();
 		lastActive.Deactivate();
 		sTheGameState.BestOf = (int)(value) - 48;
-		Debug.Log("RoundNum: " + sTheGameState.BestOf);
+	}
+	public int blueScore() {
+		return sTheGameState.BlueWins;
+	}
+	public int orangeScore() {
+		return sTheGameState.OrangeWins;
+	}
+	private void spawnBlueCounter(Vector3 target) {
+		GameObject e = (GameObject)	Instantiate(blueRoundWin);
+		e.transform.position = target;
+		e.GetComponent<RoundCounterBehavior>().mTargetPos = target;
+	}
+	private void spawnOrangeCounter(Vector3 target) {
+		GameObject e = (GameObject)	Instantiate(orangeRoundWin);
+		e.transform.position = target;
+		e.GetComponent<RoundCounterBehavior>().mTargetPos = target;
 	}
 	
 	#endregion

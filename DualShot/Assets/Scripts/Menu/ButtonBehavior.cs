@@ -17,6 +17,7 @@ public class ButtonBehavior : MonoBehaviour
     private Vector3 Controls = new Vector3(0, 20, -9);
     private Vector3 MainMenu = new Vector3(0, 0, -9);
 
+
     // Use this for initialization
     void Start()
     {
@@ -37,12 +38,18 @@ public class ButtonBehavior : MonoBehaviour
     void OnMouseEnter()
     {
         tm.fontSize = 55;
-        Play(mHover, 0.5f, 1);
+        renderer.material.color = new Color(95, 153, 207, 255);
+        //renderer.material.color = Color.red;
+        Play(mHover, 0.25f, 1);
     }
     // To de-highlight button text when mouse is over collider
     void OnMouseExit()
     {
         tm.fontSize = 50;
+        //renderer.material.color = new Color(0.8f, 0.282f, 0f, 1);
+        renderer.material.color = Color.white;
+
+        //renderer.material.color = Color.blue;
     }
 
 
@@ -51,42 +58,42 @@ public class ButtonBehavior : MonoBehaviour
         // For button up controls based on the "text" of the button
 
         // Main menu - Controls - Credits - Instructions buttons
-        if (tm.text == "Controls")
+        if (GetComponent<TextMesh>().text == "Controls")
         {
             Camera.main.transform.position = Controls;
         }
-        if (tm.text == "Credits")
+        if (GetComponent<TextMesh>().text == "Credits")
         {
             Camera.main.transform.position = Credits;
         }
-        if (tm.text == "Instructions")
+        if (GetComponent<TextMesh>().text == "Instructions")
         {
             Camera.main.transform.position = Instructions;
         }
-        if (tm.text == "Main Menu")
+        if (GetComponent<TextMesh>().text == "Main Menu")
         {
             Camera.main.transform.position = MainMenu;
         }
-        if (tm.text == "Exit")
+        if (GetComponent<TextMesh>().text == "Exit")
         {
             Application.Quit();
         }
         if (GetComponent<TextMesh>().text == "Start")
         {
-            Camera.main.transform.position = Setup;
+            //Camera.main.transform.position = Setup;
+            Application.LoadLevel(1);   // Level 1
         }
+
         // Pause menu buttons
-        if (tm.text == "Resume")
+        if (GetComponent<TextMesh>().text == "Resume")
         {
             //resume.Pause();
         }
-        if (tm.text == "Reset")
+        if (GetComponent<TextMesh>().text == "Reset")
         {
-			WorldBehavior world = GameObject.Find ("GameManager").GetComponent<WorldBehavior>();
-			world.resetScore();
             Application.LoadLevel(1);   // Level 1
         }
-        if (tm.text == "Quit")
+        if (GetComponent<TextMesh>().text == "Quit")
         {
             Time.timeScale = 1f;
             Application.LoadLevel(0);   // Menu

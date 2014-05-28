@@ -36,7 +36,7 @@ public class RoundButton : MonoBehaviour
 	// To highlight button text when mouse is over collider
 	void OnMouseEnter()
 	{
-		tm.fontSize = 70;
+		tm.fontSize = 55;
 		Play(mHover, 0.5f, 1);
 	}
 	// To de-highlight button text when mouse is over collider
