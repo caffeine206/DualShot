@@ -85,6 +85,8 @@ public class Ship : MonoBehaviour {
 	private GameObject powerupPickup = null;
 	private GameObject speedupPickup = null;
 	private GameObject speedupParticle = null;
+	private GameObject growupPickup = null;
+	private GameObject growupParticle = null;
 	
 	void Start () {
 		// Initiate ship death and respawn
@@ -122,6 +124,10 @@ public class Ship : MonoBehaviour {
 		if (speedupPickup == null) {
 			speedupPickup = Resources.Load("Prefabs/SpeedupPickup") as GameObject;
 		}
+
+		if (growupPickup == null) {
+			growupPickup = Resources.Load("Prefabs/GrowupPickup") as GameObject;
+		}
 	}
 	
 	void Update () {
@@ -139,11 +145,15 @@ public class Ship : MonoBehaviour {
 		}
 
 		if (mGrowUp == true) {
+			if (growupParticle != null) {
+				growupParticle.transform.position = transform.position;
+			}
 			if (Time.realtimeSinceStartup - kGrowBegin > kGrowEnd) {
 				mGrowUp = false;
 				kHeroSpeed = kDefaultHeroSpeed;
 				transform.localScale -= new Vector3(mGrowScale, mGrowScale, 0.0f);
 				rigidbody2D.mass -= mGrowMass;
+				Destroy(growupParticle);
 			}
 		}
 
@@ -284,6 +294,9 @@ public class Ship : MonoBehaviour {
 			transform.localScale += new Vector3(mGrowScale, mGrowScale, 0.0f);
 			rigidbody2D.mass += mGrowMass;
 			mGrowUp = true;
+			if (growupParticle == null) {
+				growupParticle = Instantiate(growupPickup) as GameObject;
+			}
 		}
 	}
 	#endregion
