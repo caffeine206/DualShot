@@ -1,0 +1,17 @@
+git status - gets any differences
+
+git pull - gets updates
+
+git commit -a - stage to push all files
+
+git push - actually pushes updates to the master branch
+
+git fetch - checks for new commits
+
+git log - gives a log of commits by date
+
+git diff - shows the differences between your version and master
+
+git add - set a single file for the next commit
+
+when adding a message to an update message - type your message, push escape, type :wq and then hit enter
