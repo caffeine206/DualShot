@@ -6,6 +6,8 @@ public class BaseBehavior : MonoBehaviour {
 	private GameObject bigExplosion = null;
 	private GameObject smallExplosion2 = null;
 	private GameObject bigExplosion2 = null;
+	private GameObject fire = null;
+	private GameObject f = null;
 	
 	private const float HEALTH = 100f;
 	private float currentHealth = HEALTH;
@@ -58,7 +60,10 @@ public class BaseBehavior : MonoBehaviour {
         // Audio clip
         mBaseHit = (AudioClip)Resources.Load("Sounds/BaseHit");
         mBaseDead = (AudioClip)Resources.Load("Sounds/city explosion");
-		
+
+		if (fire == null) {
+			fire = Resources.Load("Prefabs/Fire") as GameObject;
+		}
 	}
 	
 	void Update () {
@@ -84,11 +89,44 @@ public class BaseBehavior : MonoBehaviour {
             Play(mBaseHit, 1f, 1);
 			Destroy(other.gameObject);
 			bounds.Orbs--;
+
+			FireControl();
 		}
 	}
+
+	private void FireControl() {
+		if (f == null) {
+			f = Instantiate(fire) as GameObject;
+			f.transform.position = transform.position;
+			
+			if (gameObject.name == "OrangeCity") {
+				f.transform.position += new Vector3(-5f, 0f, -1f);
+				f.transform.Rotate(Vector3.up * 90f);
+			} else if (gameObject.name == "BlueCity") {
+				f.transform.position += new Vector3(5f, 0f, -1f);
+				f.transform.Rotate(Vector3.up * -90f);
+			}
+		}
+
+		if (currentHealth < 90f && currentHealth >= 70f) {
+			f.particleSystem.startSize = 10f;
+		} else if (currentHealth < 70f && currentHealth >= 50f) {
+			f.particleSystem.startSize = 13f;
+		} else if (currentHealth < 50f && currentHealth >= 30f) {
+			f.particleSystem.startSize = 22f;
+			f.particleSystem.startLifetime = 0.6f;
+		} else if (currentHealth < 30f && currentHealth >= 10f) {
+			f.particleSystem.startSize = 28f;
+			f.particleSystem.startLifetime = 0.4f;
+		} else if (currentHealth < 10f) {
+			f.particleSystem.startSize = 35f;
+			f.particleSystem.startLifetime = 0.2f;
+		}
+	}
+
 	private void Win() {
 		if (currentHealth <= 0f) {
-			
+			f.particleSystem.enableEmission = false;
 			spriteMan.nextSprite();
 			StartCoroutine("EXPLOSIVE_VICTORY");
 			/*

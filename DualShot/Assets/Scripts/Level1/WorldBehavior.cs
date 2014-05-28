@@ -200,25 +200,25 @@ public class WorldBehavior : MonoBehaviour {
 			TopLeft.transform.position = new Vector2(mWorldMin.x, mWorldMax.y);
 			TopLeft.transform.Rotate(Vector3.forward * 45.0f);
 			TopLeftCollider = GameObject.Find ("TopLeft").GetComponent<BoxCollider2D>();
-			TopLeftCollider.size = new Vector2(60,60);
+			TopLeftCollider.size = new Vector2(70,70);
 			
 			TopRight = GameObject.Find ("TopRight");
 			TopRight.transform.position = new Vector2(mWorldMax.x, mWorldMax.y);
 			TopRight.transform.Rotate(Vector3.forward * 45.0f);
 			TopRightCollider = GameObject.Find ("TopRight").GetComponent<BoxCollider2D>();
-			TopRightCollider.size = new Vector2(60,60);
+			TopRightCollider.size = new Vector2(70,70);
 			
 			BotLeft = GameObject.Find ("BotLeft");
 			BotLeft.transform.position = new Vector2(mWorldMin.x, mWorldMin.y);
 			BotLeft.transform.Rotate(Vector3.forward * 45.0f);
 			BotLeftCollider = GameObject.Find ("BotLeft").GetComponent<BoxCollider2D>();
-			BotLeftCollider.size = new Vector2(60,60);
+			BotLeftCollider.size = new Vector2(70,70);
 
 			BotRight = GameObject.Find ("BotRight");
 			BotRight.transform.position = new Vector2(mWorldMax.x, mWorldMin.y);
 			BotRight.transform.Rotate(Vector3.forward * 45.0f);
 			BotRightCollider = GameObject.Find ("BotRight").GetComponent<BoxCollider2D>();
-			BotRightCollider.size = new Vector2(60,60);
+			BotRightCollider.size = new Vector2(70,70);
 		}
 	}
 	

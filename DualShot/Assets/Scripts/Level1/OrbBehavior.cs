@@ -23,7 +23,7 @@ public class OrbBehavior : MonoBehaviour {
 	private GameObject mPowerUp = null;
 	private GameObject mSpeedUp = null;
 	private GameObject mGrowUp = null;
-	//private GameObject explosion = null;
+	private GameObject explosion = null;
 	
 	private float mSpawnTime;
 	private bool mInvul;
@@ -75,6 +75,10 @@ public class OrbBehavior : MonoBehaviour {
         mHitMidHigh = (AudioClip)Resources.Load("Sounds/energy orb mid high");  // Orb colliding sound (Mid-High)
 
 		explosion = Resources.Load("Prefabs/OrbExplosion") as GameObject;*/
+
+		if (explosion == null) {
+			explosion = Resources.Load("Prefabs/OrbExplosion") as GameObject;
+		}
 	}
 	
 	// Update is called once per frame
@@ -124,29 +128,26 @@ public class OrbBehavior : MonoBehaviour {
 			e.transform.localScale = Vector2.one * newMass;
 		}
 		
+		
+		float random = Random.Range (0.0f, 1.0f); 
+		
+		if (random <= 0.15f) {
+			float powerupSelect = Random.Range(0.0f, 1.0f);
 
-		float random = Random.Range ( 0.0f, 1.0f ); 
-		if (random <= .08) { // 08% chance of power up spawning upon orb death
-			GameObject powerUp = (GameObject) Instantiate(mPowerUp);
-			powerUp.transform.position = transform.position;
+			if (powerupSelect > 0.0f && powerupSelect <= 0.33f) {
+				GameObject powerUp = (GameObject) Instantiate(mPowerUp);
+				powerUp.transform.position = transform.position;
+			} else if (powerupSelect > 0.33f && powerupSelect <= 0.66f) {
+				GameObject speedUp = (GameObject) Instantiate(mSpeedUp);
+				speedUp.transform.position = transform.position;
+			} else {
+				GameObject growUp = (GameObject) Instantiate(mGrowUp);
+				growUp.transform.position = transform.position;
+			}
 		}
-		random = Random.Range ( 0.0f, 1.0f ); 
-		if (random <= .08) { // 08% chance of speed up spawning upon orb death
-			GameObject speedUp = (GameObject) Instantiate(mSpeedUp);
-			speedUp.transform.position = transform.position;
-		}
-		random = Random.Range ( 0.0f, 1.0f ); 
-		if (random <= .08) { // 08% chance of speed up spawning upon orb death
-			GameObject growUp = (GameObject) Instantiate(mGrowUp);
-			growUp.transform.position = transform.position;
-		}
-		//Orb explosion
-		//GameObject ex = Instantiate(explosion) as GameObject;
-		//ex.transform.position = transform.position;
 		
 		mWorld.Orbs--;
 		Destroy(this.gameObject);
-		
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
@@ -155,10 +156,19 @@ public class OrbBehavior : MonoBehaviour {
 				health -= 50.0f;
 				Destroy(other.gameObject);
                 Play(mHitLow, 1f, 1);
+				//Orb explosion
+				GameObject ex = Instantiate(explosion) as GameObject;
+				ex.transform.position = transform.position;
 			}
 			if (other.gameObject.name == "OrangeRedShip" || other.gameObject.name == "PeriwinkleShip" ) {
 				ShieldSprite shield = other.gameObject.GetComponentInChildren<ShieldSprite>();
 				shield.mImpactTime = Time.realtimeSinceStartup;
+			}
+			
+			if (other.gameObject.name == "OrangeCity" || other.gameObject.name == "BlueCity") {
+				//Orb explosion
+				GameObject ex = Instantiate(explosion) as GameObject;
+				ex.transform.position = transform.position;
 			}
 
 			#region Code for orbs colliding and destroying each other
