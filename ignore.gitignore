@@ -1,0 +1,5 @@
+DualShot/Library
+DualShot/Temp
+DualShot/Assets/*.unity
+*.sln
+*.userprefs
