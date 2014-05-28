@@ -10,7 +10,7 @@ public class OrbBehavior : MonoBehaviour {
 	public float kSize3 = 10;
 	public float kScale = 1f; // the constant for determining the diameter, might be Pi 
 
-	public float kExplodeForce = 25f;
+	public float kExplodeForce = 15f;
 	public float mInvulTime = 1f;
 	public float health = 100.0f;
 	public const int kPieces = 2;
@@ -83,28 +83,24 @@ public class OrbBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
-		if (health <= 0) {
-			explode();
-		}
 		if ( mInvul && Time.realtimeSinceStartup - mSpawnTime > mInvulTime )
 		{
 			mInvul = false;
 		}
 	}
 
-	private void explode() {
+	private void explode(GameObject other) {
 		if (rigidbody2D.mass > kSize3) {
-			smash(kSize2, kSize3, 2);
+			smash(kSize2, kSize3, 2, other);
 		} else if (rigidbody2D.mass > kSize2) {
-			smash(kSize1, kSize2, 2);
+			smash(kSize1, kSize2, 2, other);
 		} else {
 			Destroy(this.gameObject);
 			mWorld.Orbs--;
 		}
 	}
 	
-	private void smash(float minSize, float maxSize, int pieces) {
+	private void smash(float minSize, float maxSize, int pieces, GameObject other) {
 		// get a new mass for the object
 		// This is a steaming mess that I need to clean up somehow
 		
@@ -120,10 +116,15 @@ public class OrbBehavior : MonoBehaviour {
 			e.transform.up = rigidbody2D.velocity; // Calculate new velocity
 			e.transform.up.Normalize();
 			e.transform.Rotate(0,0, rotatepiece + Random.Range (0f, 180f / pieces));
-			
+
+			ShotgunBlastBehavior shot = other.GetComponent<ShotgunBlastBehavior>();
 			e.transform.position = transform.position + e.transform.up * Mathf.Sqrt(newMass) / kScale;
 			e.rigidbody2D.velocity = (Vector2)(e.transform.up * kExplodeForce) + rigidbody2D.velocity;
+			e.rigidbody2D.velocity += (Vector2) shot.transform.up * 10.0f;
 			e.transform.up = rigidbody2D.velocity.normalized;
+
+
+			e.rigidbody2D.AddForce(shot.transform.up * 1000.0f);
 			
 			e.transform.localScale = Vector2.one * newMass;
 		}
@@ -152,14 +153,6 @@ public class OrbBehavior : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D other) {
 		if (!mInvul) {
-			if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)") {
-				health -= 50.0f;
-				Destroy(other.gameObject);
-                Play(mHitLow, 1f, 1);
-				//Orb explosion
-				GameObject ex = Instantiate(explosion) as GameObject;
-				ex.transform.position = transform.position;
-			}
 			if (other.gameObject.name == "OrangeRedShip" || other.gameObject.name == "PeriwinkleShip" ) {
 				ShieldSprite shield = other.gameObject.GetComponentInChildren<ShieldSprite>();
 				shield.mImpactTime = Time.realtimeSinceStartup;
@@ -185,6 +178,32 @@ public class OrbBehavior : MonoBehaviour {
                 { Play(mHitMidHigh, 1f, 1); }
 			}*/
 			#endregion
+		}
+	}
+
+	void OnTriggerEnter2D(Collider2D other) {
+		if (!mInvul) {
+			if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)") {
+				health -= 50.0f;
+				Destroy(other.gameObject);
+				Play(mHitLow, 1f, 1);
+				//Orb explosion
+				GameObject ex = Instantiate(explosion) as GameObject;
+				ex.transform.position = transform.position;
+
+				if (health <= 0) {
+					explode(other.gameObject);
+				}
+			}
+		}
+
+		if (other.gameObject.name == "WaveBlastBlue(Clone)" || other.gameObject.name == "WaveBlastOrange(Clone)") {
+			Debug.Log("WaveBlastPush");
+			/*Vector2 dir = other.transform.position - transform.position;
+			dir.Normalize();*/
+			WaveBlastBehavior wave = other.GetComponent<WaveBlastBehavior>();
+			rigidbody2D.AddForce(wave.mSpeed * wave.transform.up * wave.mForce);
+			//other.gameObject.rigidbody2D.AddForce(mSpeed * transform.up * mForce);
 		}
 	}
 

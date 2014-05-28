@@ -19,12 +19,15 @@ public class Ship : MonoBehaviour {
 	//Tracks the powerup level of the ship.
 	private int powerLevel = 1;
 	private bool mSpeedUp = false;
+	private float kSpeedMass = 2.0f;
 	private float kSpeedBegin = 0.0f;
 	private float kSpeedEnd = 8.0f;
 
+	private float kDefaultMass = 4.0f;
 	public bool mGrowUp = false;
 	private float mGrowScale = 2.5f;
-	private float mGrowMass = 3.0f;
+	private float kGrowSpeed = 6000f;
+	private float mGrowMass = 7.0f;
 	private float kGrowBegin = 0.0f;
 	private float kGrowEnd = 8.0f;
 
@@ -138,6 +141,7 @@ public class Ship : MonoBehaviour {
 			if (Time.realtimeSinceStartup - kSpeedBegin > kSpeedEnd) {
 				mSpeedUp = false;
 				kHeroSpeed = kDefaultHeroSpeed;
+				rigidbody.mass += kSpeedMass;
 				kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
 				kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval;
 				Destroy(speedupParticle);
@@ -152,8 +156,8 @@ public class Ship : MonoBehaviour {
 				mGrowUp = false;
 				kHeroSpeed = kDefaultHeroSpeed;
 				transform.localScale -= new Vector3(mGrowScale, mGrowScale, 0.0f);
-				rigidbody2D.mass -= mGrowMass;
 				Destroy(growupParticle);
+				rigidbody2D.mass = kDefaultMass;
 			}
 		}
 
@@ -279,7 +283,10 @@ public class Ship : MonoBehaviour {
 			Destroy(other.gameObject);
 			kSpeedBegin = Time.realtimeSinceStartup;
 			mSpeedUp = true;
-			kHeroSpeed = kSpeedHeroSpeed;
+			if (mGrowUp == false) {
+				rigidbody2D.mass = kSpeedMass;
+				kHeroSpeed = kSpeedHeroSpeed;
+			}
 			kShotgunBlastSpawnInterval = kShotgunBlastSpeedSpawnInterval;
 			kWaveBlastSpawnInterval = kWaveBlastSpeedSpawnInterval;
 			if (speedupParticle == null) {
@@ -287,12 +294,13 @@ public class Ship : MonoBehaviour {
 			}
 		}
 
-		if ((other.gameObject.name == "GrowUp" || other.gameObject.name == "GrowUp(Clone)") && mGrowUp == false) {
+		if (other.gameObject.name == "GrowUp" || other.gameObject.name == "GrowUp(Clone)") {
 			Destroy(other.gameObject);
 			kGrowBegin = Time.realtimeSinceStartup;
-			kHeroSpeed = kSpeedHeroSpeed * 2;
-			transform.localScale += new Vector3(mGrowScale, mGrowScale, 0.0f);
-			rigidbody2D.mass += mGrowMass;
+			kHeroSpeed = kGrowSpeed;
+			if (mGrowUp == false)
+				transform.localScale += new Vector3(mGrowScale, mGrowScale, 0.0f);
+			rigidbody2D.mass = mGrowMass;
 			mGrowUp = true;
 			if (growupParticle == null) {
 				growupParticle = Instantiate(growupPickup) as GameObject;
