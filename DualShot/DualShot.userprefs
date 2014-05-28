@@ -1,29 +1,13 @@
 ﻿<Properties>
-<<<<<<< HEAD
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Menu\ButtonBehavior.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Base\BaseBehavior.cs">
     <Files>
-      <File FileName="Assets\Scripts\Menu\SetupButtonBehavior.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Menu\SetupButtonBehavior.cs" Line="30" Column="57" />
-      <File FileName="Assets\Scripts\Menu\RoundButton.cs" Line="62" Column="13" />
-      <File FileName="Assets\Scripts\Level1\WorldBehavior.cs" Line="54" Column="32" />
-      <File FileName="Assets\Scripts\Level1\RoundCounterBehavior.cs" Line="9" Column="22" />
-      <File FileName="Assets\Scripts\Base\BaseBehavior.cs" Line="41" Column="32" />
-      <File FileName="Assets\Scripts\Menu\ButtonBehavior.cs" Line="17" Column="55" />
-=======
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Level1\WorldBehavior.cs">
-    <Files>
+      <File FileName="Assets\Scripts\Base\BaseBehavior.cs" Line="12" Column="34" />
+      <File FileName="Assets\Scripts\Level1\WorldBehavior.cs" Line="183" Column="23" />
+      <File FileName="Assets\Scripts\Ship\Ship.cs" Line="20" Column="29" />
+      <File FileName="Assets\Scripts\Level1\AsteroidSpawner.cs" Line="91" Column="24" />
       <File FileName="Assets\Scripts\Level1\DeveloperControls.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Level1\WorldBehavior.cs" Line="63" Column="16" />
-      <File FileName="Assets\Scripts\Base\BaseBehavior.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Level1\GlobalBehavior.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Menu\LoadInstructions.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Base\BaseSpriteManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Level1\OrbBehavior.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Ship\Fire.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Ship\Ship.cs" Line="1" Column="1" />
->>>>>>> fcf28c31f067369bec996b52410734212430323f
+      <File FileName="Assets\Scripts\Level1\RoundCounterBehavior.cs" Line="23" Column="86" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -13,7 +13,7 @@ public class BaseBehavior : MonoBehaviour {
 	private float currentHealth = HEALTH;
 
 	public bool isInvulnerable = false;
-	public bool alive = true;
+	public bool alive;
 	
 	private BaseSpriteManager spriteMan = null;
 	private int numSprites = 24; // This is the total number of sprites, includes the final once which will is the dieing sprite
@@ -33,6 +33,7 @@ public class BaseBehavior : MonoBehaviour {
 	private GameObject blueRoundWin, orangeRoundWin;
 
 	void Start () {
+		alive = true;
 		Camera mcamera = Camera.main;
 		float aspectSize = mcamera.aspect * mcamera.orthographicSize;
 		BluePoint1 = new Vector3( aspectSize * .95f, 92f);
@@ -153,7 +154,7 @@ public class BaseBehavior : MonoBehaviour {
 		if (currentHealth <= 0f) {
 			alive = false;
 			
-			f.particleSystem.enableEmission = false;
+			f.particleSystem.enableEmission = false; // disable fire
 			spriteMan.nextSprite();
 			StartCoroutine("EXPLOSIVE_VICTORY");
 			/*
@@ -245,6 +246,6 @@ public class BaseBehavior : MonoBehaviour {
     }
 
 	public void Suicide() {
-		currentHealth = 0f;
+		currentHealth = -1f;
 	}
 }

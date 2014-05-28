@@ -101,12 +101,7 @@ public class WorldBehavior : MonoBehaviour {
 		*/
 		mCurOrbs = 0;
 		#region World Bounds
-		mMainCamera = Camera.main;
-		mWorldBound = new Bounds (Vector3.zero, Vector3.one);
-		UpdateWorldBound ();
 		#endregion	
-		
-		SpawnOrbs();
 	}
 	
 	// Update is called once per frame
@@ -137,7 +132,6 @@ public class WorldBehavior : MonoBehaviour {
 		}
 		
 		if ( Time.realtimeSinceStartup - mLastSpawn > mSpawnTime && mCurOrbs < mMaxOrbs && !pause.GameIsPaused() ) {
-			SpawnOrbs();
 			mLastSpawn = Time.realtimeSinceStartup;
 			//Added this to increase wave frequency.
 			//mSpawnTime = mSpawnTime - 2f;
@@ -183,6 +177,10 @@ public class WorldBehavior : MonoBehaviour {
 		if (null == sTheGameState) { // not here yet
 			CreateGlobalManager();
 		}
+		
+		mMainCamera = Camera.main;
+		mWorldBound = new Bounds (Vector3.zero, Vector3.one);
+		UpdateWorldBound ();
 	}
 	
 	#region WorldBounds
