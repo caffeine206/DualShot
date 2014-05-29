@@ -106,13 +106,14 @@ public class WorldBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		/*
 		if (Input.GetKeyDown (KeyCode.F7)) {
 			sTheGameState.BlueWins++;
 		}
 		if (Input.GetKeyDown (KeyCode.F8)) {
 			sTheGameState.OrangeWins++;
 		}
+		*/
 		#region Orb Spawner Logic
 		//Disabled for demo.
 		/*
