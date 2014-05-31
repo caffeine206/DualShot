@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ShotgunBlastBehavior : MonoBehaviour {
 	
-	private float mSpeed = 100f;
+	private float mSpeed = 170f;
 	private float kShotgunLife = 0.3f;
 	private float kShotgunSpawnTime;
 
