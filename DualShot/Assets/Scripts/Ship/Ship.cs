@@ -134,18 +134,19 @@ public class Ship : MonoBehaviour {
 	}
 	
 	void Update () {
-		if (mSpeedUp == true) {
-			if (speedupParticle != null) {
-				speedupParticle.transform.position = transform.position;
-			}
-			if (Time.realtimeSinceStartup - kSpeedBegin > kSpeedEnd) {
-				mSpeedUp = false;
-				kHeroSpeed = kDefaultHeroSpeed;
-				rigidbody2D.mass = kDefaultMass;
-				kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
-				kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval;
-				Destroy(speedupParticle);
-			}
+		
+			if (mSpeedUp == true) {
+		if (speedupParticle != null) {
+			speedupParticle.transform.position = transform.position;
+		}
+		if (Time.realtimeSinceStartup - kSpeedBegin > kSpeedEnd) {
+			mSpeedUp = false;
+			kHeroSpeed = kDefaultHeroSpeed;
+			rigidbody2D.mass = kDefaultMass;
+			kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
+			kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval;
+			Destroy(speedupParticle);
+		}
 		}
 
 		if (mGrowUp == true) {

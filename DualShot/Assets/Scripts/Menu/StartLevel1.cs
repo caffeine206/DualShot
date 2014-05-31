@@ -9,6 +9,7 @@ public class StartLevel1 : MonoBehaviour {
 	void Start () {
         mHover = (AudioClip)Resources.Load("Sounds/DaikoSingle");
         tm = GetComponent<TextMesh>();
+        
 	}
 	
 	void Update () {
@@ -39,6 +40,8 @@ public class StartLevel1 : MonoBehaviour {
     {
     	//GlobalBehavior glob = GameObject.Find ("GameStateManager").GetComponent<GlobalBehavior>();
     	//glob.SetCurrentLevel("Dual Level");
+		WorldBehavior world = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
+		world.resetScore();
         Application.LoadLevel(1);
     }
 	

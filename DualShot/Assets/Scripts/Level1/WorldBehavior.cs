@@ -45,9 +45,6 @@ public class WorldBehavior : MonoBehaviour {
     protected static GlobalBehavior sTheGameState = null;
     private RespawnBehavior pause = null;
     private GameObject blueRoundWin, orangeRoundWin;
-    
-	private Color orange = new Color( 0, 131, 255);
-	private Color blue = new Color( 127, 255, 0);
 	
 	// Targets for the Round Counters
 	
@@ -356,6 +353,10 @@ public class WorldBehavior : MonoBehaviour {
 	}
 	public int orangeScore() {
 		return sTheGameState.OrangeWins;
+	}
+	public void resetScore() {
+		sTheGameState.BlueWins = 0;
+		sTheGameState.OrangeWins = 0;
 	}
 	private void spawnBlueCounter(Vector3 target) {
 		GameObject e = (GameObject)	Instantiate(blueRoundWin);

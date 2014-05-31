@@ -10,7 +10,6 @@ public class LoadMenu : MonoBehaviour {
         mHover = (AudioClip)Resources.Load("Sounds/DaikoSingle");
         tm = GetComponent<TextMesh>();
 	}
-	
 	void Update () {
 	
 	}
