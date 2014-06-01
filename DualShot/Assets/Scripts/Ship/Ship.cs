@@ -5,6 +5,7 @@ public class Ship : MonoBehaviour {
 
 	//Keeps track of the max health of a player.
 	public string controller;
+	public int player;
 	private const float HEALTH = 20f;
 	//Keeps track of the current health of the player. Set to public for testing purposes.
 	private float currentHealth = HEALTH;
@@ -96,10 +97,6 @@ public class Ship : MonoBehaviour {
 		if (explosion == null) {
 			explosion = Resources.Load("Prefabs/SmallExplosionParticle") as GameObject;
 		}
-		string[] joysticks = Input.GetJoystickNames();
-		foreach( string i in joysticks ) {
-			Debug.Log (i);
-		}
 
 		fire = GetComponent<Fire>();
 		
@@ -120,6 +117,7 @@ public class Ship : MonoBehaviour {
 
 		respawn = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
 		count = GameObject.Find("Countdown").GetComponent<CountdownTimer>();
+		GameObject.Find("GameManager").GetComponent<WorldBehavior>().setupShip(this);
 		if (powerupPickup == null) {
 			powerupPickup = Resources.Load("Prefabs/PowerupPickup") as GameObject;
 		}

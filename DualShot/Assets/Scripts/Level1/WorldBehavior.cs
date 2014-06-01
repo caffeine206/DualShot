@@ -369,6 +369,16 @@ public class WorldBehavior : MonoBehaviour {
 		e.transform.position = target;
 		e.GetComponent<RoundCounterBehavior>().mTargetPos = target;
 	}
+	public void setupShip (Ship ship) {
+		sTheGameState.setupShip(ship);
+	}
+	public void setupControls(int keyboardNum) {
+		if (keyboardNum == 0) {
+			sTheGameState.disableKeyboard();
+		} else {
+			sTheGameState.setKeyboard(keyboardNum);	
+		}
+	}
 
 	#endregion
 

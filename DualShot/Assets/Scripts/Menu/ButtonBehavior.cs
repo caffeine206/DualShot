@@ -80,8 +80,8 @@ public class ButtonBehavior : MonoBehaviour
         }
         if (GetComponent<TextMesh>().text == "Start")
         {
-            //Camera.main.transform.position = Setup;
-            Application.LoadLevel(1);   // Level 1
+            Camera.main.transform.position = Setup;
+            //Application.LoadLevel(1);   // Level 1
         }
 
         // Pause menu buttons
