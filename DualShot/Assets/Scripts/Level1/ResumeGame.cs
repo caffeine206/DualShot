@@ -23,6 +23,7 @@ public class ResumeGame : MonoBehaviour {
 
 	void OnMouseEnter() {
         tm.fontSize = 55;   // Changes font size
+        renderer.material.color = new Color(95, 153, 207, 255);
 		Play(mHover, 1f, 1);
 	}
 
@@ -33,6 +34,7 @@ public class ResumeGame : MonoBehaviour {
 	void OnMouseExit()
     {
         tm.fontSize = 50;
+        renderer.material.color = Color.white;
     }
 
 	// Audio clip player
