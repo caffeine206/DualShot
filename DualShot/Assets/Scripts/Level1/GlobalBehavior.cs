@@ -8,10 +8,14 @@ public class GlobalBehavior : MonoBehaviour {
 				mBlWins = 0, // BlueWins
 				mBestOf = 3,	// Rounds total
 				mRoundNum = 1;	// Cur Round starting at one
-				
+	
+	// Input Controls
 	private string[] joysticks;
 	private int keyboard;
 
+	// Mode Selection Info
+	private int mMode = 1;	
+	
     public int DeadBase = 0; // For deciding which base is destroyed
 
 	// Use this for initialization
@@ -76,5 +80,9 @@ public class GlobalBehavior : MonoBehaviour {
 		if ( ship.player == keyboard ) {
 			ship.isController = false;
 		}
+	}
+	public int mode {
+		get {return mMode;}
+		set {mMode = value;}
 	}
 }

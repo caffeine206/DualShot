@@ -9,14 +9,14 @@ public class WaveBlastBehavior : MonoBehaviour {
 	private float kWaveSpawnTime;
 	private int mCurSrite = 0;
 	
-	private BaseSpriteManager mSpriteManager = null;
+	private SpriteManager mSpriteManager = null;
 
 	void Start()
 	{
 		kWaveSpawnTime = Time.realtimeSinceStartup;
 		
 		if ( mSpriteManager == null ) {
-			mSpriteManager = GetComponent<BaseSpriteManager>();
+			mSpriteManager = GetComponent<SpriteManager>();
 		}
 	}
 

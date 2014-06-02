@@ -15,7 +15,7 @@ public class BaseBehavior : MonoBehaviour {
 	public bool isInvulnerable = false;
 	public bool alive;
 	
-	private BaseSpriteManager spriteMan = null;
+	private SpriteManager spriteMan = null;
 	private int numSprites = 24; // This is the total number of sprites, includes the final once which will is the dieing sprite
 	private SpriteActionDefinition BaseAnimation = new SpriteActionDefinition( 0, 0, 1, 5f, false);
 	
@@ -46,7 +46,7 @@ public class BaseBehavior : MonoBehaviour {
 			mCamera = Camera.main;
 		}
 		if (spriteMan == null) {
-			spriteMan = GetComponent<BaseSpriteManager>();
+			spriteMan = GetComponent<SpriteManager>();
 		}
 		if (blueRoundWin == null) {
 			blueRoundWin = (GameObject)Resources.Load ("Prefabs/BlueRoundCounter");

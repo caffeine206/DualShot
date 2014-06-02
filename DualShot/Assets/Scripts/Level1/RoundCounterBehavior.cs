@@ -9,7 +9,7 @@ public class RoundCounterBehavior : MonoBehaviour {
 	public bool stopped;
 	private float spawnTime;
 	
-	private BaseSpriteManager mSprite = null;
+	private SpriteManager mSprite = null;
 	// Use this for initialization
 	void Start () {
 		spawnTime = Time.realtimeSinceStartup;

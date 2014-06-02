@@ -1,41 +1,33 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class RoundButton : MonoBehaviour
-{
-	// Instantiate sound clips
+public class ModeButton : MonoBehaviour {
+	
 	private AudioClip mHover;
-	//private AudioClip mStartScreenMusic;
-	
-	// Instantiate text mesh object for text on buttons
 	private TextMesh tm;
-	private char buttonNumber;
-	
-	private WorldBehavior world = null;
+	public int lvlNum;
 	private bool Active = false;
-	// Use this for initialization
-	void Start()
-	{	
-		if (world == null) {
-			world = GameObject.Find ( "GameManager").GetComponent<WorldBehavior>();
-		}
-		// Associates sound clips
+	
+	void Start () {
 		mHover = (AudioClip)Resources.Load("Sounds/DaikoSingle");
-		
-		// Associates text mesh component 
 		tm = GetComponent<TextMesh>();
-		buttonNumber = tm.text[0];
+		if (lvlNum == 1) {
+			Active = true;
+		}
+		
 	}
 	
-	// To highlight button text when mouse is over collider
-	void OnMouseEnter()
-	{
+	void OnMouseEnter() {
+		//tm.fontStyle = FontStyle.Bold;
 		tm.fontSize = 55;
 		Play(mHover, 0.5f, 1);
 	}
+	
 	// To de-highlight button text when mouse is over collider
 	void OnMouseExit()
 	{
+		//renderer.material.color = Color.white;
+		tm.fontStyle = FontStyle.Normal;
 		if (!Active) {
 			tm.fontSize = 50;
 		} else  {
@@ -43,26 +35,22 @@ public class RoundButton : MonoBehaviour
 		}
 	}
 	
-	
 	void OnMouseUp()
 	{
+		//GlobalBehavior glob = GameObject.Find ("GameStateManager").GetComponent<GlobalBehavior>();
+		//glob.SetCurrentLevel("Dual Level");
+		WorldBehavior world = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
+		world.mode = lvlNum;
+		Active = true;
 		tm.fontSize = 70;
-		world.setRounds(buttonNumber);
-		isActive = true;
-	}
-	
-	public bool isActive {
-		set { Active = value;}
-		get { return Active; }
 	}
 	public void Deactivate () {
-		isActive = false;
+		Active = false;
 		tm.fontSize = 50;
 	}
 	
 	// Audio clip player
-	public void Play(AudioClip clip, float volume, float pitch)
-	{
+	public void Play(AudioClip clip, float volume, float pitch) {
 		//Create an empty game object
 		GameObject go = new GameObject("Audio: " + clip.name);
 		
@@ -73,5 +61,6 @@ public class RoundButton : MonoBehaviour
 		source.pitch = pitch;
 		source.Play();
 		Destroy(go, clip.length);
+	
 	}
 }

@@ -65,7 +65,7 @@ public class SpriteActionDefinition {
 	}
 };
 #endregion
-public class BaseSpriteManager : MonoBehaviour {	
+public class SpriteManager : MonoBehaviour {	
 		
 		// the user specify sprite sheet
 		private Sprite[][] mSpriteElements = null;	// The actual computed sprite elements

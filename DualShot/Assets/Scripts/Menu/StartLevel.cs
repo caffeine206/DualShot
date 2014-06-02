@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StartLevel1 : MonoBehaviour {
+public class StartLevel : MonoBehaviour {
 
     private AudioClip mHover;
     private TextMesh tm;
+    // indicates level to load on start
+    // 1 = 1v1
+    // 4 = 2v2
+    // 5 = Versus
 
 	void Start () {
         mHover = (AudioClip)Resources.Load("Sounds/DaikoSingle");
@@ -42,7 +46,8 @@ public class StartLevel1 : MonoBehaviour {
     	//glob.SetCurrentLevel("Dual Level");
 		WorldBehavior world = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
 		world.resetScore();
-        Application.LoadLevel(1);
+		int mode = world.mode;
+        Application.LoadLevel(mode);
     }
 	
 	// Audio clip player

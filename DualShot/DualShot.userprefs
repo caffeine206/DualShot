@@ -1,13 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Level1\GlobalBehavior.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Base\SpriteManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\Level1\WorldBehavior.cs" Line="218" Column="1" />
-      <File FileName="Assets\Scripts\Level1\GlobalBehavior.cs" Line="77" Column="30" />
-      <File FileName="Assets\Scripts\Menu\ControlButton.cs" Line="36" Column="42" />
-      <File FileName="Assets\Scripts\Menu\RoundButton.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Base\SpriteManager.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Level1\WorldBehavior.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Level1\GlobalBehavior.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Menu\ControlButton.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Ship\Ship.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Menu\StartLevel.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Level1\ModeButton.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

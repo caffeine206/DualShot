@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ShieldSprite : MonoBehaviour {
 
-	private BaseSpriteManager spriteMan = null;
+	private SpriteManager spriteMan = null;
 	private float mFlashTime = 0.1f;
 	public float mImpactTime = 0f;
 
@@ -11,7 +11,7 @@ public class ShieldSprite : MonoBehaviour {
 	void Start () {
 	
 		if (spriteMan == null) {
-			spriteMan = GetComponent<BaseSpriteManager>();
+			spriteMan = GetComponent<SpriteManager>();
 		}
 	}
 	

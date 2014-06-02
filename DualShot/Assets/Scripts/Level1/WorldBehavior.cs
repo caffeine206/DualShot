@@ -379,6 +379,14 @@ public class WorldBehavior : MonoBehaviour {
 			sTheGameState.setKeyboard(keyboardNum);	
 		}
 	}
+	public int mode {
+		get {return sTheGameState.mode;}
+		set {
+			ModeButton lastActive = GameObject.Find ("Setup-Mode" + sTheGameState.mode).GetComponent<ModeButton>();
+			lastActive.Deactivate();
+			sTheGameState.mode = value;
+		}	
+	}
 
 	#endregion
 
