@@ -37,7 +37,7 @@ public class StartLevel : MonoBehaviour {
     void OnMouseExit()
     {
         //renderer.material.color = Color.white;
-        tm.fontStyle = FontStyle.Normal;
+        //tm.fontStyle = FontStyle.Normal;
         tm.fontSize = 50;
         renderer.material.color = Color.white;
     }

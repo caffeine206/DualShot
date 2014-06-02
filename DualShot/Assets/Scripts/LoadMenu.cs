@@ -23,12 +23,14 @@ public class LoadMenu : MonoBehaviour {
 	void OnMouseEnter() {
         tm.fontSize = 55;
 		Play(mHover, 0.25f, 1);
+		renderer.material.color = new Color(95, 153, 207, 255);
 	}
 	
     // To de-highlight button text when mouse is over collider
     void OnMouseExit()
     {
         tm.fontSize = 50;
+        renderer.material.color = Color.white;
     }
 
     void OnMouseUp()
