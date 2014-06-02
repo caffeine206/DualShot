@@ -30,7 +30,8 @@ public class RoundButton : MonoBehaviour
 	// To highlight button text when mouse is over collider
 	void OnMouseEnter()
 	{
-		tm.fontSize = 55;
+        if (!Active)
+        { tm.fontSize = 55; }
 		Play(mHover, 0.5f, 1);
 	}
 	// To de-highlight button text when mouse is over collider
@@ -43,21 +44,26 @@ public class RoundButton : MonoBehaviour
 		}
 	}
 	
-	
 	void OnMouseUp()
 	{
-		tm.fontSize = 70;
-		world.setRounds(buttonNumber);
-		isActive = true;
+        if (!Active)
+        {
+            tm.fontSize = 70;
+            world.setRounds(buttonNumber);
+            isActive = true;
+        }
 	}
 	
 	public bool isActive {
-		set { Active = value;}
+        set { Active = value;
+        renderer.material.color = new Color(95, 153, 207, 255);
+        }
 		get { return Active; }
 	}
 	public void Deactivate () {
 		isActive = false;
 		tm.fontSize = 50;
+        renderer.material.color = Color.white;
 	}
 	
 	// Audio clip player

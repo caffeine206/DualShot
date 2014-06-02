@@ -30,6 +30,7 @@ public class StartLevel : MonoBehaviour {
         //tm.fontStyle = FontStyle.Bold;
         tm.fontSize = 55;
 		Play(mHover, 0.5f, 1);
+        renderer.material.color = new Color(95, 153, 207, 255);
 	}
 	
     // To de-highlight button text when mouse is over collider
@@ -38,6 +39,7 @@ public class StartLevel : MonoBehaviour {
         //renderer.material.color = Color.white;
         tm.fontStyle = FontStyle.Normal;
         tm.fontSize = 50;
+        renderer.material.color = Color.white;
     }
 
     void OnMouseUp()

@@ -49,7 +49,6 @@ public class ButtonBehavior : MonoBehaviour
         //renderer.material.color = new Color(0.8f, 0.282f, 0f, 1);
         renderer.material.color = Color.white;
 
-        //renderer.material.color = Color.blue;
     }
 
 

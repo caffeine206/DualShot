@@ -82,7 +82,7 @@ public class BaseBehavior : MonoBehaviour {
 		}
 
         // Audio clip
-        mBaseHit = (AudioClip)Resources.Load("Sounds/BaseHit");
+        mBaseHit = (AudioClip)Resources.Load("Sounds/OrbOnCity");
         mBaseDead = (AudioClip)Resources.Load("Sounds/city explosion");
 
 		if (fire == null) {
