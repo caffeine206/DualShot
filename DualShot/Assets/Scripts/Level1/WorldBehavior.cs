@@ -3,31 +3,7 @@ using System.Collections;
 
 public class WorldBehavior : MonoBehaviour {
 
-	#region Asteroid Spawner
-	// Vars for Asteroid Spawning
-	private float mSpawnTime = 12f;
-	//private float mMinSpawnTime = 3f;
-	private int mMaxOrbs = 20;
-	public int mSpawnNum = 6;
-	public float mSpawnMinSize = 1f;
-	public float mSpawnMaxSize = 15f;
-	public float mSpawnSpread = 20f;
-	public float mSpawnSpeed = 30f;
-	public float mSpawnStagger = 10f;
 	
-	private float mRampInterval = 15f;
-	private float mlastRamp;
-	//private float mTimeInterval = 0.25f;
-	private float mMassInterval = 5f;
-	
-	public GameObject mOrb = null;
-	//public GUIText mEcho = null;
-	protected float mMass = 1f;
-	protected float mVelocity = 50f;
-	
-	protected int mCurOrbs;
-	protected float mLastSpawn = 0f; // The last time that orbs were spawned
-	#endregion
 
 	#region World Bound support
 	// Top, Bot, Left, and Right are built to provide
@@ -43,20 +19,17 @@ public class WorldBehavior : MonoBehaviour {
 	
 	// Global Manager
     protected static GlobalBehavior sTheGameState = null;
-    private RespawnBehavior pause = null;
-    private GameObject blueRoundWin, orangeRoundWin;
+    protected RespawnBehavior pause = null;
+    protected GameObject blueRoundWin, orangeRoundWin;
 	
 	// Targets for the Round Counters
 	
-	private Vector3	BluePoint1, BluePoint2, BluePoint3,
+	protected Vector3	BluePoint1, BluePoint2, BluePoint3,
 	OrangePoint1, OrangePoint2, OrangePoint3;
 						
 	// Use this for initialization
 	void Start () {
 	//sTheGameState.
-		if (mOrb == null) {
-			mOrb = (GameObject) Resources.Load ("Prefabs/Orb");                
-		}
 		if (pause == null) {
 			pause = GetComponent<RespawnBehavior>();
 		}
@@ -90,15 +63,11 @@ public class WorldBehavior : MonoBehaviour {
 		if (sTheGameState.OrangeWins > 1) {
 			spawnOrangeCounter(OrangePoint2);
 		}
-		mlastRamp = Time.realtimeSinceStartup;
 		/*
 		if (mEcho == null) {
 			mEcho = GameObject.Find ("GUI Text").GetComponent<GUIText>();
 		}
-		*/
-		mCurOrbs = 0;
-		#region World Bounds
-		#endregion	
+		*/		
 	}
 	
 	// Update is called once per frame
@@ -111,34 +80,7 @@ public class WorldBehavior : MonoBehaviour {
 			sTheGameState.OrangeWins++;
 		}
 		*/
-		#region Orb Spawner Logic
-		//Disabled for demo.
-		/*
-		if ( Input.GetKeyDown(KeyCode.F2)) { // Manual Spawner
-			SpawnOrbs();
-		}
-		*/
-
-		// Automated spawner. Uses the metrics of time since last spawn and limits the number of orbs on the screen.
-		 
-		if ( Time.realtimeSinceStartup - mlastRamp > mRampInterval ) {
-			mlastRamp = Time.realtimeSinceStartup;
-			/*if ( mSpawnTime > mMinSpawnTime ) { 
-				mSpawnTime -= mTimeInterval;
-				}*/
-			mSpawnMinSize += mMassInterval;
-		}
 		
-		if ( Time.realtimeSinceStartup - mLastSpawn > mSpawnTime && mCurOrbs < mMaxOrbs && !pause.GameIsPaused() ) {
-			mLastSpawn = Time.realtimeSinceStartup;
-			//Added this to increase wave frequency.
-			//mSpawnTime = mSpawnTime - 2f;
-
-			//if (mSpawnTime < 0f) {
-			//	mSpawnTime = 0f;
-			//}
-		}
-		#endregion
 		/*
 		mMass += Input.GetAxis ("Vertical");
 		if (mMass < 1) {
@@ -164,7 +106,7 @@ public class WorldBehavior : MonoBehaviour {
 	}
 
 	/*
-	private void reset() {
+	protected void reset() {
 		if (Input.GetKey(KeyCode.Return)) {
 			mCurOrbs = 0;
 		}
@@ -194,7 +136,7 @@ public class WorldBehavior : MonoBehaviour {
 	};
 
 	
-	public void UpdateWorldBound() 
+	public virtual void UpdateWorldBound() 
 	{
 		if (mMainCamera != null) {
 			float maxY = mMainCamera.orthographicSize;
@@ -306,7 +248,7 @@ public class WorldBehavior : MonoBehaviour {
 	
 	#region Global
 	
-	private static void CreateGlobalManager()
+	protected static void CreateGlobalManager()
 	{
 		GameObject newGameState = new GameObject();
 		newGameState.name = "GlobalStateManager";
@@ -319,14 +261,14 @@ public class WorldBehavior : MonoBehaviour {
 			CreateGlobalManager();
 			return sTheGameState;
 		} }
-	public void RoundEnd(int winner) {
+	public virtual void RoundEnd(int winner) {
 		sTheGameState.RoundNum++;
 		if ( winner == 2 ) {
 			sTheGameState.BlueWins++;
 			if (sTheGameState.BlueWins >= sTheGameState.BestOf) {
 				Application.LoadLevel (winner);
 			} else {
-				Application.LoadLevel (1);
+				Application.LoadLevel (mode);
 			}
 		} else {
 			sTheGameState.OrangeWins++;
@@ -334,15 +276,9 @@ public class WorldBehavior : MonoBehaviour {
 			if (sTheGameState.OrangeWins >= sTheGameState.BestOf) {
 				Application.LoadLevel (winner);
 			} else {
-				Application.LoadLevel (1);
+				Application.LoadLevel (mode);
 			}
 		}
-	}
-
-	
-	public int Orbs {
-		get { return mCurOrbs; }
-		set { mCurOrbs = value; }
 	}
 	public void setRounds( char value ) {
 		RoundButton lastActive = GameObject.Find ("Setup-Rounds" + sTheGameState.BestOf + "Button" ).GetComponent<RoundButton>();
@@ -356,15 +292,14 @@ public class WorldBehavior : MonoBehaviour {
 		return sTheGameState.OrangeWins;
 	}
 	public void resetScore() {
-		sTheGameState.BlueWins = 0;
-		sTheGameState.OrangeWins = 0;
+		sTheGameState.resetScores();
 	}
-	private void spawnBlueCounter(Vector3 target) {
+	protected void spawnBlueCounter(Vector3 target) {
 		GameObject e = (GameObject)	Instantiate(blueRoundWin);
 		e.transform.position = target;
 		e.GetComponent<RoundCounterBehavior>().mTargetPos = target;
 	}
-	private void spawnOrangeCounter(Vector3 target) {
+	protected void spawnOrangeCounter(Vector3 target) {
 		GameObject e = (GameObject)	Instantiate(orangeRoundWin);
 		e.transform.position = target;
 		e.GetComponent<RoundCounterBehavior>().mTargetPos = target;

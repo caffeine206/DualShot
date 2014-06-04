@@ -5,8 +5,7 @@ public class DeveloperControls : MonoBehaviour {
 
 	private Ship periwinkle;
 	private Ship orangeRed;
-	private BaseBehavior blueCity;
-	private BaseBehavior orangeCity;
+	private VersusBaseBehavior blueCity, orangeCity, charCity, perCity;
 	private GUIText status;
 	private GUIText controls;
 	private bool shipsInvulnerable = true;
@@ -19,11 +18,14 @@ public class DeveloperControls : MonoBehaviour {
 			global = GameObject.Find("GlobalStateManager").GetComponent<GlobalBehavior>();
 			global.PrintCurrentLevel();
 		}
+		
 	
-		periwinkle = GameObject.Find("PeriwinkleShip").GetComponent<Ship>();
-		orangeRed = GameObject.Find("OrangeRedShip").GetComponent<Ship>();
-		blueCity = GameObject.Find("BlueCity").GetComponent<BaseBehavior>();
-		orangeCity = GameObject.Find("OrangeCity").GetComponent<BaseBehavior>();
+		//periwinkle = GameObject.Find("PeriwinkleShip").GetComponent<Ship>();
+		//orangeRed = GameObject.Find("OrangeRedShip").GetComponent<Ship>();
+		blueCity = GameObject.Find("BlueCity").GetComponent<VersusBaseBehavior>();
+		orangeCity = GameObject.Find("OrangeCity").GetComponent<VersusBaseBehavior>();
+		charCity = GameObject.Find("ChartreuseCity").GetComponent<VersusBaseBehavior>();
+		perCity = GameObject.Find("PeriwinkleCity").GetComponent<VersusBaseBehavior>();
 		status = GameObject.Find("Status").GetComponent<GUIText>();
 		controls = GameObject.Find("Controls").GetComponent<GUIText>();
 
@@ -50,8 +52,11 @@ public class DeveloperControls : MonoBehaviour {
 
 	private void UpdateStatus() {
 		status.text = 
-			"Periwinkle wins: " + global.BlueWins
-			+ "\nOrangeRed wins: " + global.OrangeWins
+			    "Blue wins:          " + global.BlueWins
+			+ "\nOrangeRed wins:     " + global.OrangeWins
+			+ "\nChatreuse wins:     " + global.CharWins
+			+ "\nPeriwinkle wins:    " + global.PerWins
+			+ "\nLevel:              " + global.mode
 			+ "\nShip Invincibility: " + shipsInvulnerable
 			+ "\nCity Invincibility: " + citiesInvulnerable;
 	}
@@ -73,6 +78,10 @@ public class DeveloperControls : MonoBehaviour {
 			blueCity.Suicide();
 		} else if (Input.GetKeyDown(KeyCode.Alpha4)) {
 			orangeCity.Suicide();
+		} else if (Input.GetKeyDown(KeyCode.Alpha7)) {
+			charCity.Suicide();
+		} else if (Input.GetKeyDown(KeyCode.Alpha8)) {
+			perCity.Suicide();
 		}
 	}
 	#endregion

@@ -19,7 +19,7 @@ public class OrbBehavior : MonoBehaviour {
 	#region PrivateVar
 	// Use this for initialization
 	private GameObject mObject = null; // The prefab of this object.
-	private WorldBehavior mWorld = null;
+	private AsteroidSpawner mWorld = null;
 	private GameObject mPowerUp = null;
 	private GameObject mSpeedUp = null;
 	private GameObject mGrowUp = null;
@@ -45,7 +45,7 @@ public class OrbBehavior : MonoBehaviour {
 			mObject = (GameObject) Resources.Load ("Prefabs/Orb");
 		}
 		if (mWorld == null) {
-			mWorld = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
+			mWorld = GameObject.Find("GameManager").GetComponent<AsteroidSpawner>();
 		}
 		if (mPowerUp == null) {
 			mPowerUp = (GameObject) Resources.Load ("Prefabs/PowerUp");
@@ -198,7 +198,7 @@ public class OrbBehavior : MonoBehaviour {
 		}
 
 		if (other.gameObject.name == "WaveBlastBlue(Clone)" || other.gameObject.name == "WaveBlastOrange(Clone)") {
-			Debug.Log("WaveBlastPush");
+	//		Debug.Log("WaveBlastPush");
 			/*Vector2 dir = other.transform.position - transform.position;
 			dir.Normalize();*/
 			WaveBlastBehavior wave = other.GetComponent<WaveBlastBehavior>();

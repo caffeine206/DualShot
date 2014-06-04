@@ -6,6 +6,8 @@ public class GlobalBehavior : MonoBehaviour {
 	private string mCurrentLevel = "MenuLevel";
 	private int mOrWins = 0, // OrangeWins
 				mBlWins = 0, // BlueWins
+				mPwWins = 0,
+				mChWins = 0,
 				mBestOf = 3,	// Rounds total
 				mRoundNum = 1;	// Cur Round starting at one
 	
@@ -43,6 +45,20 @@ public class GlobalBehavior : MonoBehaviour {
 		get { return mBlWins; }
 		set { mBlWins = value; }
 	}
+	public int CharWins {
+		get { return mChWins; }
+		set { mChWins = value; }
+	}
+	public int PerWins {
+		get { return mPwWins; }
+		set { mPwWins = value; }
+	}
+	public void resetScores() {
+		mPwWins = 0;
+		mChWins = 0;
+		mBlWins = 0;
+		mOrWins = 0;
+	}
 	public int BestOf {
 		get { return mBestOf; }
 		set { mBestOf = value; }
@@ -76,6 +92,12 @@ public class GlobalBehavior : MonoBehaviour {
 		}
 	}
 	public void setupShip(Ship ship) {
+		ship.controller = joysticks[ship.player - 1];
+		if ( ship.player == keyboard ) {
+			ship.isController = false;
+		}
+	}
+	public void setupShip(FourPlayerShip ship) {
 		ship.controller = joysticks[ship.player - 1];
 		if ( ship.player == keyboard ) {
 			ship.isController = false;

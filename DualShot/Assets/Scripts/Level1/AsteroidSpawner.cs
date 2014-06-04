@@ -5,9 +5,9 @@ public class AsteroidSpawner : MonoBehaviour {
 
 	#region Asteroid Spawner
 	// Vars for Asteroid Spawning
-	private float mSpawnTime = 12f;
-	//private float mMinSpawnTime = 3f;
-	private int mMaxOrbs = 20;
+	protected float mSpawnTime = 12f;
+	//protected float mMinSpawnTime = 3f;
+	protected int mMaxOrbs = 20;
 	public int mSpawnNum = 6;
 	public float mSpawnMinSize = 1f;
 	public float mSpawnMaxSize = 15f;
@@ -15,10 +15,10 @@ public class AsteroidSpawner : MonoBehaviour {
 	public float mSpawnSpeed = 30f;
 	public float mSpawnStagger = 10f;
 	
-	private float mRampInterval = 15f;
-	private float mlastRamp;
-	//private float mTimeInterval = 0.25f;
-	private float mMassInterval = 5f;
+	protected float mRampInterval = 15f;
+	protected float mlastRamp;
+	//protected float mTimeInterval = 0.25f;
+	protected float mMassInterval = 5f;
 	
 	public GameObject mOrb = null;
 	//public GUIText mEcho = null;
@@ -29,7 +29,7 @@ public class AsteroidSpawner : MonoBehaviour {
 	protected float mLastSpawn = 0f; // The last time that orbs were spawned
 	#endregion
 	
-	private RespawnBehavior pause = null;
+	protected RespawnBehavior pause = null;
 	
 	// Use this for initialization
 	void Start () {
@@ -86,7 +86,7 @@ public class AsteroidSpawner : MonoBehaviour {
 		set { mCurOrbs = value; }
 	}
 	
-	private void SpawnOrbs() {
+	protected virtual void SpawnOrbs() {
 		int topNum, botNum; // Number spawning from top/bottom
 		topNum = mSpawnNum/2;
 		botNum = mSpawnNum - topNum;
@@ -109,7 +109,7 @@ public class AsteroidSpawner : MonoBehaviour {
 		//Added
 	}
 	
-	private void ThrowOrb(Vector2 pos, Vector2 dir, float mass) {
+	protected virtual void ThrowOrb(Vector2 pos, Vector2 dir, float mass) {
 		GameObject e = (GameObject) Instantiate(mOrb);
 		e.rigidbody2D.mass = mass;
 		e.transform.position = pos;
