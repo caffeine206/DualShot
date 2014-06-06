@@ -56,27 +56,27 @@ public class VersusAsteroidSpawner : AsteroidSpawner {
 		for(int i = 0; i < mSpawnNum; ++i) {
 			float spawnLoc = world.WorldMax.y + (i + 1) * mSpawnStagger;
 			
-			// Top Left
-			spawnPoint = new Vector2( -spawnLoc, spawnLoc);
-			spawnDir = new Vector2( 1, -1) * mSpawnSpeed;
+			// Top
+			spawnPoint = new Vector2( 0f, spawnLoc);
+			spawnDir = new Vector2( Random.Range (-mSpawnSpread, mSpawnSpread), -1f).normalized * mSpawnSpeed;
 			spawnMass = Random.Range (mSpawnMinSize, mSpawnMaxSize);
 			ThrowOrb(spawnPoint, spawnDir, spawnMass);
 			
-			// Top Right
-			spawnPoint = new Vector2( spawnLoc, spawnLoc);
-			spawnDir = new Vector2( -1, -1) * mSpawnSpeed;
+			// Left
+			spawnPoint = new Vector2( -spawnLoc, 0f);
+			spawnDir = new Vector2( 1f, Random.Range (-mSpawnSpread, mSpawnSpread)).normalized * mSpawnSpeed;
 			spawnMass = Random.Range (mSpawnMinSize, mSpawnMaxSize);
 			ThrowOrb(spawnPoint, spawnDir, spawnMass);
 			
-			// Bot Left
-			spawnPoint = new Vector2( -spawnLoc, -spawnLoc);
-			spawnDir = new Vector2( 1, 1) * mSpawnSpeed;
+			// Bot
+			spawnPoint = new Vector2( 0f, -spawnLoc);
+			spawnDir = new Vector2( Random.Range (-mSpawnSpread, mSpawnSpread), 1f).normalized * mSpawnSpeed;
 			spawnMass = Random.Range (mSpawnMinSize, mSpawnMaxSize);
 			ThrowOrb(spawnPoint, spawnDir, spawnMass);
 			
-			// Bot Right
-			spawnPoint = new Vector2( spawnLoc, -spawnLoc);
-			spawnDir = new Vector2( -1, 1) * mSpawnSpeed;
+			// Right
+			spawnPoint = new Vector2( spawnLoc, 0f);
+			spawnDir = new Vector2( -1f, Random.Range (-mSpawnSpread, mSpawnSpread)).normalized * mSpawnSpeed;
 			spawnMass = Random.Range (mSpawnMinSize, mSpawnMaxSize);
 			ThrowOrb(spawnPoint, spawnDir, spawnMass);
 		}
@@ -90,10 +90,9 @@ public class VersusAsteroidSpawner : AsteroidSpawner {
 		e.transform.position = pos;
 		e.rigidbody2D.velocity = dir;
 		e.transform.up = dir.normalized;
-		float rotate = Random.Range (-5f, 5f);
-		e.transform.Rotate (0, 0, rotate);
 		e.transform.localScale = mass * Vector2.one;
 		e.collider2D.isTrigger = true;
+		e.GetComponent<OrbBehavior>().incoming = true;
 	}
 	
 	

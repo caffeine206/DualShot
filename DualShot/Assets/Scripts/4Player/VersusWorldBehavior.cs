@@ -37,44 +37,70 @@ public class VersusWorldBehavior : WorldBehavior {
 		
 		// setup round counters
 		
-		float aspectSize = mMainCamera.aspect * mMainCamera.orthographicSize;
-		BluePoint1 = new Vector3( 95f, -92f);
-		BluePoint2 = new Vector3( 90f, -92f);
-		BluePoint3 = new Vector3( 95f, -82f);
-		OrangePoint1 = new Vector3( -95f, 92f);
-		OrangePoint2 = new Vector3( -90f, 92f);
-		OrangePoint3 = new Vector3( -95f, 82f);
-		ChartreusePoint1 = new Vector3( 95f, 92f);
-		ChartreusePoint2 = new Vector3( 90f, 92f);
-		ChartreusePoint3 = new Vector3( 95f, 82f);
-		PeriwinklePoint1 = new Vector3( -95f, -92f);
-		PeriwinklePoint2 = new Vector3( -90f, -92f);
-		PeriwinklePoint3 = new Vector3( -95f, -82f);
-		if (sTheGameState.BlueWins > 0) {
-			spawnBlueCounter(BluePoint1);
-		} 
-		if (sTheGameState.BlueWins > 1) {
-			spawnBlueCounter(BluePoint2);
-		}
+		float near = 100f;
+		float far = 112.5f;
 		
-		if (sTheGameState.OrangeWins > 0) {
-			spawnOrangeCounter(OrangePoint1);
+		float aspectSize = mMainCamera.aspect * mMainCamera.orthographicSize;
+		BluePoint1 = new Vector3( far, -far);
+		BluePoint2 = new Vector3( near, -far);
+		BluePoint3 = new Vector3( far, -near);
+		OrangePoint1 = new Vector3( -far, far);
+		OrangePoint2 = new Vector3( -near, far);
+		OrangePoint3 = new Vector3( -far , near);
+		ChartreusePoint1 = new Vector3( far, far);
+		ChartreusePoint2 = new Vector3( near, far);
+		ChartreusePoint3 = new Vector3( far, near);
+		PeriwinklePoint1 = new Vector3( -far, -far);
+		PeriwinklePoint2 = new Vector3( -near, -far);
+		PeriwinklePoint3 = new Vector3( -far, -near);
+		
+		// Blue counter logic
+		RoundCounterBehavior counter = spawnBlueCounter(BluePoint1);
+		if (sTheGameState.BlueWins <= 0) {
+			counter.makeFrame();
 		}
-		if (sTheGameState.OrangeWins > 1) {
-			spawnOrangeCounter(OrangePoint2);
+		counter = spawnBlueCounter(BluePoint2);
+		if (sTheGameState.BlueWins <= 1) {
+			counter.makeFrame();
 		}
-		if (sTheGameState.OrangeWins > 0) {
-			spawnOrangeCounter(OrangePoint1);
+		counter = spawnBlueCounter(BluePoint3);
+		counter.makeFrame();
+		
+		// Orange counter logic
+		counter = spawnOrangeCounter(OrangePoint1);
+		if (sTheGameState.OrangeWins <= 0) {
+			counter.makeFrame();
 		}
-		if (sTheGameState.OrangeWins > 1) {
-			spawnOrangeCounter(OrangePoint2);
+		counter = spawnOrangeCounter(OrangePoint2);
+		if (sTheGameState.OrangeWins <= 1) {
+			counter.makeFrame();
 		}
-		if (sTheGameState.OrangeWins > 0) {
-			spawnOrangeCounter(OrangePoint1);
+		counter = spawnOrangeCounter(OrangePoint3);
+		counter.makeFrame();
+		
+		// Chartreuse counter logic
+		counter = spawnCharCounter(ChartreusePoint1);
+		if (sTheGameState.CharWins <= 0) {
+			counter.makeFrame();
 		}
-		if (sTheGameState.OrangeWins > 1) {
-			spawnOrangeCounter(OrangePoint2);
+		counter = spawnCharCounter(ChartreusePoint2);
+		if (sTheGameState.CharWins <= 1) {
+			counter.makeFrame();
 		}
+		counter = spawnCharCounter(ChartreusePoint3);
+		counter.makeFrame();
+		
+		// MulBerry counter logic
+		counter = spawnPerCounter(PeriwinklePoint1);
+		if (sTheGameState.PerWins <= 0) {
+			counter.makeFrame();
+		}
+		counter = spawnPerCounter(PeriwinklePoint2);
+		if (sTheGameState.PerWins <= 1) {
+			counter.makeFrame();
+		}
+		counter = spawnPerCounter(PeriwinklePoint3);
+		counter.makeFrame();
 	}
 	public override void UpdateWorldBound() {
 		if (mMainCamera != null) {
@@ -83,8 +109,8 @@ public class VersusWorldBehavior : WorldBehavior {
 			float sizeX = 2 * maxX;
 			float sizeY = 2 * maxY;
 			float sizeZ = Mathf.Abs (mMainCamera.farClipPlane - mMainCamera.nearClipPlane);
-			float boxSize = 10;
-			float cornerSize = 36;
+			float boxSize = 8;
+			float cornerSize = 75;
 			
 			// set z to zero
 			Vector3 center = mMainCamera.transform.position;
@@ -144,7 +170,22 @@ public class VersusWorldBehavior : WorldBehavior {
 		if (mIsAlive[dead - 1]){
 			mIsAlive[dead - 1] = false;
 			mPlayersAlive--;
-		}		
+		}
+		
+		Debug.Log("dead: " + dead);
+		if( dead == 2) {
+			FourPlayerShip ship = GameObject.Find("BlueShip").GetComponent<FourPlayerShip>();
+			ship.killShip();
+		} else if (dead == 1) {
+			FourPlayerShip ship = GameObject.Find("OrangeShip").GetComponent<FourPlayerShip>();
+			ship.killShip();
+		} else if (dead == 3) {
+			FourPlayerShip ship = GameObject.Find("ChartreuseShip").GetComponent<FourPlayerShip>();
+			ship.killShip();
+		} else if (dead == 4) {
+			FourPlayerShip ship = GameObject.Find("PeriwinkleShip").GetComponent<FourPlayerShip>();
+			ship.killShip();
+		}
 		if (mPlayersAlive <= 1) {
 			for (int i = 0; i < 4; ++i) {
 				if (mIsAlive[i]){
@@ -246,15 +287,17 @@ public class VersusWorldBehavior : WorldBehavior {
 		}
 	}
 	
-	private void spawnCharCounter(Vector3 target) {
+	private RoundCounterBehavior spawnCharCounter(Vector3 target) {
 		GameObject e = (GameObject)	Instantiate(charRoundWin);
 		e.transform.position = target;
 		e.GetComponent<RoundCounterBehavior>().mTargetPos = target;
+		return e.GetComponent<RoundCounterBehavior>();
 	}
-	private void spawnPerCounter(Vector3 target) {
+	private RoundCounterBehavior spawnPerCounter(Vector3 target) {
 		GameObject e = (GameObject)	Instantiate(PerRoundWin);
 		e.transform.position = target;
 		e.GetComponent<RoundCounterBehavior>().mTargetPos = target;
+		return e.GetComponent<RoundCounterBehavior>();
 	}
 	public void setupShip (FourPlayerShip ship) {
 		sTheGameState.setupShip(ship);

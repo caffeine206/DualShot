@@ -26,7 +26,8 @@ public class OrbBehavior : MonoBehaviour {
 	private GameObject explosion = null;
 	
 	private float mSpawnTime;
-	private bool mInvul;
+	protected bool mInvul;
+	public bool incoming = false;
 	
 	
 
@@ -182,7 +183,7 @@ public class OrbBehavior : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
-		if (!mInvul) {
+		if (!mInvul && !incoming) {
 			if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)") {
 				health -= 50.0f;
 				Destroy(other.gameObject);
@@ -195,22 +196,24 @@ public class OrbBehavior : MonoBehaviour {
 					explode(other.gameObject);
 				}
 			}
-		}
+		
 
-		if (other.gameObject.name == "WaveBlastBlue(Clone)" || other.gameObject.name == "WaveBlastOrange(Clone)") {
-	//		Debug.Log("WaveBlastPush");
-			/*Vector2 dir = other.transform.position - transform.position;
-			dir.Normalize();*/
-			WaveBlastBehavior wave = other.GetComponent<WaveBlastBehavior>();
-			rigidbody2D.AddForce(wave.mSpeed * wave.transform.up * wave.mForce);
-			//other.gameObject.rigidbody2D.AddForce(mSpeed * transform.up * mForce);
+			if (other.gameObject.name == "WaveBlastBlue(Clone)" || other.gameObject.name == "WaveBlastOrange(Clone)") {
+		//		Debug.Log("WaveBlastPush");
+				/*Vector2 dir = other.transform.position - transform.position;
+				dir.Normalize();*/
+				WaveBlastBehavior wave = other.GetComponent<WaveBlastBehavior>();
+				rigidbody2D.AddForce(wave.mSpeed * wave.transform.up * wave.mForce);
+				//other.gameObject.rigidbody2D.AddForce(mSpeed * transform.up * mForce);
+			}
 		}
 	}
 
 	void OnTriggerExit2D(Collider2D other) {
 		string otherName = other.gameObject.name;
-		if (otherName == "Top" || otherName == "Bot") {
+		if (otherName == "Top" || otherName == "Bot" || otherName == "Left" || otherName == "Right") {
 			collider2D.isTrigger = false;
+			incoming = false;
 		}
 	}
 

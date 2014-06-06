@@ -6,7 +6,7 @@ public class RoundCounterBehavior : MonoBehaviour {
 	private float mUpdateTime, mLastUpdate;
 	public GameObject mTarget;
 	public Vector3 mTargetPos;
-	public bool stopped;
+	public bool frame;
 	private float spawnTime;
 	
 	private SpriteManager mSprite = null;
@@ -27,5 +27,10 @@ public class RoundCounterBehavior : MonoBehaviour {
 			}
 			transform.position += dir;
 		}
+	}
+	
+	public void makeFrame() {
+		GetComponent<SpriteManager>().nextSprite();
+		frame = true;
 	}
 }

@@ -50,19 +50,33 @@ public class WorldBehavior : MonoBehaviour {
 		OrangePoint2 = new Vector3( -aspectSize * .9f, 92f);
 		OrangePoint3 = new Vector3( -aspectSize * .95f, 82f);
 		
-		if (sTheGameState.BlueWins > 0) {
-			spawnBlueCounter(BluePoint1);
-		} 
-		if (sTheGameState.BlueWins > 1) {
-			spawnBlueCounter(BluePoint2);
+		RoundCounterBehavior counter;	
+	
+		// Orange counter logic
+		counter = spawnOrangeCounter(OrangePoint1);
+		if (sTheGameState.OrangeWins <= 0) {
+			counter.makeFrame();
 		}
+		counter = spawnOrangeCounter(OrangePoint2);
+		if (sTheGameState.OrangeWins <= 1) {
+			counter.makeFrame();
+		}
+		counter = spawnOrangeCounter(OrangePoint3);
+		counter.makeFrame();
+		// Blue counter logic
+		counter = spawnBlueCounter(BluePoint1);
+		if (sTheGameState.BlueWins <= 0) {
+			counter.makeFrame();
+		}
+		counter = spawnBlueCounter(BluePoint2);
+		if (sTheGameState.BlueWins <= 1) {
+			counter.makeFrame();
+		}
+		counter = spawnBlueCounter(BluePoint3);
+		counter.makeFrame();
 		
-		if (sTheGameState.OrangeWins > 0) {
-			spawnOrangeCounter(OrangePoint1);
-		}
-		if (sTheGameState.OrangeWins > 1) {
-			spawnOrangeCounter(OrangePoint2);
-		}
+		
+		
 		/*
 		if (mEcho == null) {
 			mEcho = GameObject.Find ("GUI Text").GetComponent<GUIText>();
@@ -294,15 +308,17 @@ public class WorldBehavior : MonoBehaviour {
 	public void resetScore() {
 		sTheGameState.resetScores();
 	}
-	protected void spawnBlueCounter(Vector3 target) {
+	protected RoundCounterBehavior spawnBlueCounter(Vector3 target) {
 		GameObject e = (GameObject)	Instantiate(blueRoundWin);
 		e.transform.position = target;
 		e.GetComponent<RoundCounterBehavior>().mTargetPos = target;
+		return e.GetComponent<RoundCounterBehavior>();
 	}
-	protected void spawnOrangeCounter(Vector3 target) {
+	protected RoundCounterBehavior spawnOrangeCounter(Vector3 target) {
 		GameObject e = (GameObject)	Instantiate(orangeRoundWin);
 		e.transform.position = target;
 		e.GetComponent<RoundCounterBehavior>().mTargetPos = target;
+		return e.GetComponent<RoundCounterBehavior>();
 	}
 	public void setupShip (Ship ship) {
 		sTheGameState.setupShip(ship);

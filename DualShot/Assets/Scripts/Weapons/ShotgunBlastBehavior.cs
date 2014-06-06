@@ -7,13 +7,24 @@ public class ShotgunBlastBehavior : MonoBehaviour {
 	private float kShotgunLife = 0.3f;
 	private float kShotgunSpawnTime;
 
+	protected RespawnBehavior pause = null;
+
 	void Start()
 	{
+		if (pause == null) {
+			pause = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
+		}
+	
 		kShotgunSpawnTime = Time.realtimeSinceStartup;
 	}
 
 	// Update is called once per frame
 	void Update () {
+		
+		if (pause.GameIsPaused()) {
+			kShotgunSpawnTime += Time.time;
+		}
+	
 		if ((Time.realtimeSinceStartup - kShotgunSpawnTime) > kShotgunLife) {
 			Destroy(this.gameObject);
 		}

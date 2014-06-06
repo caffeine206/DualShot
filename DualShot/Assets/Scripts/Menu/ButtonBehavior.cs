@@ -90,7 +90,8 @@ public class ButtonBehavior : MonoBehaviour
         }
         if (GetComponent<TextMesh>().text == "Reset")
         {
-            Application.LoadLevel(1);   // Level 1
+        	WorldBehavior world = GameObject.Find ("GameManager").GetComponent<WorldBehavior>();
+            Application.LoadLevel(world.mode);   // Level 1
         }
         if (GetComponent<TextMesh>().text == "Quit")
         {

@@ -6,96 +6,99 @@ public class Ship : MonoBehaviour {
 	//Keeps track of the max health of a player.
 	public string controller;
 	public int player;
-	private const float HEALTH = 20f;
+	protected const float HEALTH = 20f;
 	//Keeps track of the current health of the player. Set to public for testing purposes.
-	private float currentHealth = HEALTH;
+	protected float currentHealth = HEALTH;
 	//Used to instantiate a small explosion upon death.
-	private GameObject explosion = null;
+	protected GameObject explosion = null;
 	//The start location of the ship. Currently set to the middle of the screen because
 	//I'm not sure were we want to spawn the ship. Spawn points can be set in the inspector.
-	private Vector3 startLocation = new Vector3(0f, 0f, 0f);
+	protected Vector3 startLocation = new Vector3(0f, 0f, 0f);
 	//The middle of our world. Used to reorient the ships to their default direction after respawning.
-	private Vector3 originOfWorld = new Vector3(0f, 0f, 0f);
+	protected Vector3 originOfWorld = new Vector3(0f, 0f, 0f);
 
 	//Tracks the powerup level of the ship.
-	private int powerLevel = 1;
-	private bool mSpeedUp = false;
-	private float kSpeedMass = 2.0f;
-	private float kSpeedBegin = 0.0f;
-	private float kSpeedEnd = 8.0f;
+	protected int powerLevel = 1;
+	protected bool mSpeedUp = false;
+	protected float kSpeedMass = 2.0f;
+	protected float kSpeedBegin = 0.0f;
+	protected float kSpeedEnd = 8.0f;
 
-	private float kDefaultMass = 4.0f;
+	protected float kDefaultMass = 4.0f;
 	public bool mGrowUp = false;
-	private float mGrowScale = 2.5f;
-	private float kGrowSpeed = 6000f;
-	private float mGrowMass = 7.0f;
-	private float kGrowBegin = 0.0f;
-	private float kGrowEnd = 8.0f;
+	protected float mGrowScale = 2.5f;
+	protected float kGrowSpeed = 6000f;
+	protected float mGrowMass = 7.0f;
+	protected float kGrowBegin = 0.0f;
+	protected float kGrowEnd = 8.0f;
 
 	//Invulnerability flag.
 	public bool isInvulnerable = true;
 	public bool isController = false;
 
-	private const float kDefaultHeroSpeed = 3000f;
-	private float kHeroSpeed = kDefaultHeroSpeed;
-	private float kSpeedHeroSpeed = 9000f;
-	private Vector3 mClampedPosition;
-	private Vector3 mNewDirection;
-	private Vector3 mNewRotation;
-    //private AudioClip mBackground;  // "music by audionautix.com"
+	protected const float kDefaultHeroSpeed = 3000f;
+	protected float kHeroSpeed = kDefaultHeroSpeed;
+	protected float kSpeedHeroSpeed = 9000f;
+	protected Vector3 mClampedPosition;
+	protected Vector3 mNewDirection;
+	protected Vector3 mNewRotation;
+    //protected AudioClip mBackground;  // "music by audionautix.com"
 
 	public GameObject mWaveProjectile = null;
 	public GameObject[] mShotgunProjectile = null;
-	private bool hasFired = false;
-	private bool isCharging = false;
+	protected bool hasFired = false;
+	protected bool isCharging = false;
 
-	//private float mAbsoluteWeaponInterval = .4f;
-	//private float mTimeOfLastCharge = 0.0f;
+	//protected float mAbsoluteWeaponInterval = .4f;
+	//protected float mTimeOfLastCharge = 0.0f;
 	
-	//private float mWaveBlastSpawnTime = -0.0f;
-	private const float kWaveBlastDefaultSpawnInterval = 0.5f;
-	private float kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval; //0.32
-	private float kWaveBlastSpeedSpawnInterval = 0.15f;
-	private float kWaveBlastChargeInterval = .5f;
-	private float mWaveBlastChargeTime = -1.0f;
-	private float kWaveTotalChargeTime = 0.0f;
-	private float kWaveMaxChargeTime = 1.5f;
-	//private float mWaveBlastLastCharge = -1.0f;
+	//protected float mWaveBlastSpawnTime = -0.0f;
+	protected const float kWaveBlastDefaultSpawnInterval = 0.5f;
+	protected float kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval; //0.32
+	protected float kWaveBlastSpeedSpawnInterval = 0.15f;
+	protected float kWaveBlastChargeInterval = .5f;
+	protected float mWaveBlastChargeTime = -1.0f;
+	protected float kWaveTotalChargeTime = 0.0f;
+	protected float kWaveMaxChargeTime = 1.5f;
+	//protected float mWaveBlastLastCharge = -1.0f;
 	
-	//private float mShotgunBlastSpawnTime = -1.0f;
-	private const float kShotgunBlastDefaultSpawnInterval = 0.5f;
-	private float kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
-	private float kShotgunBlastSpeedSpawnInterval = 0.2f;
-	private float kShotgunBlastChargeInterval = 0.5f;
-	//private float mShotgunBlastChargeTime = -1.0f;
-	//private float kShotgunTotalChargeTime = 0.0f;
-	//private float kShotgunMaxChargeTime = 1.1f;
-	//private float mShotgunBlastLastCharge = -1.0f;
-	private float kShotgunPowerInterval = .2f;
+	//protected float mShotgunBlastSpawnTime = -1.0f;
+	protected const float kShotgunBlastDefaultSpawnInterval = 0.5f;
+	protected float kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
+	protected float kShotgunBlastSpeedSpawnInterval = 0.2f;
+	protected float kShotgunBlastChargeInterval = 0.5f;
+	//protected float mShotgunBlastChargeTime = -1.0f;
+	//protected float kShotgunTotalChargeTime = 0.0f;
+	//protected float kShotgunMaxChargeTime = 1.1f;
+	//protected float mShotgunBlastLastCharge = -1.0f;
+	protected float kShotgunPowerInterval = .2f;
 
-	private const int kMinShotgunShots = 5;
-	private const float kMinShotgunSpread = -20.0f;
+	protected const int kMinShotgunShots = 5;
+	protected const float kMinShotgunSpread = -20.0f;
 
-	private float kShotgunSpread = kMinShotgunSpread;
-	private int kShotgunShots = kMinShotgunShots;
-	//private int kMaxShotgunShots = 9;
+	protected float kShotgunSpread = kMinShotgunSpread;
+	protected int kShotgunShots = kMinShotgunShots;
+	//protected int kMaxShotgunShots = 9;
 
-	Fire fire;
-	Vector2 mousedir;
+	protected Fire fire;
+	protected Vector2 mousedir;
 
-	RespawnBehavior respawn;
-	CountdownTimer count;
+	protected RespawnBehavior respawn;
+	protected CountdownTimer count;
 
-	private GameObject powerupPickup = null;
-	private GameObject speedupPickup = null;
-	private GameObject speedupParticle = null;
-	private GameObject growupPickup = null;
-	private GameObject growupParticle = null;
-	
+	protected GameObject powerupPickup = null;
+	protected GameObject speedupPickup = null;
+	protected GameObject speedupParticle = null;
+	protected GameObject growupPickup = null;
+	protected GameObject growupParticle = null;
+	protected RespawnBehavior pause = null;
 	void Start () {
 		// Initiate ship death and respawn
 		if (explosion == null) {
 			explosion = Resources.Load("Prefabs/SmallExplosionParticle") as GameObject;
+		}
+		if (pause == null) {
+			pause = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
 		}
 
 		fire = GetComponent<Fire>();
@@ -132,8 +135,14 @@ public class Ship : MonoBehaviour {
 	}
 	
 	void Update () {
+	
+		if (pause.GameIsPaused()) {
+			kSpeedBegin += Time.time;
+			kGrowBegin += Time.time;
+			mWaveBlastChargeTime += Time.time;
+		}	
 		
-			if (mSpeedUp == true) {
+	if (mSpeedUp == true) {
 		if (speedupParticle != null) {
 			speedupParticle.transform.position = transform.position;
 		}
@@ -147,18 +156,18 @@ public class Ship : MonoBehaviour {
 		}
 		}
 
-		if (mGrowUp == true) {
-			if (growupParticle != null) {
-				growupParticle.transform.position = transform.position;
-			}
-			if (Time.realtimeSinceStartup - kGrowBegin > kGrowEnd) {
-				mGrowUp = false;
-				kHeroSpeed = kDefaultHeroSpeed;
-				transform.localScale -= new Vector3(mGrowScale, mGrowScale, 0.0f);
-				Destroy(growupParticle);
-				rigidbody2D.mass = kDefaultMass;
-			}
+	if (mGrowUp == true) {
+		if (growupParticle != null) {
+			growupParticle.transform.position = transform.position;
 		}
+		if (Time.realtimeSinceStartup - kGrowBegin > kGrowEnd) {
+			mGrowUp = false;
+			kHeroSpeed = kDefaultHeroSpeed;
+			transform.localScale -= new Vector3(mGrowScale, mGrowScale, 0.0f);
+			Destroy(growupParticle);
+			rigidbody2D.mass = kDefaultMass;
+		}
+	}
 
 		//No longer necessary. Maybe.
 		//DieCheck(); // Check if ship is dead
@@ -309,7 +318,7 @@ public class Ship : MonoBehaviour {
 	#endregion
 
 	#region Ship dies
-	private void DieCheck() {
+	protected void DieCheck() {
 		if (currentHealth <= 0f) {
 			RespawnBehavior respawnControls = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
 			GameObject e = Instantiate(explosion) as GameObject;
@@ -330,6 +339,21 @@ public class Ship : MonoBehaviour {
             //Play(mShipDead, 1f, 1);
 		}
 	}
+	
+	public void killShip () {
+		GameObject e = Instantiate(explosion) as GameObject;
+		
+		e.transform.position = transform.position;
+		
+		Transform flames = transform.Find("ShipFlames");
+		flames.particleSystem.Clear();
+		
+		Transform[] shipParts = GetComponentsInChildren<Transform>();
+		foreach( Transform i in shipParts) {
+			i.gameObject.SetActive(false);
+		}
+		
+	}	
 	#endregion
 
 	#region Reset the ship
@@ -362,7 +386,7 @@ public class Ship : MonoBehaviour {
 	#endregion
 
 	#region Wave blast single/charge fire support
-	private void StartWaveBlast() {
+	protected void StartWaveBlast() {
 		if (!hasFired) {
 			if (isController == true)
 				fire.FireWaveBlast(transform.up, this.gameObject, powerLevel);
@@ -387,7 +411,7 @@ public class Ship : MonoBehaviour {
 		}
 	}
 
-	private void FireChargedWaveBlast() {
+	protected void FireChargedWaveBlast() {
 		if (isCharging) {
 			kWaveTotalChargeTime = Time.realtimeSinceStartup - mWaveBlastChargeTime;
 			if (kWaveTotalChargeTime > kWaveMaxChargeTime)
@@ -403,7 +427,7 @@ public class Ship : MonoBehaviour {
 	#endregion
 
 	#region Shotgun blast single/charge fire support
-	private void StartShotgunBlast() {
+	protected void StartShotgunBlast() {
 		if (!hasFired) {
 			if (!mGrowUp) {
 				fire.FireShotgunBlast(this.gameObject, powerLevel, 15f);
@@ -440,7 +464,7 @@ public class Ship : MonoBehaviour {
 		}
 	}
 
-	private void FireChargedShotgunBlast() {
+	protected void FireChargedShotgunBlast() {
 		if (isCharging) {
 			if (!mGrowUp) {
 				fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel, 15f);
@@ -471,7 +495,7 @@ public class Ship : MonoBehaviour {
 		theCharge.particleSystem.startSize = 3.5f;
 	}
 
-	private void StopChargeParticle() {
+	protected void StopChargeParticle() {
 		Transform theCharge = transform.Find("Charge");
 		StopCoroutine("ChargeParticleCoroutine");
 		theCharge.particleSystem.startSize = 1.5f;

@@ -42,16 +42,16 @@ public class VersusBaseBehavior : MonoBehaviour {
 		
 		spriteMan.mCurrentSpriteAction = BaseAnimation;
 		
-		float sizeY = mCamera.orthographicSize * 0.98f;
+		float sizeY = mCamera.orthographicSize * 0.727f;
 		
 		if ( gameObject.name == "OrangeCity") {
-			transform.position -= new Vector3(sizeY, 0);
+			transform.position = new Vector3(-sizeY, sizeY );
 		} else if (gameObject.name == "BlueCity"){
-			transform.position += new Vector3(sizeY, 0);
+			transform.position = new Vector3(sizeY, -sizeY);
 		} else if (gameObject.name == "ChartreuseCity"){
-			transform.position += new Vector3(0, sizeY);
+			transform.position = new Vector3(sizeY , sizeY);
 		} else if (gameObject.name == "PeriwinkleCity"){
-			transform.position -= new Vector3(0, sizeY);
+			transform.position = new Vector3(-sizeY, -sizeY);
 		}
 		
 		if (smallExplosion == null) {
@@ -151,6 +151,8 @@ public class VersusBaseBehavior : MonoBehaviour {
 			f.particleSystem.enableEmission = false; // disable fire
 			spriteMan.nextSprite();
 			StartCoroutine("EXPLOSIVE_VICTORY");
+			
+			
 			/*
             Play(mBaseDead, 1f, 1);
 
@@ -182,6 +184,7 @@ public class VersusBaseBehavior : MonoBehaviour {
 		} else if(gameObject.name == "PeriwinkleCity") {
 			world.BaseDies(4);
 		}
+		GetComponent<CircleCollider2D>().center += new Vector2(100f,100f);
 		
 	}
 	
@@ -201,6 +204,11 @@ public class VersusBaseBehavior : MonoBehaviour {
 		yield return new WaitForSeconds(2f);
 		GameObject s2 = Instantiate(smallExplosion2) as GameObject;
 		s2.transform.position = transform.position;
+		
+		SpriteRenderer[] sprites = GetComponentsInChildren<SpriteRenderer>();
+		for( int i = 1; i < sprites.Length; ++i) {
+			sprites[i].enabled = false;
+		}
 	}
 	
 	// Audio clip player

@@ -10,6 +10,7 @@ public class WaveBlastBehavior : MonoBehaviour {
 	private int mCurSrite = 0;
 	
 	private SpriteManager mSpriteManager = null;
+	protected RespawnBehavior pause = null;
 
 	void Start()
 	{
@@ -18,10 +19,19 @@ public class WaveBlastBehavior : MonoBehaviour {
 		if ( mSpriteManager == null ) {
 			mSpriteManager = GetComponent<SpriteManager>();
 		}
+		if (pause == null) {
+			pause = GameObject.Find ("GameManager").GetComponent<RespawnBehavior>();
+		}
 	}
 
 	// Update is called once per frame
 	void Update () {
+	
+		if (pause.GameIsPaused()) {
+			kWaveSpawnTime += Time.time;
+		}
+	
+		Debug.Log("SpawnTime: " + kWaveSpawnTime + " Delta: " + Time.time);
 		float percentLife = 1 - ((Time.realtimeSinceStartup - kWaveSpawnTime) / kWaveLife);
 		
 //		Debug.Log (percentLife);

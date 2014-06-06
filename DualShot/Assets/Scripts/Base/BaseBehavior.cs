@@ -158,6 +158,8 @@ public class BaseBehavior : MonoBehaviour {
 			f.particleSystem.enableEmission = false; // disable fire
 			spriteMan.nextSprite();
 			StartCoroutine("EXPLOSIVE_VICTORY");
+			
+			
 			/*
             Play(mBaseDead, 1f, 1);
 
@@ -229,6 +231,11 @@ public class BaseBehavior : MonoBehaviour {
 		yield return new WaitForSeconds(2f);
 		GameObject s2 = Instantiate(smallExplosion2) as GameObject;
 		s2.transform.position = transform.position;
+		
+		SpriteRenderer[] sprites = GetComponentsInChildren<SpriteRenderer>();
+		for( int i = 1; i < sprites.Length; ++i) {
+			sprites[i].enabled = false;
+		}
 	}
 	
     // Audio clip player

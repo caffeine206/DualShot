@@ -69,7 +69,7 @@ public class SpriteManager : MonoBehaviour {
 		
 		// the user specify sprite sheet
 		private Sprite[][] mSpriteElements = null;	// The actual computed sprite elements
-		private Sprite[] mSpriteLine = null;
+		public Sprite[] mSpriteLine = null;
 		/// <summary>
 		/// When not null, this refers to the current sprite animation we are performing
 		/// </summary>
@@ -107,6 +107,11 @@ public class SpriteManager : MonoBehaviour {
 		/// </summary>
 		void Start()
 		{
+			
+		}
+		
+		void Awake() 
+		{
 			if ((mRowInSheet == 0) || (mColumnInSheet == 0))
 				return;  // not properly defined, cannot do anything!
 			
@@ -143,22 +148,22 @@ public class SpriteManager : MonoBehaviour {
 						mMyRenderer.sprite.texture,
 						spriteRect, new Vector2(0.5f, 0.5f));
 				}
-			}
-			
-			// now comptue the position and scale offset
-			// compute the proper scale factor
-			float sx = totalTexResolution.width / spriteRect.width;
-			float sy = totalTexResolution.height / spriteRect.height;
-			transform.localScale = new Vector3(sx * transform.localScale.x, 
-			                                   sy * transform.localScale.y, 1f);
-			
-			// finally 
-			if (null != mCurrentSpriteAction)
-				mMyRenderer.sprite = mSpriteLine[mCurrentActionNum];	
-			// create a new collder for this GameObject
-			else
-				mMyRenderer.sprite = mSpriteElements[0][0];	
-			//RecreateCollider();
+		}
+		
+		// now comptue the position and scale offset
+		// compute the proper scale factor
+		float sx = totalTexResolution.width / spriteRect.width;
+		float sy = totalTexResolution.height / spriteRect.height;
+		transform.localScale = new Vector3(sx * transform.localScale.x, 
+		                                   sy * transform.localScale.y, 1f);
+		
+		// finally 
+		if (null != mCurrentSpriteAction)
+			mMyRenderer.sprite = mSpriteLine[mCurrentActionNum];	
+		// create a new collder for this GameObject
+		else
+			mMyRenderer.sprite = mSpriteElements[0][0];	
+		//RecreateCollider();
 		}
 		
 		/// <summary>
@@ -189,10 +194,17 @@ public class SpriteManager : MonoBehaviour {
 		{
 			if ( mCurrentActionNum < mRowInSheet * mColumnInSheet - 1)
 				mCurrentActionNum ++;
-			mMyRenderer.sprite = mSpriteLine[mCurrentActionNum];
+			if (mMyRenderer == null) {
+				mMyRenderer = GetComponent<SpriteRenderer>();
+			}
+				gameObject.GetComponent<SpriteRenderer>().sprite = mSpriteLine[mCurrentActionNum];
 		}
 		public void setSprite() 
 		{
+			mMyRenderer.sprite = mSpriteLine[mCurrentActionNum];
+		}
+		public void setSprite( int spriteNum) {
+			mCurrentActionNum = spriteNum;
 			mMyRenderer.sprite = mSpriteLine[mCurrentActionNum];
 		}
 		public int SpriteNum { 

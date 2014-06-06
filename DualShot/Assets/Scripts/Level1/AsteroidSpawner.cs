@@ -5,9 +5,9 @@ public class AsteroidSpawner : MonoBehaviour {
 
 	#region Asteroid Spawner
 	// Vars for Asteroid Spawning
-	protected float mSpawnTime = 12f;
+	public float mSpawnTime = 12f;
 	//protected float mMinSpawnTime = 3f;
-	protected int mMaxOrbs = 20;
+	public int mMaxOrbs = 40;
 	public int mSpawnNum = 6;
 	public float mSpawnMinSize = 1f;
 	public float mSpawnMaxSize = 15f;
@@ -41,7 +41,7 @@ public class AsteroidSpawner : MonoBehaviour {
 			pause = GetComponent<RespawnBehavior>();
 		}
 		
-		mlastRamp = Time.realtimeSinceStartup;
+		mlastRamp = Time.realtimeSinceStartup + 4f;
 		
 		SpawnOrbs();
 	
@@ -58,7 +58,9 @@ public class AsteroidSpawner : MonoBehaviour {
 		*/
 
 		// Automated spawner. Uses the metrics of time since last spawn and limits the number of orbs on the screen.
-		 
+		if (pause.GameIsPaused()) {
+			mlastRamp += Time.time;
+		}
 		if ( Time.realtimeSinceStartup - mlastRamp > mRampInterval ) {
 			mlastRamp = Time.realtimeSinceStartup;
 			/*if ( mSpawnTime > mMinSpawnTime ) { 
@@ -77,6 +79,9 @@ public class AsteroidSpawner : MonoBehaviour {
 			//	mSpawnTime = 0f;
 			//}
 		}
+		
+		if ( mCurOrbs < 5) 
+			SpawnOrbs();
 		#endregion
 	}
 	#region Asteroid Spawner
@@ -117,6 +122,7 @@ public class AsteroidSpawner : MonoBehaviour {
 		e.transform.up = dir.normalized;
 		e.transform.localScale = mass * Vector2.one;
 		e.collider2D.isTrigger = true;
+		e.GetComponent<OrbBehavior>().incoming = true;
 	}
 	
 	#endregion

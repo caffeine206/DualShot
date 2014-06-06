@@ -16,7 +16,7 @@ public class GlobalBehavior : MonoBehaviour {
 	private int keyboard;
 
 	// Mode Selection Info
-	private int mMode = 1;	
+	private int mMode = 1;	// Which level is loaded
 	
     public int DeadBase = 0; // For deciding which base is destroyed
 

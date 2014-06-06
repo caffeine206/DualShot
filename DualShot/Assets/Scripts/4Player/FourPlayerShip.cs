@@ -1,112 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FourPlayerShip : MonoBehaviour {
-	
-	//Keeps track of the max health of a player.
-	public string controller;
-	public int player;
-	private const float HEALTH = 20f;
-	//Keeps track of the current health of the player. Set to public for testing purposes.
-	private float currentHealth = HEALTH;
-	//Used to instantiate a small explosion upon death.
-	private GameObject explosion = null;
-	//The start location of the ship. Currently set to the middle of the screen because
-	//I'm not sure were we want to spawn the ship. Spawn points can be set in the inspector.
-	private Vector3 startLocation = new Vector3(0f, 0f, 0f);
-	//The middle of our world. Used to reorient the ships to their default direction after respawning.
-	private Vector3 originOfWorld = new Vector3(0f, 0f, 0f);
-	
-	//Tracks the powerup level of the ship.
-	private int powerLevel = 1;
-	private bool mSpeedUp = false;
-	private float kSpeedMass = 2.0f;
-	private float kSpeedBegin = 0.0f;
-	private float kSpeedEnd = 8.0f;
-	
-	private float kDefaultMass = 4.0f;
-	public bool mGrowUp = false;
-	private float mGrowScale = 2.5f;
-	private float kGrowSpeed = 6000f;
-	private float mGrowMass = 7.0f;
-	private float kGrowBegin = 0.0f;
-	private float kGrowEnd = 8.0f;
-	
-	//Invulnerability flag.
-	public bool isInvulnerable = true;
-	public bool isController = false;
-	
-	private const float kDefaultHeroSpeed = 3000f;
-	private float kHeroSpeed = kDefaultHeroSpeed;
-	private float kSpeedHeroSpeed = 9000f;
-	private Vector3 mClampedPosition;
-	private Vector3 mNewDirection;
-	private Vector3 mNewRotation;
-	//private AudioClip mBackground;  // "music by audionautix.com"
-	
-	public GameObject mWaveProjectile = null;
-	public GameObject[] mShotgunProjectile = null;
-	private bool hasFired = false;
-	private bool isCharging = false;
-	
-	//private float mAbsoluteWeaponInterval = .4f;
-	//private float mTimeOfLastCharge = 0.0f;
-	
-	//private float mWaveBlastSpawnTime = -0.0f;
-	private const float kWaveBlastDefaultSpawnInterval = 0.5f;
-	private float kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval; //0.32
-	private float kWaveBlastSpeedSpawnInterval = 0.15f;
-	private float kWaveBlastChargeInterval = .5f;
-	private float mWaveBlastChargeTime = -1.0f;
-	private float kWaveTotalChargeTime = 0.0f;
-	private float kWaveMaxChargeTime = 1.5f;
-	//private float mWaveBlastLastCharge = -1.0f;
-	
-	//private float mShotgunBlastSpawnTime = -1.0f;
-	private const float kShotgunBlastDefaultSpawnInterval = 0.5f;
-	private float kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
-	private float kShotgunBlastSpeedSpawnInterval = 0.2f;
-	private float kShotgunBlastChargeInterval = 0.5f;
-	//private float mShotgunBlastChargeTime = -1.0f;
-	//private float kShotgunTotalChargeTime = 0.0f;
-	//private float kShotgunMaxChargeTime = 1.1f;
-	//private float mShotgunBlastLastCharge = -1.0f;
-	private float kShotgunPowerInterval = .2f;
-	
-	private const int kMinShotgunShots = 5;
-	private const float kMinShotgunSpread = -20.0f;
-	
-	private float kShotgunSpread = kMinShotgunSpread;
-	private int kShotgunShots = kMinShotgunShots;
-	//private int kMaxShotgunShots = 9;
-	
-	Fire fire;
-	Vector2 mousedir;
-	
-	RespawnBehavior respawn;
-	CountdownTimer count;
-	
-	private GameObject powerupPickup = null;
-	private GameObject speedupPickup = null;
-	private GameObject speedupParticle = null;
-	private GameObject growupPickup = null;
-	private GameObject growupParticle = null;
+public class FourPlayerShip : Ship {
 	
 	void Start () {
 		// Initiate ship death and respawn
 		if (explosion == null) {
 			explosion = Resources.Load("Prefabs/SmallExplosionParticle") as GameObject;
 		}
+		if (pause == null) {
+			pause = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
+		}
 		
 		fire = GetComponent<Fire>();
 		
-		float sizeY = Camera.main.orthographicSize;
+		float sizeY = 65f;
 		
 		if (gameObject.name == "OrangeShip") {
-			startLocation -= new Vector3(sizeY - 50f, 0f, 0f);
-		} 
-		else if (gameObject.name == "BlueShip") {
-			startLocation += new Vector3(sizeY - 50f, 0f, 0f);
+			startLocation = new Vector3(-sizeY, 0f, 0f);
+		} else if (gameObject.name == "BlueShip") {
+			startLocation = new Vector3(sizeY, 0f, 0f);
+		} else if (gameObject.name == "ChartreuseShip") {
+			startLocation = new Vector3(sizeY, 0f, 0f);
+		} else if (gameObject.name == "PeriwinkleShip") {
+			startLocation = new Vector3(-sizeY, 0f, 0f);
 		}
 		
 		startLocation.y = transform.position.y;
@@ -132,6 +49,12 @@ public class FourPlayerShip : MonoBehaviour {
 	}
 	
 	void Update () {
+		
+		if (pause.GameIsPaused()) {
+			kSpeedBegin += Time.time;
+			kGrowBegin += Time.time;
+			mWaveBlastChargeTime += Time.time;
+		}	
 		
 		if (mSpeedUp == true) {
 			if (speedupParticle != null) {
@@ -307,73 +230,6 @@ public class FourPlayerShip : MonoBehaviour {
 	}
 	#endregion
 	
-	#region Ship dies
-	private void DieCheck() {
-	/*
-		if (currentHealth <= 0f) {
-			RespawnBehavior respawnControls = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
-			GameObject e = Instantiate(explosion) as GameObject;
-			
-			e.transform.position = transform.position;
-			
-			transform.position = startLocation;
-			//Doesn't point the ship to the center of the world. :(
-			transform.up = originOfWorld;
-			
-			respawnControls.Respawn(this);
-			
-			Transform flames = transform.Find("ShipFlames");
-			flames.particleSystem.Clear();
-			
-			gameObject.SetActive(false);
-			
-			//Play(mShipDead, 1f, 1);
-		}
-		
-		*/
-	}
-	#endregion
-	
-	#region Reset the ship
-	public void Reset() {
-		transform.position = startLocation;
-		transform.up = originOfWorld;
-		RestoreHealth();
-		rigidbody2D.velocity = Vector3.zero;
-		Transform flames = transform.Find("ShipFlames");
-		flames.particleSystem.Clear();
-		Transform shield = transform.Find("Shield");
-		renderer.enabled = true;
-		shield.renderer.enabled = true;
-		powerLevel = 0;
-	}
-	#endregion
-	
-	#region Small useful functions
-	public void RestoreHealth() {
-		currentHealth = HEALTH;
-	}
-	
-	public void Suicide() {
-		currentHealth = 0f;
-	}
-	
-	public float GetCurrentHealth() {
-		return currentHealth;
-	}
-	#endregion
-	
-	#region Wave blast single/charge fire support
-	private void StartWaveBlast() {
-		if (!hasFired) {
-			if (isController == true)
-				fire.FireWaveBlast(transform.up, this.gameObject, powerLevel);
-			else
-				fire.FireWaveBlast(mousedir, this.gameObject, powerLevel);
-			StartCoroutine("WaveBlastStallTime");
-		}
-	}
-	
 	IEnumerator WaveBlastStallTime() {
 		hasFired = true;
 		yield return new WaitForSeconds(kWaveBlastSpawnInterval);
@@ -389,32 +245,8 @@ public class FourPlayerShip : MonoBehaviour {
 		}
 	}
 	
-	private void FireChargedWaveBlast() {
-		if (isCharging) {
-			kWaveTotalChargeTime = Time.realtimeSinceStartup - mWaveBlastChargeTime;
-			if (kWaveTotalChargeTime > kWaveMaxChargeTime)
-				kWaveTotalChargeTime = kWaveMaxChargeTime;
-			if (isController == true)
-				fire.FireChargedWaveBlast(transform.up, this.gameObject, powerLevel, kWaveTotalChargeTime);
-			else
-				fire.FireChargedWaveBlast(mousedir, this.gameObject, powerLevel, kWaveTotalChargeTime);
-			isCharging = false;
-			StartCoroutine("WaveBlastStallTime");
-		}
-	}
-	#endregion
 	
 	#region Shotgun blast single/charge fire support
-	private void StartShotgunBlast() {
-		if (!hasFired) {
-			if (!mGrowUp) {
-				fire.FireShotgunBlast(this.gameObject, powerLevel, 15f);
-			} else {
-				fire.FireShotgunBlast(this.gameObject, powerLevel, 30f);
-			}
-			StartCoroutine("ShotgunBlastStallTime");
-		}
-	}
 	
 	IEnumerator ShotgunBlastStallTime() {
 		hasFired = true;
@@ -442,19 +274,7 @@ public class FourPlayerShip : MonoBehaviour {
 		}
 	}
 	
-	private void FireChargedShotgunBlast() {
-		if (isCharging) {
-			if (!mGrowUp) {
-				fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel, 15f);
-			} else {
-				fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel, 30f);
-			}
-			isCharging = false;
-			StartCoroutine("ShotgunBlastStallTime");
-		}
-		kShotgunShots = kMinShotgunShots;
-		kShotgunSpread = kMinShotgunSpread;
-	}
+	
 	#endregion
 	
 	#region Charge PARTICLE support
@@ -473,26 +293,5 @@ public class FourPlayerShip : MonoBehaviour {
 		theCharge.particleSystem.startSize = 3.5f;
 	}
 	
-	private void StopChargeParticle() {
-		Transform theCharge = transform.Find("Charge");
-		StopCoroutine("ChargeParticleCoroutine");
-		theCharge.particleSystem.startSize = 1.5f;
-		theCharge.particleSystem.enableEmission = false;
-	}
 	#endregion
-	
-	// Audio clip player
-	public void Play(AudioClip clip, float volume, float pitch)
-	{
-		//Create an empty game object
-		GameObject go = new GameObject("Audio: " + clip.name);
-		
-		//Create the source
-		AudioSource source = go.AddComponent<AudioSource>();
-		source.clip = clip;
-		source.volume = volume;
-		source.pitch = pitch;
-		source.Play();
-		Destroy(go, clip.length);
-	}
 }

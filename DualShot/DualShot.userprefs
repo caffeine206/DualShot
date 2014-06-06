@@ -1,9 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\4Player\VersusWorldBehavior.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\4Player\VersusAsteroidSpawner.cs">
     <Files>
-      <File FileName="Assets\Scripts\4Player\VersusWorldBehavior.cs" Line="51" Column="38" />
-      <File FileName="Assets\Scripts\Level1\WorldBehavior.cs" Line="154" Column="16" />
+      <File FileName="Assets\Scripts\4Player\VersusWorldBehavior.cs" Line="113" Column="25" />
+      <File FileName="Assets\Scripts\Ship\Ship.cs" Line="332" Column="3" />
+      <File FileName="Assets\Scripts\4Player\FourPlayerShip.cs" Line="287" Column="12" />
+      <File FileName="Assets\Scripts\4Player\VersusBaseBehavior.cs" Line="110" Column="3" />
+      <File FileName="Assets\Scripts\Level1\WorldBehavior.cs" Line="4" Column="1" />
+      <File FileName="Assets\Scripts\Level1\AsteroidSpawner.cs" Line="10" Column="25" />
+      <File FileName="Assets\Scripts\4Player\VersusAsteroidSpawner.cs" Line="61" Column="55" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
