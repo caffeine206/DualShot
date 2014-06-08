@@ -79,7 +79,7 @@ public class WaveBlastBehavior : MonoBehaviour {
 	public void SetPowerLevel(int level) {
 		float increase = level * 1.0f;
 		kWaveLife += increase / 8.0f;
-		//mForce += 20.0f;
+		mForce += 20.0f;
 		transform.localScale *= 1f + (0.7f * increase);
 //		transform.localScale += new Vector3 (increase * 1.25f, increase * 1.25f, 0.0f);
 	}

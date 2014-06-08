@@ -32,6 +32,10 @@ public class Ship : MonoBehaviour {
 	protected float kGrowBegin = 0.0f;
 	protected float kGrowEnd = 8.0f;
 
+	protected bool spikeUp = false;
+	protected float spikeBegin = 0.0f;
+	protected float spikeEnd = 8.0f;
+
 	//Invulnerability flag.
 	public bool isInvulnerable = true;
 	public bool isController = false;
@@ -42,17 +46,12 @@ public class Ship : MonoBehaviour {
 	protected Vector3 mClampedPosition;
 	protected Vector3 mNewDirection;
 	protected Vector3 mNewRotation;
-    //protected AudioClip mBackground;  // "music by audionautix.com"
 
 	public GameObject mWaveProjectile = null;
 	public GameObject[] mShotgunProjectile = null;
 	protected bool hasFired = false;
 	protected bool isCharging = false;
 
-	//protected float mAbsoluteWeaponInterval = .4f;
-	//protected float mTimeOfLastCharge = 0.0f;
-	
-	//protected float mWaveBlastSpawnTime = -0.0f;
 	protected const float kWaveBlastDefaultSpawnInterval = 0.5f;
 	protected float kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval; //0.32
 	protected float kWaveBlastSpeedSpawnInterval = 0.15f;
@@ -60,17 +59,11 @@ public class Ship : MonoBehaviour {
 	protected float mWaveBlastChargeTime = -1.0f;
 	protected float kWaveTotalChargeTime = 0.0f;
 	protected float kWaveMaxChargeTime = 1.5f;
-	//protected float mWaveBlastLastCharge = -1.0f;
 	
-	//protected float mShotgunBlastSpawnTime = -1.0f;
 	protected const float kShotgunBlastDefaultSpawnInterval = 0.5f;
 	protected float kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
 	protected float kShotgunBlastSpeedSpawnInterval = 0.2f;
 	protected float kShotgunBlastChargeInterval = 0.5f;
-	//protected float mShotgunBlastChargeTime = -1.0f;
-	//protected float kShotgunTotalChargeTime = 0.0f;
-	//protected float kShotgunMaxChargeTime = 1.1f;
-	//protected float mShotgunBlastLastCharge = -1.0f;
 	protected float kShotgunPowerInterval = .2f;
 
 	protected const int kMinShotgunShots = 5;
@@ -78,7 +71,6 @@ public class Ship : MonoBehaviour {
 
 	protected float kShotgunSpread = kMinShotgunSpread;
 	protected int kShotgunShots = kMinShotgunShots;
-	//protected int kMaxShotgunShots = 9;
 
 	protected Fire fire;
 	protected Vector2 mousedir;
@@ -92,6 +84,7 @@ public class Ship : MonoBehaviour {
 	protected GameObject growupPickup = null;
 	protected GameObject growupParticle = null;
 	protected RespawnBehavior pause = null;
+
 	void Start () {
 		// Initiate ship death and respawn
 		if (explosion == null) {
@@ -142,32 +135,38 @@ public class Ship : MonoBehaviour {
 			mWaveBlastChargeTime += Time.time;
 		}	
 		
-	if (mSpeedUp == true) {
-		if (speedupParticle != null) {
-			speedupParticle.transform.position = transform.position;
-		}
-		if (Time.realtimeSinceStartup - kSpeedBegin > kSpeedEnd) {
-			mSpeedUp = false;
-			kHeroSpeed = kDefaultHeroSpeed;
-			rigidbody2D.mass = kDefaultMass;
-			kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
-			kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval;
-			Destroy(speedupParticle);
-		}
+		if (mSpeedUp == true) {
+			if (speedupParticle != null) {
+				speedupParticle.transform.position = transform.position;
+			}
+			if (Time.realtimeSinceStartup - kSpeedBegin > kSpeedEnd) {
+				mSpeedUp = false;
+				kHeroSpeed = kDefaultHeroSpeed;
+				rigidbody2D.mass = kDefaultMass;
+				kShotgunBlastSpawnInterval = kShotgunBlastDefaultSpawnInterval;
+				kWaveBlastSpawnInterval = kWaveBlastDefaultSpawnInterval;
+				Destroy(speedupParticle);
+			}
+			}
+
+		if (mGrowUp == true) {
+			if (growupParticle != null) {
+				growupParticle.transform.position = transform.position;
+			}
+			if (Time.realtimeSinceStartup - kGrowBegin > kGrowEnd) {
+				mGrowUp = false;
+				kHeroSpeed = kDefaultHeroSpeed;
+				transform.localScale -= new Vector3(mGrowScale, mGrowScale, 0.0f);
+				Destroy(growupParticle);
+				rigidbody2D.mass = kDefaultMass;
+			}
 		}
 
-	if (mGrowUp == true) {
-		if (growupParticle != null) {
-			growupParticle.transform.position = transform.position;
+		if (spikeUp == true) {
+			if (Time.realtimeSinceStartup - spikeBegin > spikeEnd) {
+				spikeUp = false;
+			}
 		}
-		if (Time.realtimeSinceStartup - kGrowBegin > kGrowEnd) {
-			mGrowUp = false;
-			kHeroSpeed = kDefaultHeroSpeed;
-			transform.localScale -= new Vector3(mGrowScale, mGrowScale, 0.0f);
-			Destroy(growupParticle);
-			rigidbody2D.mass = kDefaultMass;
-		}
-	}
 
 		//No longer necessary. Maybe.
 		//DieCheck(); // Check if ship is dead
@@ -185,21 +184,6 @@ public class Ship : MonoBehaviour {
 				Vector2 move = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 				rigidbody2D.AddForce (move.normalized * kHeroSpeed);
 			}
-			
-			/*
-			if (Input.GetAxis("Horizontal") > 0.1f || Input.GetAxis("Horizontal") < -0.1f ||
-				Input.GetAxis("Vertical") > 0.1f || Input.GetAxis("Vertical") < -0.1f) {
-				Vector2 move = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-				rigidbody2D.AddForce(move.normalized * kHeroSpeed);
-			}
-			*/
-			//Enable with GetAxisRaw instead of GetAxis for the movement for exact controls.
-			/*
-			if (Input.GetAxisRaw("Horizontal") == 0f && Input.GetAxisRaw("Vertical") == 0f) {
-				rigidbody2D.velocity = Vector3.zero;
-				rigidbody2D.angularVelocity = 0f;
-			}
-			*/
 
 			// Wave Blast single click
 			if (Input.GetButtonDown("Fire1")) {
@@ -228,7 +212,7 @@ public class Ship : MonoBehaviour {
 				FireChargedShotgunBlast();
 			}
 
-		} else if (isController == true) {
+		} else if (isController == true && !respawn.GameIsPaused() && !count.GetIsCounting()) {
 			// Player movement
 			//Vector2 move = new Vector2(Input.GetAxis(controller + "Horizontal"), Input.GetAxis(controller + "Vertical"));
 			Vector2 move = new Vector2(Input.GetAxisRaw(controller + "Horizontal"), Input.GetAxisRaw(controller + "Vertical"));
@@ -269,9 +253,17 @@ public class Ship : MonoBehaviour {
 
 	#region Collision with orbs and pickup powerups
 	void OnCollisionEnter2D(Collision2D other) {
+		#region Support for the ship taking damage from colliding with orbs
 		if (other.gameObject.name == "Orb(Clone)" && !isInvulnerable) {
 			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * 
 					other.gameObject.rigidbody2D.mass) / 100.0f);
+		}
+		#endregion
+
+		if (other.gameObject.name == "Orb" || other.gameObject.name == "Orb(Clone)") {
+			if (spikeUp == true) {
+				Destroy(other.gameObject);
+			}
 		}
 
 		if (other.gameObject.name == "PowerUp" || other.gameObject.name == "PowerUp(Clone)") {
@@ -313,6 +305,12 @@ public class Ship : MonoBehaviour {
 			if (growupParticle == null) {
 				growupParticle = Instantiate(growupPickup) as GameObject;
 			}
+		}
+
+		if (other.gameObject.name == "SpikeUp" || other.gameObject.name == "SpikeUp(Clone)") {
+			Destroy(other.gameObject);
+			spikeBegin = Time.realtimeSinceStartup;
+			spikeUp = true;
 		}
 	}
 	#endregion
@@ -387,7 +385,7 @@ public class Ship : MonoBehaviour {
 
 	#region Wave blast single/charge fire support
 	protected void StartWaveBlast() {
-		if (!hasFired) {
+		if (!hasFired && !isCharging) {
 			if (isController == true)
 				fire.FireWaveBlast(transform.up, this.gameObject, powerLevel);
 			else
@@ -428,11 +426,11 @@ public class Ship : MonoBehaviour {
 
 	#region Shotgun blast single/charge fire support
 	protected void StartShotgunBlast() {
-		if (!hasFired) {
+		if (!hasFired && !isCharging) {
 			if (!mGrowUp) {
-				fire.FireShotgunBlast(this.gameObject, powerLevel, 15f);
+				fire.FireShotgunBlast(this.gameObject, powerLevel, 12f);
 			} else {
-				fire.FireShotgunBlast(this.gameObject, powerLevel, 30f);
+				fire.FireShotgunBlast(this.gameObject, powerLevel, 28f);
 			}
 			StartCoroutine("ShotgunBlastStallTime");
 		}
@@ -467,9 +465,9 @@ public class Ship : MonoBehaviour {
 	protected void FireChargedShotgunBlast() {
 		if (isCharging) {
 			if (!mGrowUp) {
-				fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel, 15f);
+				fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel, 12f);
 			} else {
-				fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel, 30f);
+				fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel, 28f);
 			}
 			isCharging = false;
 			StartCoroutine("ShotgunBlastStallTime");

@@ -3,8 +3,6 @@ using System.Collections;
 
 public class WorldBehavior : MonoBehaviour {
 
-	
-
 	#region World Bound support
 	// Top, Bot, Left, and Right are built to provide
 	// walls with collisions on them.
@@ -43,12 +41,12 @@ public class WorldBehavior : MonoBehaviour {
 		// setup round counters
 		
 		float aspectSize = mMainCamera.aspect * mMainCamera.orthographicSize;
-		BluePoint1 = new Vector3( aspectSize * .95f, 92f);
-		BluePoint2 = new Vector3( aspectSize * .9f, 92f);
-		BluePoint3 = new Vector3( aspectSize * .95f, 82f);
+		BluePoint1 = new Vector3( aspectSize * .95f, 92f); 
+		BluePoint2 = new Vector3( aspectSize * .885f, 92f);
+		BluePoint3 = new Vector3( aspectSize * .95f, 80f);
 		OrangePoint1 = new Vector3( -aspectSize * .95f, 92f);
-		OrangePoint2 = new Vector3( -aspectSize * .9f, 92f);
-		OrangePoint3 = new Vector3( -aspectSize * .95f, 82f);
+		OrangePoint2 = new Vector3( -aspectSize * .885f, 92f);
+		OrangePoint3 = new Vector3( -aspectSize * .95f, 80f);
 		
 		RoundCounterBehavior counter;	
 	
@@ -119,14 +117,6 @@ public class WorldBehavior : MonoBehaviour {
 		//reset();
 	}
 
-	/*
-	protected void reset() {
-		if (Input.GetKey(KeyCode.Return)) {
-			mCurOrbs = 0;
-		}
-	}
-	*/
-
 	void Awake() {
 		if (null == sTheGameState) { // not here yet
 			CreateGlobalManager();
@@ -149,7 +139,6 @@ public class WorldBehavior : MonoBehaviour {
 		Inside
 	};
 
-	
 	public virtual void UpdateWorldBound() 
 	{
 		if (mMainCamera != null) {

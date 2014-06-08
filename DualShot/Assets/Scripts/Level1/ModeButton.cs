@@ -11,10 +11,6 @@ public class ModeButton : MonoBehaviour {
 	void Start () {
 		mHover = (AudioClip)Resources.Load("Sounds/DaikoSingle");
 		tm = GetComponent<TextMesh>();
-		if (lvlNum == 1) {
-			Active = true;
-		}
-		
 	}
 	
 	void OnMouseEnter() {
@@ -43,10 +39,20 @@ public class ModeButton : MonoBehaviour {
 		world.mode = lvlNum;
 		Active = true;
 		tm.fontSize = 70;
+		renderer.material.color = new Color(95, 153, 207, 255);
 	}
+
+	public bool isActive {
+		set {
+			Active = value;
+		}
+		get { return Active; }
+	}
+
 	public void Deactivate () {
-		Active = false;
+		isActive = false;
 		tm.fontSize = 50;
+		renderer.material.color = Color.white;
 	}
 	
 	// Audio clip player

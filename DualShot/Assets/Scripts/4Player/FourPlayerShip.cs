@@ -69,6 +69,12 @@ public class FourPlayerShip : Ship {
 				Destroy(speedupParticle);
 			}
 		}
+
+		if (spikeUp == true) {
+			if (Time.realtimeSinceStartup - spikeBegin > spikeEnd) {
+				spikeUp = false;
+			}
+		}
 		
 		if (mGrowUp == true) {
 			if (growupParticle != null) {
@@ -182,9 +188,17 @@ public class FourPlayerShip : Ship {
 	
 	#region Collision with orbs and pickup powerups
 	void OnCollisionEnter2D(Collision2D other) {
+		#region Support for the ship taking damage from colliding with orbs
 		if (other.gameObject.name == "Orb(Clone)" && !isInvulnerable) {
-			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * 
-			                   other.gameObject.rigidbody2D.mass) / 100.0f);
+			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude *
+					other.gameObject.rigidbody2D.mass) / 100.0f);
+		}
+		#endregion
+
+		if (other.gameObject.name == "Orb" || other.gameObject.name == "Orb(Clone)") {
+			if (spikeUp == true) {
+				Destroy(other.gameObject);
+			}
 		}
 		
 		if (other.gameObject.name == "PowerUp" || other.gameObject.name == "PowerUp(Clone)") {
@@ -226,6 +240,12 @@ public class FourPlayerShip : Ship {
 			if (growupParticle == null) {
 				growupParticle = Instantiate(growupPickup) as GameObject;
 			}
+		}
+
+		if (other.gameObject.name == "SpikeUp" || other.gameObject.name == "SpikeUp(Clone)") {
+			Destroy(other.gameObject);
+			spikeBegin = Time.realtimeSinceStartup;
+			spikeUp = true;
 		}
 	}
 	#endregion

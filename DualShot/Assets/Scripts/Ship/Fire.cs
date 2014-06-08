@@ -2,9 +2,9 @@
 using System.Collections;
 
 public class Fire : MonoBehaviour {
-	
-	public int shipColor = 1;
-	// 1- orange, 2-blue, 3-chartreuse, 4-mulberry (or periwinkle)
+
+	public int playerNum = 1;
+	//1: blue, 2: orange, 3: chartreuse, 4: mulberry
 
 	private AudioClip mGunShot1;
     private AudioClip mGunShot2;
@@ -12,10 +12,6 @@ public class Fire : MonoBehaviour {
 
 	public GameObject mWaveProjectile = null;
 	public GameObject[] mShotgunProjectile = null;
-
-	//private float kWaveMaxChargeTime = 1.5f;
-
-	//private float kShotgunMaxChargeTime = 1.1f;
 	
 	private float kShotgunSpread = -20.0f;
 	private int kShotgunShots = 5;
@@ -29,25 +25,27 @@ public class Fire : MonoBehaviour {
 
 		// Initiate weapons
 		if (null == mWaveProjectile) {
-			if (shipColor == 2)
-				mWaveProjectile = Resources.Load ("Prefabs/WaveBlastBlue") as GameObject;
-			else if (shipColor == 3)
-				mWaveProjectile = Resources.Load ("Prefabs/WaveBlastChar") as GameObject;
-			else if (shipColor == 4)
-				mWaveProjectile = Resources.Load ("Prefabs/WaveBlastMul") as GameObject;
-			else
-				mWaveProjectile = Resources.Load ("Prefabs/WaveBlastOrange") as GameObject;
+			if (playerNum == 1) {
+				mWaveProjectile = Resources.Load("Prefabs/WaveBlastOrange") as GameObject;
+			} else if (playerNum == 2) {
+				mWaveProjectile = Resources.Load("Prefabs/WaveBlastBlue") as GameObject;
+			} else if (playerNum == 3) {
+				mWaveProjectile = Resources.Load("Prefabs/WaveBlastChar") as GameObject;
+			} else {
+				mWaveProjectile = Resources.Load("Prefabs/WaveBlastMul") as GameObject;
+			}
 		}
 		mShotgunProjectile = new GameObject[kMaxShotgunShots + 1];
 		for (int i = 0; i <= kMaxShotgunShots; i++) {
-			if (shipColor == 2)
-				mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastBlue") as GameObject;
-			else if (shipColor == 3)
-				mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastChar") as GameObject;
-			else if (shipColor == 4)
-				mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastMul") as GameObject;
-			else
-				mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastOrange") as GameObject;
+			if (playerNum == 1) {
+				mShotgunProjectile[i] = Resources.Load("Prefabs/ShotgunBlastOrange") as GameObject;
+			} else if (playerNum == 2) {
+				mShotgunProjectile[i] = Resources.Load("Prefabs/ShotgunBlastBlue") as GameObject;
+			} else if (playerNum == 3) {
+				mShotgunProjectile[i] = Resources.Load("Prefabs/ShotgunBlastChar") as GameObject;
+			} else {
+				mShotgunProjectile[i] = Resources.Load("Prefabs/ShotgunBlastMul") as GameObject;
+			}
 		}
 	}
 	

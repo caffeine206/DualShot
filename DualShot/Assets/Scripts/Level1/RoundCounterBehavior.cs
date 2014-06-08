@@ -17,9 +17,6 @@ public class RoundCounterBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
-		
-	
 		if ( transform.position != mTargetPos && Time.realtimeSinceStartup - spawnTime > 2f) {
 			Vector3 dir = mTargetPos - transform.position;
 			if (dir.magnitude > 5f) {

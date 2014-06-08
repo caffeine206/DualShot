@@ -24,12 +24,6 @@ public class CountdownTimer : MonoBehaviour {
 	}
 
 	private void Countdown() {
-		/*
-		if (Time.realtimeSinceStartup >= lastCount + interval && maxCountdown == 0) {
-			isCounting = false;
-			gameObject.SetActive(false);
-		}
-		*/
 		if (Time.realtimeSinceStartup >= lastCount + interval && isCounting) {
 			lastCount = Time.realtimeSinceStartup;
 			maxCountdown--;
@@ -48,6 +42,12 @@ public class CountdownTimer : MonoBehaviour {
 				transform.GetComponent<TextMesh>().text = "Go!";
 				Time.timeScale = 1f;
 				StartCoroutine("BackgroundMusic");
+
+				foreach (ParticleSystem flames in FindObjectsOfType(typeof(ParticleSystem)) as ParticleSystem[]) {
+					if (flames.name == "ShipFlames") {
+						flames.particleSystem.enableEmission = true;
+					}
+				}
 			}
 		}
 	}

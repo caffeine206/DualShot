@@ -23,6 +23,7 @@ public class OrbBehavior : MonoBehaviour {
 	private GameObject mPowerUp = null;
 	private GameObject mSpeedUp = null;
 	private GameObject mGrowUp = null;
+	private GameObject mSpikeUp = null;
 	private GameObject explosion = null;
 	
 	private float mSpawnTime;
@@ -56,6 +57,9 @@ public class OrbBehavior : MonoBehaviour {
 		}
 		if (mGrowUp == null) {
 			mGrowUp = (GameObject) Resources.Load ("Prefabs/GrowUp");
+		}
+		if (mSpikeUp == null) {
+			mSpikeUp = (GameObject) Resources.Load ("Prefabs/SpikeUp");
 		}
 		
 		// Set mass and adjust the scale to match
@@ -130,21 +134,23 @@ public class OrbBehavior : MonoBehaviour {
 			e.transform.localScale = Vector2.one * newMass;
 		}
 		
-		
 		float random = Random.Range (0.0f, 1.0f); 
 		
 		if (random <= 0.15f) {
 			float powerupSelect = Random.Range(0.0f, 1.0f);
 
-			if (powerupSelect > 0.0f && powerupSelect <= 0.33f) {
+			if (powerupSelect > 0.0f && powerupSelect <= 0.25f) {
 				GameObject powerUp = (GameObject) Instantiate(mPowerUp);
 				powerUp.transform.position = transform.position;
-			} else if (powerupSelect > 0.33f && powerupSelect <= 0.66f) {
+			} else if (powerupSelect > 0.25f && powerupSelect <= 0.50f) {
 				GameObject speedUp = (GameObject) Instantiate(mSpeedUp);
 				speedUp.transform.position = transform.position;
-			} else {
+			} else if (powerupSelect > 0.50f && powerupSelect <= 0.75f) {
 				GameObject growUp = (GameObject) Instantiate(mGrowUp);
 				growUp.transform.position = transform.position;
+			} else {
+				GameObject spikeUp = (GameObject)Instantiate(mSpikeUp);
+				spikeUp.transform.position = transform.position;
 			}
 		}
 		
@@ -185,7 +191,7 @@ public class OrbBehavior : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other) {
 		if (!mInvul && !incoming) {
 			if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)"
-			 || other.gameObject.name == "ShotgunBlastChar(Clone)" || other.gameObject.name == "ShotgunBlastMul(Clone)") {
+				|| other.gameObject.name == "ShotgunBlastMul(Clone)" || other.gameObject.name == "ShotgunBlastChar(Clone)") {
 				health -= 50.0f;
 				Destroy(other.gameObject);
 				Play(mHitLow, 1f, 1);
@@ -200,8 +206,8 @@ public class OrbBehavior : MonoBehaviour {
 		
 
 			if (other.gameObject.name == "WaveBlastBlue(Clone)" || other.gameObject.name == "WaveBlastOrange(Clone)"
-			 || other.gameObject.name == "WaveBlastChar(Clone)" || other.gameObject.name == "WaveBlastMul(Clone)") {
-		//		Debug.Log("WaveBlastPush");
+				|| other.gameObject.name == "WaveBlastMul(Clone)" || other.gameObject.name == "WaveBlastChar(Clone)") {
+				//Debug.Log("WaveBlastPush");
 				/*Vector2 dir = other.transform.position - transform.position;
 				dir.Normalize();*/
 				WaveBlastBehavior wave = other.GetComponent<WaveBlastBehavior>();

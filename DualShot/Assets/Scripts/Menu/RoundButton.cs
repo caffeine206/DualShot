@@ -60,6 +60,7 @@ public class RoundButton : MonoBehaviour
         }
 		get { return Active; }
 	}
+
 	public void Deactivate () {
 		isActive = false;
 		tm.fontSize = 50;
