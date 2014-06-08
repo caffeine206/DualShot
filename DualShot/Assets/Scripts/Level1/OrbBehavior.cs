@@ -184,7 +184,8 @@ public class OrbBehavior : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other) {
 		if (!mInvul && !incoming) {
-			if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)") {
+			if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)"
+			 || other.gameObject.name == "ShotgunBlastChar(Clone)" || other.gameObject.name == "ShotgunBlastMul(Clone)") {
 				health -= 50.0f;
 				Destroy(other.gameObject);
 				Play(mHitLow, 1f, 1);
@@ -198,7 +199,8 @@ public class OrbBehavior : MonoBehaviour {
 			}
 		
 
-			if (other.gameObject.name == "WaveBlastBlue(Clone)" || other.gameObject.name == "WaveBlastOrange(Clone)") {
+			if (other.gameObject.name == "WaveBlastBlue(Clone)" || other.gameObject.name == "WaveBlastOrange(Clone)"
+			 || other.gameObject.name == "WaveBlastChar(Clone)" || other.gameObject.name == "WaveBlastMul(Clone)") {
 		//		Debug.Log("WaveBlastPush");
 				/*Vector2 dir = other.transform.position - transform.position;
 				dir.Normalize();*/

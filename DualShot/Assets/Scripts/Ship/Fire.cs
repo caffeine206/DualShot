@@ -3,7 +3,8 @@ using System.Collections;
 
 public class Fire : MonoBehaviour {
 	
-	public bool isOrange = true;
+	public int shipColor = 1;
+	// 1- orange, 2-blue, 3-chartreuse, 4-mulberry (or periwinkle)
 
 	private AudioClip mGunShot1;
     private AudioClip mGunShot2;
@@ -28,15 +29,23 @@ public class Fire : MonoBehaviour {
 
 		// Initiate weapons
 		if (null == mWaveProjectile) {
-			if (isOrange == false)
+			if (shipColor == 2)
 				mWaveProjectile = Resources.Load ("Prefabs/WaveBlastBlue") as GameObject;
+			else if (shipColor == 3)
+				mWaveProjectile = Resources.Load ("Prefabs/WaveBlastChar") as GameObject;
+			else if (shipColor == 4)
+				mWaveProjectile = Resources.Load ("Prefabs/WaveBlastMul") as GameObject;
 			else
 				mWaveProjectile = Resources.Load ("Prefabs/WaveBlastOrange") as GameObject;
 		}
 		mShotgunProjectile = new GameObject[kMaxShotgunShots + 1];
 		for (int i = 0; i <= kMaxShotgunShots; i++) {
-			if (isOrange == false)
+			if (shipColor == 2)
 				mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastBlue") as GameObject;
+			else if (shipColor == 3)
+				mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastChar") as GameObject;
+			else if (shipColor == 4)
+				mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastMul") as GameObject;
 			else
 				mShotgunProjectile[i] = Resources.Load ("Prefabs/ShotgunBlastOrange") as GameObject;
 		}
