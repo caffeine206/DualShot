@@ -11,12 +11,21 @@ public class ModeButton : MonoBehaviour {
 	void Start () {
 		mHover = (AudioClip)Resources.Load("Sounds/DaikoSingle");
 		tm = GetComponent<TextMesh>();
+
+        // Set Mode: 1 vs 1 & Best of: 1 Round to active
+        if(gameObject.name == "Setup-Mode1")
+        {
+            Active = true;
+            tm.fontSize = 70;
+            renderer.material.color = new Color(95, 153, 207, 255);
+        }
 	}
 	
 	void OnMouseEnter() {
 		//tm.fontStyle = FontStyle.Bold;
-		tm.fontSize = 55;
-		Play(mHover, 0.5f, 1);
+        if (!Active)
+        { tm.fontSize = 55; }
+        Play(mHover, 0.5f, 1);
 	}
 	
 	// To de-highlight button text when mouse is over collider

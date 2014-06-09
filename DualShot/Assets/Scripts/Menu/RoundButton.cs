@@ -25,6 +25,14 @@ public class RoundButton : MonoBehaviour
 		// Associates text mesh component 
 		tm = GetComponent<TextMesh>();
 		buttonNumber = tm.text[0];
+
+        // Set Mode: 1 vs 1 & Best of: 1 Round to active
+        if (gameObject.name == "Setup-Rounds1Button")
+        {
+            Active = true;
+            tm.fontSize = 70;
+            renderer.material.color = new Color(95, 153, 207, 255);
+        }
 	}
 	
 	// To highlight button text when mouse is over collider

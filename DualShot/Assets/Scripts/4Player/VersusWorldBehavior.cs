@@ -205,7 +205,7 @@ public class VersusWorldBehavior : WorldBehavior {
 		
 	}
 	IEnumerator Ending() {
-		if ( winner == 1 ) {
+		if ( winner == 1 ) { // -------------------------------------- Orange Win
 			GameObject e = (GameObject)	Instantiate(orangeRoundWin);
 			e.transform.position = new Vector3(0, -50);
 			if (sTheGameState.OrangeWins == 0) {
@@ -219,13 +219,16 @@ public class VersusWorldBehavior : WorldBehavior {
 			yield return new WaitForSeconds(4.5f);
 			
 			sTheGameState.OrangeWins++;
-			
-			if (sTheGameState.OrangeWins >= sTheGameState.BestOf) {
+
+            if (sTheGameState.OrangeWins >= 1 && sTheGameState.BestOf == 1 ||
+                sTheGameState.OrangeWins >= 2 && sTheGameState.BestOf == 3 ||
+                sTheGameState.OrangeWins >= 3 && sTheGameState.BestOf == 5 )
+            {
 				Application.LoadLevel (winner + 3);
 			} else {
 				Application.LoadLevel (sTheGameState.mode);
 			}
-		} else if(winner == 2 ) {
+		} else if(winner == 2 ) { // ----------------------------------  Blue Win
 			GameObject e = (GameObject)	Instantiate(blueRoundWin);
 			e.transform.position = new Vector3(0, -50);
 			if (sTheGameState.BlueWins == 0){
@@ -239,12 +242,15 @@ public class VersusWorldBehavior : WorldBehavior {
 			yield return new WaitForSeconds(4.5f);
 			
 			sTheGameState.BlueWins++;
-			if (sTheGameState.BlueWins >= sTheGameState.BestOf) {
+            if (sTheGameState.BlueWins >= 1 && sTheGameState.BestOf == 1 ||
+                sTheGameState.BlueWins >= 2 && sTheGameState.BestOf == 3 ||
+                sTheGameState.BlueWins >= 3 && sTheGameState.BestOf == 5 )
+            {
 				Application.LoadLevel (winner + 3);
 			} else {
 				Application.LoadLevel (sTheGameState.mode);
 			}
-		} else if(winner == 3 ) {
+		} else if(winner == 3 ) { // ----------------------------------  Green Win
 			GameObject e = (GameObject)	Instantiate(charRoundWin);
 			e.transform.position = new Vector3(0, -50);
 			if (sTheGameState.CharWins == 0) {
@@ -258,13 +264,16 @@ public class VersusWorldBehavior : WorldBehavior {
 			yield return new WaitForSeconds(4.5f);
 			
 			sTheGameState.CharWins++;
-			
-			if (sTheGameState.CharWins >= sTheGameState.BestOf) {
+
+            if (sTheGameState.CharWins >= 1 && sTheGameState.BestOf == 1 ||
+                sTheGameState.CharWins >= 2 && sTheGameState.BestOf == 3 ||
+                sTheGameState.CharWins >= 3 && sTheGameState.BestOf == 5 )
+            {
 				Application.LoadLevel (winner + 3);
 			} else {
 				Application.LoadLevel (sTheGameState.mode);
 			}
-		} else if(winner == 4 ) {
+		} else if(winner == 4 ) { // ----------------------------------  Purple Win
 			GameObject e = (GameObject)	Instantiate(PerRoundWin);
 			e.transform.position = new Vector3(0, -50);
 			if (sTheGameState.PerWins == 0) {
@@ -278,8 +287,11 @@ public class VersusWorldBehavior : WorldBehavior {
 			yield return new WaitForSeconds(4.5f);
 			
 			sTheGameState.PerWins++;
-			
-			if (sTheGameState.PerWins >= sTheGameState.BestOf) {
+
+            if (sTheGameState.PerWins >= 1 && sTheGameState.BestOf == 1 ||
+                sTheGameState.PerWins >= 2 && sTheGameState.BestOf == 3 ||
+                sTheGameState.PerWins >= 3 && sTheGameState.BestOf == 5)
+            {
 				Application.LoadLevel (winner + 3);
 			} else {
 				Application.LoadLevel (sTheGameState.mode);

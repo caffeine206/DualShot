@@ -21,7 +21,6 @@ public class WorldBehavior : MonoBehaviour {
     protected GameObject blueRoundWin, orangeRoundWin;
 	
 	// Targets for the Round Counters
-	
 	protected Vector3	BluePoint1, BluePoint2, BluePoint3,
 	OrangePoint1, OrangePoint2, OrangePoint3;
 						
@@ -268,19 +267,23 @@ public class WorldBehavior : MonoBehaviour {
 		sTheGameState.RoundNum++;
 		if ( winner == 2 ) {
 			sTheGameState.BlueWins++;
-			if (sTheGameState.BlueWins >= sTheGameState.BestOf) {
-				Application.LoadLevel (winner);
-			} else {
-				Application.LoadLevel (mode);
-			}
-		} else {
+            // Wins X out of Y rounds (1 out of 1, 2 out of 3, 3 out of 5)
+            if (sTheGameState.BlueWins >= 1 && sTheGameState.BestOf == 1 ||
+                sTheGameState.BlueWins >= 2 && sTheGameState.BestOf == 3 ||
+                sTheGameState.BlueWins >= 3 && sTheGameState.BestOf == 5 )
+            { Application.LoadLevel (5); }
+            else
+            { Application.LoadLevel (mode); }
+		}
+        else {
 			sTheGameState.OrangeWins++;
-			
-			if (sTheGameState.OrangeWins >= sTheGameState.BestOf) {
-				Application.LoadLevel (winner);
-			} else {
-				Application.LoadLevel (mode);
-			}
+            // Wins X out of Y rounds (1 out of 1, 2 out of 3, 3 out of 5)
+            if (sTheGameState.OrangeWins >= 1 && sTheGameState.BestOf == 1 ||
+                sTheGameState.OrangeWins >= 2 && sTheGameState.BestOf == 3 ||
+                sTheGameState.OrangeWins >= 3 && sTheGameState.BestOf == 5 )
+            { Application.LoadLevel(4); }
+            else
+            { Application.LoadLevel(mode); }
 		}
 	}
 	public void setRounds( char value ) {

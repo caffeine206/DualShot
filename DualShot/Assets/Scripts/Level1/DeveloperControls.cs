@@ -5,6 +5,8 @@ public class DeveloperControls : MonoBehaviour {
 
 	private Ship periwinkle;
 	private Ship orangeRed;
+    private Ship chartreuse;
+    private Ship blue;
 	private VersusBaseBehavior blueCity, orangeCity, charCity, perCity;
 	private GUIText status;
 	private GUIText controls;
@@ -20,8 +22,10 @@ public class DeveloperControls : MonoBehaviour {
 		}
 		
 	
-		//periwinkle = GameObject.Find("PeriwinkleShip").GetComponent<Ship>();
-		//orangeRed = GameObject.Find("OrangeRedShip").GetComponent<Ship>();
+		periwinkle = GameObject.Find("PeriwinkleShip").GetComponent<Ship>();
+		orangeRed = GameObject.Find("OrangeRedShip").GetComponent<Ship>();
+        blue = GameObject.Find("PeriwinkleShip").GetComponent<Ship>();
+        chartreuse = GameObject.Find("OrangeRedShip").GetComponent<Ship>();
 		blueCity = GameObject.Find("BlueCity").GetComponent<VersusBaseBehavior>();
 		orangeCity = GameObject.Find("OrangeCity").GetComponent<VersusBaseBehavior>();
 		charCity = GameObject.Find("ChartreuseCity").GetComponent<VersusBaseBehavior>();
@@ -64,11 +68,23 @@ public class DeveloperControls : MonoBehaviour {
 	#region Destroy the ships
 	//For testing purposes.
 	private void KillShip() {
-		if (Input.GetKeyDown(KeyCode.Alpha1)) {
+		if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
 			periwinkle.Suicide();
-		} else if (Input.GetKeyDown(KeyCode.Alpha2)) {
+		} 
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
 			orangeRed.Suicide();
 		}
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            chartreuse.Suicide();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            blue.Suicide();
+        }
+
 	}
 	#endregion
 
