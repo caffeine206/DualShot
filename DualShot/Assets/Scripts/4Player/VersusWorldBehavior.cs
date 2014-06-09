@@ -59,11 +59,15 @@ public class VersusWorldBehavior : WorldBehavior {
 		if (sTheGameState.BlueWins <= 0) {
 			counter.makeFrame();
 		}
-		counter = spawnBlueCounter(BluePoint2);
+		if (sTheGameState.BestOf > 1) {
+			counter = spawnBlueCounter(BluePoint2);
+		}
 		if (sTheGameState.BlueWins <= 1) {
 			counter.makeFrame();
 		}
-		counter = spawnBlueCounter(BluePoint3);
+		if (sTheGameState.BestOf > 3) {
+			counter = spawnBlueCounter(BluePoint3);
+		}
 		counter.makeFrame();
 		
 		// Orange counter logic
@@ -71,23 +75,31 @@ public class VersusWorldBehavior : WorldBehavior {
 		if (sTheGameState.OrangeWins <= 0) {
 			counter.makeFrame();
 		}
-		counter = spawnOrangeCounter(OrangePoint2);
+		if (sTheGameState.BestOf > 1) {
+			counter = spawnOrangeCounter(OrangePoint2);
+		}
 		if (sTheGameState.OrangeWins <= 1) {
 			counter.makeFrame();
 		}
-		counter = spawnOrangeCounter(OrangePoint3);
+		if (sTheGameState.BestOf > 3) {
+			counter = spawnOrangeCounter(OrangePoint3);
+		}
 		counter.makeFrame();
-		
+
 		// Chartreuse counter logic
 		counter = spawnCharCounter(ChartreusePoint1);
 		if (sTheGameState.CharWins <= 0) {
 			counter.makeFrame();
 		}
-		counter = spawnCharCounter(ChartreusePoint2);
+		if (sTheGameState.BestOf > 1) {
+			counter = spawnCharCounter(ChartreusePoint2);
+		}
 		if (sTheGameState.CharWins <= 1) {
 			counter.makeFrame();
 		}
-		counter = spawnCharCounter(ChartreusePoint3);
+		if (sTheGameState.BestOf > 3) {
+			counter = spawnCharCounter(ChartreusePoint3);
+		}
 		counter.makeFrame();
 		
 		// MulBerry counter logic
@@ -95,11 +107,15 @@ public class VersusWorldBehavior : WorldBehavior {
 		if (sTheGameState.PerWins <= 0) {
 			counter.makeFrame();
 		}
-		counter = spawnPerCounter(PeriwinklePoint2);
+		if (sTheGameState.BestOf > 1) {
+			counter = spawnPerCounter(PeriwinklePoint2);
+		}
 		if (sTheGameState.PerWins <= 1) {
 			counter.makeFrame();
 		}
-		counter = spawnPerCounter(PeriwinklePoint3);
+		if (sTheGameState.BestOf > 3) {
+			counter = spawnPerCounter(PeriwinklePoint3);
+		}
 		counter.makeFrame();
 	}
 	public override void UpdateWorldBound() {

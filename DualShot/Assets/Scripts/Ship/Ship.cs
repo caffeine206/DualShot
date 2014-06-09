@@ -282,12 +282,12 @@ public class Ship : MonoBehaviour {
 
 		if (other.gameObject.name == "PowerUp" || other.gameObject.name == "PowerUp(Clone)") {
 			Play(mPowerUpClip, 1f, 1);
-			Destroy(other.gameObject);
 			powerLevel++;
 			
 			if (powerLevel > 3) {
 				powerLevel = 3;
 			}
+
 			GameObject pickup = Instantiate(powerupPickup) as GameObject;
 			pickup.transform.position = transform.position;
 			pickup.particleEmitter.Emit(150);
@@ -295,15 +295,17 @@ public class Ship : MonoBehaviour {
 
 		if (other.gameObject.name == "SpeedUp" || other.gameObject.name == "SpeedUp(Clone)") {
 			Play(mSpeedUpClip, 1f, 1);
-			Destroy(other.gameObject);
 			kSpeedBegin = Time.realtimeSinceStartup;
 			mSpeedUp = true;
+			
 			if (mGrowUp == false) {
 				rigidbody2D.mass = kSpeedMass;
 				kHeroSpeed = kSpeedHeroSpeed;
 			}
+			
 			kShotgunBlastSpawnInterval = kShotgunBlastSpeedSpawnInterval;
 			kWaveBlastSpawnInterval = kWaveBlastSpeedSpawnInterval;
+			
 			if (speedupParticle == null) {
 				speedupParticle = Instantiate(speedupPickup) as GameObject;
 			}
@@ -311,7 +313,6 @@ public class Ship : MonoBehaviour {
 
 		if (other.gameObject.name == "GrowUp" || other.gameObject.name == "GrowUp(Clone)") {
 			Play(mGrowUpClip, 1f, 1);
-			Destroy(other.gameObject);
 			kGrowBegin = Time.realtimeSinceStartup;
 			kHeroSpeed = kGrowSpeed;
 			if (mGrowUp == false)
@@ -325,7 +326,6 @@ public class Ship : MonoBehaviour {
 
 		if (other.gameObject.name == "SpikeUp" || other.gameObject.name == "SpikeUp(Clone)") {
 			Play(mSpikeUpClip, 1f, 1);
-			Destroy(other.gameObject);
 			kSpikeBegin = Time.realtimeSinceStartup;
 			mSpikeUp = true;
 		}
