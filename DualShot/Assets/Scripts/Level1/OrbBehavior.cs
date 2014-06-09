@@ -160,12 +160,15 @@ public class OrbBehavior : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D other) {
 		if (!mInvul) {
-			if (other.gameObject.name == "OrangeRedShip" || other.gameObject.name == "PeriwinkleShip" ) {
+			if (other.gameObject.name == "OrangeRedShip" || other.gameObject.name == "PeriwinkleShip"
+			 || other.gameObject.name == "BlueShip" || other.gameObject.name == "ChatreuseCity"
+			 || other.gameObject.name == "Ship") {
 				ShieldSprite shield = other.gameObject.GetComponentInChildren<ShieldSprite>();
 				shield.mImpactTime = Time.realtimeSinceStartup;
 			}
 			
-			if (other.gameObject.name == "OrangeCity" || other.gameObject.name == "BlueCity") {
+			if (other.gameObject.name == "OrangeCity" || other.gameObject.name == "BlueCity"
+			 || other.gameObject.name == "ChartreuseCity" || other.gameObject.name == "PeriwinkleCity") {
 				//Orb explosion
 				GameObject ex = Instantiate(explosion) as GameObject;
 				ex.transform.position = transform.position;

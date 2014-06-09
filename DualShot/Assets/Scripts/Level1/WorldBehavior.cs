@@ -269,7 +269,7 @@ public class WorldBehavior : MonoBehaviour {
 		if ( winner == 2 ) {
 			sTheGameState.BlueWins++;
 			if (sTheGameState.BlueWins >= sTheGameState.BestOf) {
-				Application.LoadLevel (winner);
+				Application.LoadLevel (winner + 3);
 			} else {
 				Application.LoadLevel (mode);
 			}
@@ -277,7 +277,7 @@ public class WorldBehavior : MonoBehaviour {
 			sTheGameState.OrangeWins++;
 			
 			if (sTheGameState.OrangeWins >= sTheGameState.BestOf) {
-				Application.LoadLevel (winner);
+				Application.LoadLevel (winner + 3);
 			} else {
 				Application.LoadLevel (mode);
 			}
