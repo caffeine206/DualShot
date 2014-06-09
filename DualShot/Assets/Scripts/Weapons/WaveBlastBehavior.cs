@@ -4,8 +4,8 @@ using System.Collections;
 public class WaveBlastBehavior : MonoBehaviour {
 	
 	public float mSpeed = 200f;
-	public float mForce = 100f;
-	private float kWaveLife = 0.33f;
+	public float mForce = 120f;
+	private float kWaveLife = 0.4f;
 	private float kWaveSpawnTime;
 	private int mCurSrite = 0;
 	

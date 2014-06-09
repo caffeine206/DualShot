@@ -16,6 +16,8 @@ public class Fire : MonoBehaviour {
 	private float kShotgunSpread = -20.0f;
 	private int kShotgunShots = 5;
 	private int kMaxShotgunShots = 9;
+	private float kShotgunDisplacement = 0f;
+	private float kDefaultShotgunDisplacement = 12.0f;
 
 	void Start () {
         // Audio Files setup
@@ -52,41 +54,51 @@ public class Fire : MonoBehaviour {
 	void Update () {
 	}
 
-	public void FireWaveBlast(Vector2 mousedir, GameObject ship, int powerLevel) {
+	public void FireWaveBlast(Vector2 mousedir, GameObject ship, int powerLevel, bool grow, float displacement) {
 		GameObject e = Instantiate(mWaveProjectile) as GameObject;
 		WaveBlastBehavior waveBlast = e.GetComponent<WaveBlastBehavior>();
 
 		if (null != waveBlast) {
 			if (powerLevel > 1)
 				waveBlast.SetPowerLevel(powerLevel);
-			e.transform.position = ship.transform.position;
+			e.transform.position = ship.transform.position + ship.transform.up * displacement;
+			if (grow)
+				e.transform.localScale += new Vector3 (5.0f, 5.0f, 0.0f);
 			waveBlast.SetForwardDirection(mousedir);
 		}
 		Play(mWave, 1f, 1);
 	}
 	
-	public void FireChargedWaveBlast(Vector2 mousedir, GameObject ship, int powerLevel, float kWaveTotalChargeTime) {
+	public void FireChargedWaveBlast(Vector2 mousedir, GameObject ship, int powerLevel, float kWaveTotalChargeTime, 
+			bool grow, float displacement) {
 		GameObject e = Instantiate(mWaveProjectile) as GameObject;
 		WaveBlastBehavior waveBlast = e.GetComponent<WaveBlastBehavior>();
 		if (null != waveBlast) {
 			if (powerLevel > 1)
 				waveBlast.SetPowerLevel(powerLevel);
-			waveBlast.mSpeed += (waveBlast.mSpeed * kWaveTotalChargeTime) / 3.0f;
-			waveBlast.mForce += kWaveTotalChargeTime * 15.0f;
-			e.transform.localScale += new Vector3(kWaveTotalChargeTime * 2, kWaveTotalChargeTime * 2, 0.0f);
-			e.transform.position = ship.transform.position;
+			waveBlast.mSpeed += (waveBlast.mSpeed * kWaveTotalChargeTime) / 2.0f;
+			waveBlast.mForce += kWaveTotalChargeTime * 10.0f;
+			e.transform.localScale += new Vector3(kWaveTotalChargeTime * 2.5f, kWaveTotalChargeTime * 2.5f, 0.0f);
+			if (grow)
+				e.transform.localScale += new Vector3 (5.0f, 5.0f, 0.0f);
+			e.transform.position = ship.transform.position + ship.transform.up * displacement;
 			waveBlast.SetForwardDirection(mousedir);
 			Play(mWave, 1f, 1);
 		}
 	}
 	
-	public void FireShotgunBlast(GameObject ship, int powerLevel, float displacement) {
-		FireShotgun(kShotgunShots, kShotgunSpread, ship, powerLevel, displacement);
+	public void FireShotgunBlast(GameObject ship, int powerLevel, bool grow) {
+		FireShotgun(kShotgunShots, kShotgunSpread, ship, powerLevel, grow);
 		Play(mGunShot1, 1f, 1);
 	}
 
 	// Shotgun firing
-	public void FireShotgun(int shots, float spread, GameObject ship, int powerLevel, float displacement) {
+	public void FireShotgun(int shots, float spread, GameObject ship, int powerLevel, bool grow) {
+		if (grow)
+			kShotgunDisplacement = 28f;
+		else
+			kShotgunDisplacement = kDefaultShotgunDisplacement;
+
 		for (int i = 0; i <= shots; i++) {
 			GameObject e = Instantiate(mShotgunProjectile[i]) as GameObject;
 			ShotgunBlastBehavior shotgunBlast = e.GetComponent<ShotgunBlastBehavior>();
@@ -94,8 +106,10 @@ public class Fire : MonoBehaviour {
 			if (null != shotgunBlast) {
 				if (powerLevel > 1)
 					shotgunBlast.SetPowerLevel(powerLevel);
-				e.transform.position = ship.transform.position + ship.transform.up * displacement; //displacement, was 14f
+				e.transform.position = ship.transform.position + ship.transform.up * kShotgunDisplacement; //displacement, was 14f
 				e.transform.up = ship.transform.up;
+				if (grow)
+					e.transform.localScale += new Vector3 (100.0f, 100.0f, 0.0f);
 				shotgunBlast.AddShotgunSpeed(rigidbody2D.velocity.magnitude);
 				shotgunBlast.SetForwardDirection(e.transform.up);
 				e.transform.Rotate(Vector3.forward, spread + (i * shots * 2));

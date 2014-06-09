@@ -7,7 +7,7 @@ public class AsteroidSpawner : MonoBehaviour {
 	// Vars for Asteroid Spawning
 	public float mSpawnTime = 12f;
 	//protected float mMinSpawnTime = 3f;
-	public int mMaxOrbs = 40;
+	public int mMaxOrbs = 30;
 	public int mSpawnNum = 6;
 	public float mSpawnMinSize = 1f;
 	public float mSpawnMaxSize = 15f;
@@ -15,7 +15,7 @@ public class AsteroidSpawner : MonoBehaviour {
 	public float mSpawnSpeed = 30f;
 	public float mSpawnStagger = 10f;
 	
-	protected float mRampInterval = 15f;
+	public float mRampInterval = 15f;
 	protected float mlastRamp;
 	//protected float mTimeInterval = 0.25f;
 	protected float mMassInterval = 5f;
@@ -25,7 +25,7 @@ public class AsteroidSpawner : MonoBehaviour {
 	protected float mMass = 1f;
 	protected float mVelocity = 50f;
 	
-	protected int mCurOrbs;
+	public int mCurOrbs;
 	protected float mLastSpawn = 0f; // The last time that orbs were spawned
 	#endregion
 	
@@ -80,7 +80,7 @@ public class AsteroidSpawner : MonoBehaviour {
 			//}
 		}
 		
-		if ( mCurOrbs < 5) 
+		if ( mCurOrbs < 8) 
 			SpawnOrbs();
 		#endregion
 	}
