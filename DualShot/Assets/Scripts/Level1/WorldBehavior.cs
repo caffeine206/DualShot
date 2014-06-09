@@ -55,22 +55,31 @@ public class WorldBehavior : MonoBehaviour {
 		if (sTheGameState.OrangeWins <= 0) {
 			counter.makeFrame();
 		}
-		counter = spawnOrangeCounter(OrangePoint2);
+		if (sTheGameState.BestOf > 1) {
+			counter = spawnOrangeCounter(OrangePoint2);
+		}
 		if (sTheGameState.OrangeWins <= 1) {
 			counter.makeFrame();
 		}
-		counter = spawnOrangeCounter(OrangePoint3);
+		if (sTheGameState.BestOf > 3) {
+			counter = spawnOrangeCounter(OrangePoint3);
+		}
 		counter.makeFrame();
+
 		// Blue counter logic
 		counter = spawnBlueCounter(BluePoint1);
 		if (sTheGameState.BlueWins <= 0) {
 			counter.makeFrame();
 		}
-		counter = spawnBlueCounter(BluePoint2);
+		if (sTheGameState.BestOf > 1) {
+			counter = spawnBlueCounter(BluePoint2);
+		}
 		if (sTheGameState.BlueWins <= 1) {
 			counter.makeFrame();
 		}
-		counter = spawnBlueCounter(BluePoint3);
+		if (sTheGameState.BestOf > 3) {
+			counter = spawnBlueCounter(BluePoint3);
+		}
 		counter.makeFrame();
 		
 		

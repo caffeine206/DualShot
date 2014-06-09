@@ -267,20 +267,18 @@ public class Ship : MonoBehaviour {
 		}
 
 		if (other.gameObject.name == "PowerUp" || other.gameObject.name == "PowerUp(Clone)") {
-			Destroy(other.gameObject);
-			
 			powerLevel++;
 			
 			if (powerLevel > 3) {
 				powerLevel = 3;
 			}
+
 			GameObject pickup = Instantiate(powerupPickup) as GameObject;
 			pickup.transform.position = transform.position;
 			pickup.particleEmitter.Emit(150);
 		}
 
 		if (other.gameObject.name == "SpeedUp" || other.gameObject.name == "SpeedUp(Clone)") {
-			Destroy(other.gameObject);
 			kSpeedBegin = Time.realtimeSinceStartup;
 			mSpeedUp = true;
 			if (mGrowUp == false) {
@@ -295,7 +293,6 @@ public class Ship : MonoBehaviour {
 		}
 
 		if (other.gameObject.name == "GrowUp" || other.gameObject.name == "GrowUp(Clone)") {
-			Destroy(other.gameObject);
 			kGrowBegin = Time.realtimeSinceStartup;
 			kHeroSpeed = kGrowSpeed;
 			if (mGrowUp == false)
@@ -308,7 +305,6 @@ public class Ship : MonoBehaviour {
 		}
 
 		if (other.gameObject.name == "SpikeUp" || other.gameObject.name == "SpikeUp(Clone)") {
-			Destroy(other.gameObject);
 			spikeBegin = Time.realtimeSinceStartup;
 			spikeUp = true;
 		}
