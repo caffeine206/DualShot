@@ -34,7 +34,7 @@ public class Ship : MonoBehaviour {
 
 	protected bool mSpikeUp = false;
 	protected float kSpikeBegin = 0.0f;
-	protected float kSpikeEnd = 8.0f;
+	public static float kSpikeEnd = 8.0f;
 
 	//Invulnerability flag.
 	public bool isInvulnerable = true;
@@ -66,8 +66,9 @@ public class Ship : MonoBehaviour {
 	protected float kShotgunBlastChargeInterval = 0.5f;
 	protected float kShotgunPowerInterval = .2f;
 
-	protected const int kMinShotgunShots = 5;
-	protected const float kMinShotgunSpread = -20.0f;
+	protected const int kMinShotgunShots = 6;
+	protected const float kMinShotgunSpread = 75f;
+    protected const float kShotgunSpreadInterval = 10f;
 
 	protected float kShotgunSpread = kMinShotgunSpread;
 	protected int kShotgunShots = kMinShotgunShots;
@@ -86,12 +87,15 @@ public class Ship : MonoBehaviour {
 	protected GameObject speedupParticle = null;
 	protected GameObject growupPickup = null;
 	protected GameObject growupParticle = null;
+    protected GameObject spikeupPickup = null;
+    protected GameObject spikeupParticle = null;
 	protected RespawnBehavior pause = null;
 
 	protected AudioClip mGrowUpClip;
 	protected AudioClip mSpikeUpClip;
 	protected AudioClip mPowerUpClip;
 	protected AudioClip mSpeedUpClip;
+	protected float volume = 0.3f;
 
 	void Start () {
 		// Initiate ship death and respawn
@@ -137,6 +141,11 @@ public class Ship : MonoBehaviour {
 		if (growupPickup == null) {
 			growupPickup = Resources.Load("Prefabs/GrowupPickup") as GameObject;
 		}
+
+        if (spikeupPickup == null)
+        {
+            spikeupPickup = Resources.Load("Prefabs/SpikeupPickup") as GameObject;
+        }
 	}
 	
 	void Update () {
@@ -175,6 +184,9 @@ public class Ship : MonoBehaviour {
 		}
 
 		if (mSpikeUp == true) {
+            if (spikeupParticle != null) {
+                spikeupParticle.transform.position = transform.position;
+            }
 			if (Time.realtimeSinceStartup - kSpikeBegin > kSpikeEnd) {
 				mSpikeUp = false;
 			}
@@ -231,7 +243,7 @@ public class Ship : MonoBehaviour {
 			rigidbody2D.AddForce(move.normalized * kHeroSpeed);
 			
 			// Right Stick Aimto
-			transform.up += new Vector3(Input.GetAxis(controller + "RHorz"), Input.GetAxis(controller + "RVert"), 0) * Time.smoothDeltaTime * 10f;			
+			transform.up += new Vector3(Input.GetAxis(controller + "RHorz"), Input.GetAxis(controller + "RVert"), 0) * Time.smoothDeltaTime * 15f;			
 			
 			// Wave blast single click
 			if (Input.GetButtonDown(controller + "Fire1")) {
@@ -272,7 +284,10 @@ public class Ship : MonoBehaviour {
 		}
 		#endregion
 
-		if (other.gameObject.name == "Orb" || other.gameObject.name == "Orb(Clone)") {
+		if (other.gameObject.name == "Orb1(Clone)" || other.gameObject.name == "Orb(Clone)"
+            || other.gameObject.name == "Orb2(Clone)" || other.gameObject.name == "Orb3(Clone)"
+             || other.gameObject.name == "Orb4(Clone)")
+        {
 			if (mSpikeUp == true) {
 				Destroy(other.gameObject);
 				AsteroidSpawner astroidSpawner = GameObject.Find("GameManager").GetComponent<AsteroidSpawner>();
@@ -281,7 +296,7 @@ public class Ship : MonoBehaviour {
 		}
 
 		if (other.gameObject.name == "PowerUp" || other.gameObject.name == "PowerUp(Clone)") {
-			Play(mPowerUpClip, 1f, 1);
+			Play(mPowerUpClip, volume, 1);
 			powerLevel++;
 			
 			if (powerLevel > 3) {
@@ -294,7 +309,7 @@ public class Ship : MonoBehaviour {
 		}
 
 		if (other.gameObject.name == "SpeedUp" || other.gameObject.name == "SpeedUp(Clone)") {
-			Play(mSpeedUpClip, 1f, 1);
+			Play(mSpeedUpClip, volume, 1);
 			kSpeedBegin = Time.realtimeSinceStartup;
 			mSpeedUp = true;
 			
@@ -312,7 +327,7 @@ public class Ship : MonoBehaviour {
 		}
 
 		if (other.gameObject.name == "GrowUp" || other.gameObject.name == "GrowUp(Clone)") {
-			Play(mGrowUpClip, 1f, 1);
+			Play(mGrowUpClip, volume * 2f, 1);
 			kGrowBegin = Time.realtimeSinceStartup;
 			kHeroSpeed = kGrowSpeed;
 			if (mGrowUp == false)
@@ -325,9 +340,14 @@ public class Ship : MonoBehaviour {
 		}
 
 		if (other.gameObject.name == "SpikeUp" || other.gameObject.name == "SpikeUp(Clone)") {
-			Play(mSpikeUpClip, 1f, 1);
+			Play(mSpikeUpClip, volume, 1);
+			GetComponentInChildren<ShieldSprite>().spikesUp();
 			kSpikeBegin = Time.realtimeSinceStartup;
 			mSpikeUp = true;
+            if (spikeupParticle == null)
+            {
+                spikeupParticle = Instantiate(spikeupPickup) as GameObject;
+            }
 		}
 	}
 	#endregion
@@ -464,15 +484,17 @@ public class Ship : MonoBehaviour {
 
 	IEnumerator ShotgunBlastStallTime() {
 		hasFired = true;
-		yield return new WaitForSeconds(kShotgunBlastDisplacementInterval);
 		if (powerLevel >= 2) {
-			fire.FireShotgunBlast(this.gameObject, powerLevel, mGrowUp);
+            yield return new WaitForSeconds(kShotgunBlastDisplacementInterval);
+            fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel, mGrowUp);
 		}
-		yield return new WaitForSeconds(kShotgunBlastDisplacementInterval);
 		if (powerLevel >= 3) {
-			fire.FireShotgunBlast(this.gameObject, powerLevel, mGrowUp);
+            yield return new WaitForSeconds(kShotgunBlastDisplacementInterval);
+            fire.FireShotgun(kShotgunShots, kShotgunSpread, this.gameObject, powerLevel, mGrowUp);
 		}
-		yield return new WaitForSeconds(kShotgunBlastSpawnInterval);
+        yield return new WaitForSeconds(kShotgunBlastSpawnInterval);
+        kShotgunShots = kMinShotgunShots;
+        kShotgunSpread = kMinShotgunSpread;
 		hasFired = false;
 	}
 
@@ -482,17 +504,17 @@ public class Ship : MonoBehaviour {
 			isCharging = true;
 			StartCoroutine("ChargeParticleCoroutine");
 			yield return new WaitForSeconds(kShotgunPowerInterval);
-			kShotgunShots++;
-			kShotgunSpread = -35.0f;
+			kShotgunShots += 2;
+            kShotgunSpread += kShotgunSpreadInterval;
 			yield return new WaitForSeconds(kShotgunPowerInterval);
-			kShotgunShots++;
-			kShotgunSpread = -45.0f;
+			kShotgunShots += 2;
+            kShotgunSpread += kShotgunSpreadInterval;
 			yield return new WaitForSeconds(kShotgunPowerInterval);
-			kShotgunShots++;
-			kShotgunSpread = -70.0f;
+			kShotgunShots += 2;
+            kShotgunSpread += kShotgunSpreadInterval;
 			yield return new WaitForSeconds(kShotgunPowerInterval);
-			kShotgunShots++;
-			kShotgunSpread = -80.0f;
+			kShotgunShots += 2;
+            kShotgunSpread += kShotgunSpreadInterval;
 		}
 	}
 
@@ -502,8 +524,6 @@ public class Ship : MonoBehaviour {
 			isCharging = false;
 			StartCoroutine("ShotgunBlastStallTime");
 		}
-		kShotgunShots = kMinShotgunShots;
-		kShotgunSpread = kMinShotgunSpread;
 	}
 	#endregion
 

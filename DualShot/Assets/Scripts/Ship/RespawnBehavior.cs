@@ -29,7 +29,7 @@ public class RespawnBehavior : MonoBehaviour {
 	}
 	
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.Escape) && !count.GetIsCounting()) {
+		if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton7)) && !count.GetIsCounting()) {
 			Pause();
 		}
 	}

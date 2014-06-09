@@ -4,7 +4,30 @@ using System.Collections;
 public class FourPlayerShip : Ship {
 	
 	void Start () {
-		// Initiate ship death and respawn
+	
+		mGrowUpClip = (AudioClip)Resources.Load("Sounds/GrowPowerup");
+		mSpeedUpClip = (AudioClip)Resources.Load ("Sounds/SpeedPowerup");
+		mPowerUpClip = (AudioClip)Resources.Load ("Sounds/WeaponPowerup");
+		mSpikeUpClip = (AudioClip)Resources.Load ("Sounds/SpikePowerup");
+		
+		if (powerupPickup == null) {
+			powerupPickup = Resources.Load("Prefabs/PowerupPickup") as GameObject;
+		}
+		
+		if (speedupPickup == null) {
+			speedupPickup = Resources.Load("Prefabs/SpeedupPickup") as GameObject;
+		}
+		
+		if (growupPickup == null) {
+			growupPickup = Resources.Load("Prefabs/GrowupPickup") as GameObject;
+		}
+		
+		if (spikeupPickup == null)
+		{
+			spikeupPickup = Resources.Load("Prefabs/SpikeupPickup") as GameObject;
+		}
+	
+			// Initiate ship death and respawn
 		if (explosion == null) {
 			explosion = Resources.Load("Prefabs/SmallExplosionParticle") as GameObject;
 		}
@@ -13,6 +36,7 @@ public class FourPlayerShip : Ship {
 		}
 		
 		fire = GetComponent<Fire>();
+		
 		
 		float sizeY = 65f;
 		
@@ -35,17 +59,7 @@ public class FourPlayerShip : Ship {
 		respawn = GameObject.Find("GameManager").GetComponent<RespawnBehavior>();
 		count = GameObject.Find("Countdown").GetComponent<CountdownTimer>();
 		GameObject.Find("GameManager").GetComponent<VersusWorldBehavior>().setupShip(this);
-		if (powerupPickup == null) {
-			powerupPickup = Resources.Load("Prefabs/PowerupPickup") as GameObject;
-		}
 		
-		if (speedupPickup == null) {
-			speedupPickup = Resources.Load("Prefabs/SpeedupPickup") as GameObject;
-		}
-		
-		if (growupPickup == null) {
-			growupPickup = Resources.Load("Prefabs/GrowupPickup") as GameObject;
-		}
 	}
 	
 	void Update () {
@@ -70,11 +84,17 @@ public class FourPlayerShip : Ship {
 			}
 		}
 
-		if (mSpikeUp == true) {
-			if (Time.realtimeSinceStartup - kSpikeBegin > kSpikeEnd) {
-				mSpikeUp = false;
-			}
-		}
+        if (mSpikeUp == true)
+        {
+            if (spikeupParticle != null)
+            {
+                spikeupParticle.transform.position = transform.position;
+            }
+            if (Time.realtimeSinceStartup - kSpikeBegin > kSpikeEnd)
+            {
+                mSpikeUp = false;
+            }
+        }
 		
 		if (mGrowUp == true) {
 			if (growupParticle != null) {
@@ -195,7 +215,9 @@ public class FourPlayerShip : Ship {
 		}
 		#endregion
 
-		if (other.gameObject.name == "Orb" || other.gameObject.name == "Orb(Clone)") {
+		if(other.gameObject.name == "Orb1(Clone)" || other.gameObject.name == "Orb(Clone)"
+		       || other.gameObject.name == "Orb2(Clone)" || other.gameObject.name == "Orb3(Clone)"
+		       || other.gameObject.name == "Orb4(Clone)") {
 			if (mSpikeUp == true) {
 				Destroy(other.gameObject);
 				VersusAsteroidSpawner astroidSpawner = GameObject.Find("GameManager").GetComponent<VersusAsteroidSpawner>();
@@ -214,6 +236,7 @@ public class FourPlayerShip : Ship {
 			GameObject pickup = Instantiate(powerupPickup) as GameObject;
 			pickup.transform.position = transform.position;
 			pickup.particleEmitter.Emit(150);
+			Play(mPowerUpClip, volume, 1);
 		}
 		
 		if (other.gameObject.name == "SpeedUp" || other.gameObject.name == "SpeedUp(Clone)") {
@@ -229,6 +252,7 @@ public class FourPlayerShip : Ship {
 			if (speedupParticle == null) {
 				speedupParticle = Instantiate(speedupPickup) as GameObject;
 			}
+			Play(mSpeedUpClip, volume, 1);
 		}
 		
 		if (other.gameObject.name == "GrowUp" || other.gameObject.name == "GrowUp(Clone)") {
@@ -242,12 +266,19 @@ public class FourPlayerShip : Ship {
 			if (growupParticle == null) {
 				growupParticle = Instantiate(growupPickup) as GameObject;
 			}
+			Play(mGrowUpClip, volume * 2f, 1);
 		}
-
+        
 		if (other.gameObject.name == "SpikeUp" || other.gameObject.name == "SpikeUp(Clone)") {
-			Destroy(other.gameObject);
+			
+			GetComponentInChildren<ShieldSprite>().spikesUp();
 			kSpikeBegin = Time.realtimeSinceStartup;
 			mSpikeUp = true;
+			if (spikeupParticle == null)
+			{
+				spikeupParticle = Instantiate(spikeupPickup) as GameObject;
+			}
+			Play(mSpikeUpClip, volume, 1);
 		}
 	}
 	#endregion

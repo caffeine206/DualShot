@@ -13,7 +13,7 @@ public class GlobalBehavior : MonoBehaviour {
 	
 	// Input Controls
 	private string[] joysticks;
-	private int keyboard;
+	public int keyboard;
 
 	// Mode Selection Info
 	private int mMode = 1;	// Which level is loaded

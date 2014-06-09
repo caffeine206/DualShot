@@ -36,12 +36,12 @@ public class BaseBehavior : MonoBehaviour {
 		alive = true;
 		Camera mcamera = Camera.main;
 		float aspectSize = mcamera.aspect * mcamera.orthographicSize;
-		BluePoint1 = new Vector3( aspectSize * .95f, 92f);
-		BluePoint2 = new Vector3( aspectSize * .9f, 92f);
-		BluePoint3 = new Vector3( aspectSize * .95f, 82f);
-		OrangePoint1 = new Vector3( -aspectSize * .95f, 92f);
-		OrangePoint2 = new Vector3( -aspectSize * .9f, 92f);
-		OrangePoint3 = new Vector3( -aspectSize * .95f, 82f);
+        BluePoint1 = new Vector3(aspectSize * .95f, 92f);
+        BluePoint2 = new Vector3(aspectSize * .885f, 92f);
+        BluePoint3 = new Vector3(aspectSize * .95f, 80f);
+        OrangePoint1 = new Vector3(-aspectSize * .95f, 92f);
+        OrangePoint2 = new Vector3(-aspectSize * .885f, 92f);
+        OrangePoint3 = new Vector3(-aspectSize * .95f, 80f);
 		if (mCamera == null) {
 			mCamera = Camera.main;
 		}
@@ -101,7 +101,9 @@ public class BaseBehavior : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D other) {
-		if ((other.gameObject.name == "Orb(Clone)" || other.gameObject.name == "Orb") && !isInvulnerable) {
+		if (other.gameObject.name == "Orb1(Clone)" || other.gameObject.name == "Orb(Clone)"
+            || other.gameObject.name == "Orb2(Clone)" || other.gameObject.name == "Orb3(Clone)"
+             || other.gameObject.name == "Orb4(Clone)" && !isInvulnerable) {
 			WorldBehavior bounds = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
 			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
 			Debug.Log("Base Health: " + currentHealth);

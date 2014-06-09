@@ -42,7 +42,7 @@ public class VersusBaseBehavior : MonoBehaviour {
 		
 		spriteMan.mCurrentSpriteAction = BaseAnimation;
 		
-		float sizeY = mCamera.orthographicSize * 0.727f;
+		float sizeY = mCamera.orthographicSize * 0.735f;
 		
 		if ( gameObject.name == "OrangeCity") {
 			transform.position = new Vector3(-sizeY, sizeY );
@@ -90,7 +90,9 @@ public class VersusBaseBehavior : MonoBehaviour {
 	}
 	
 	void OnCollisionEnter2D(Collision2D other) {
-		if ((other.gameObject.name == "Orb(Clone)" || other.gameObject.name == "Orb") && !isInvulnerable) {
+        if (other.gameObject.name == "Orb1(Clone)" || other.gameObject.name == "Orb(Clone)"
+            || other.gameObject.name == "Orb2(Clone)" || other.gameObject.name == "Orb3(Clone)"
+             || other.gameObject.name == "Orb4(Clone)" && !isInvulnerable){
 			WorldBehavior bounds = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
 			currentHealth -= ((other.gameObject.rigidbody2D.velocity.magnitude * other.gameObject.rigidbody2D.mass) / 100.0f);
 		

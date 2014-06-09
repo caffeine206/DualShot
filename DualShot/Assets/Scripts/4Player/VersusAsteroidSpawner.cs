@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class VersusAsteroidSpawner : AsteroidSpawner {
-	public int mMaxOrbs = 20;
 	
 /*
 	
@@ -82,17 +81,6 @@ public class VersusAsteroidSpawner : AsteroidSpawner {
 		}
 		
 		//Added
-	}
-	
-	protected override void ThrowOrb(Vector2 pos, Vector2 dir, float mass) {
-		GameObject e = (GameObject) Instantiate(mOrb);
-		e.rigidbody2D.mass = mass;
-		e.transform.position = pos;
-		e.rigidbody2D.velocity = dir;
-		e.transform.up = dir.normalized;
-		e.transform.localScale = mass * Vector2.one;
-		e.collider2D.isTrigger = true;
-		e.GetComponent<OrbBehavior>().incoming = true;
 	}
 	
 	

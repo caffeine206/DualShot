@@ -6,8 +6,8 @@ public class OrbBehavior : MonoBehaviour {
 	#region PublicVar
 	// the minmum mass for the 3 sizes of asteroids
 	public float kSize1 = 1f;
-	public float kSize2 = 5;
-	public float kSize3 = 10;
+	public float kSize2 = 5f;
+	public float kSize3 = 10f;
 	public float kScale = 1f; // the constant for determining the diameter, might be Pi 
 
 	public float kExplodeForce = 15f;
@@ -17,14 +17,16 @@ public class OrbBehavior : MonoBehaviour {
 	#endregion
 	
 	#region PrivateVar
+    private float powerUpDroprate;
 	// Use this for initialization
-	private GameObject mObject = null; // The prefab of this object.
+	public GameObject mObject = null; // The prefab of this object.
 	private AsteroidSpawner mWorld = null;
 	private GameObject mPowerUp = null;
 	private GameObject mSpeedUp = null;
 	private GameObject mGrowUp = null;
 	private GameObject mSpikeUp = null;
 	private GameObject explosion = null;
+    
 	
 	private float mSpawnTime;
 	protected bool mInvul;
@@ -43,9 +45,20 @@ public class OrbBehavior : MonoBehaviour {
 
 	void Start () {
 		// Get Prefab
-		if (mObject == null) {
-			mObject = (GameObject) Resources.Load ("Prefabs/Orb");
-		}
+        WorldBehavior world = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
+        if (world.mode == 1)
+        {
+            powerUpDroprate = 0.13f;
+        }
+        else if (world.mode == 2)
+        {
+            powerUpDroprate = 0.09f;
+        }
+        else if (world.mode == 3)
+        {
+            powerUpDroprate = 0.10f;
+        }
+		
 		if (mWorld == null) {
 			mWorld = GameObject.Find("GameManager").GetComponent<AsteroidSpawner>();
 		}
@@ -112,7 +125,8 @@ public class OrbBehavior : MonoBehaviour {
 		float newMass = rigidbody2D.mass / pieces;
 		
 		for ( int i = 0; i < pieces; ++i ) {
-			GameObject e = (GameObject) Instantiate(mObject);
+            GameObject e = (GameObject)Instantiate(mObject);
+            e.GetComponent<OrbBehavior>().mObject = mObject;
 			e.rigidbody2D.mass = newMass;// change mass
 			
 			float rotatepiece = -90 + (180 * i) / pieces;
@@ -136,7 +150,7 @@ public class OrbBehavior : MonoBehaviour {
 		
 		float random = Random.Range (0.0f, 1.0f); 
 		
-		if (random <= 0.15f) {
+		if (random <= powerUpDroprate) {
 			float powerupSelect = Random.Range(0.0f, 1.0f);
 
 			if (powerupSelect > 0.0f && powerupSelect <= 0.25f) {
@@ -164,7 +178,7 @@ public class OrbBehavior : MonoBehaviour {
 			    || other.gameObject.name == "OrangeShip" || other.gameObject.name == "BlueShip" 
 			    || other.gameObject.name == "ChartreuseShip") {
 				ShieldSprite shield = other.gameObject.GetComponentInChildren<ShieldSprite>();
-				shield.mImpactTime = Time.realtimeSinceStartup;
+				shield.shieldFlash();
 			}
 			
 			if (other.gameObject.name == "OrangeCity" || other.gameObject.name == "BlueCity"
@@ -195,8 +209,8 @@ public class OrbBehavior : MonoBehaviour {
 		if (!mInvul && !incoming) {
 			if (other.gameObject.name == "ShotgunBlastBlue(Clone)" || other.gameObject.name == "ShotgunBlastOrange(Clone)"
 				|| other.gameObject.name == "ShotgunBlastMul(Clone)" || other.gameObject.name == "ShotgunBlastChar(Clone)") {
-				health -= 50.0f;
-				Destroy(other.gameObject);
+                health -= 5f;
+                Destroy(other.gameObject);
 				Play(mHitLow, 1f, 1);
 				//Orb explosion
 				GameObject ex = Instantiate(explosion) as GameObject;

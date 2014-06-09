@@ -13,7 +13,8 @@ public class ModeButton : MonoBehaviour {
 		tm = GetComponent<TextMesh>();
 
         // Set Mode: 1 vs 1 & Best of: 1 Round to active
-        if(gameObject.name == "Setup-Mode1")
+		WorldBehavior world = GameObject.Find("GameManager").GetComponent<WorldBehavior>();
+        if(lvlNum == world.mode)
         {
             Active = true;
             tm.fontSize = 70;

@@ -155,7 +155,7 @@ public class WorldBehavior : MonoBehaviour {
 			float sizeX = 2 * maxX;
 			float sizeY = 2 * maxY;
 			float sizeZ = Mathf.Abs (mMainCamera.farClipPlane - mMainCamera.nearClipPlane);
-			
+            float cornerSize = 60f;
 			// set z to zero
 			Vector3 center = mMainCamera.transform.position;
 			center.z = 0.0f;
@@ -170,11 +170,11 @@ public class WorldBehavior : MonoBehaviour {
 
 			Top = GameObject.Find ("Top").GetComponent<BoxCollider2D>();
 			Top.center = new Vector2(mWorldCenter.x, mWorldMax.y);
-			Top.size = new Vector2(sizeX,20);
+			Top.size = new Vector2(sizeX,10f);
 
 			Bot = GameObject.Find ("Bot").GetComponent<BoxCollider2D>();
 			Bot.center = new Vector2(mWorldCenter.x, mWorldMin.y);
-			Bot.size = new Vector2(sizeX,20);
+			Bot.size = new Vector2(sizeX,10f);
 
 			Right = GameObject.Find ("Right").GetComponent<BoxCollider2D>();
 			Right.center = new Vector2(mWorldMax.x, mWorldCenter.y);
@@ -188,25 +188,25 @@ public class WorldBehavior : MonoBehaviour {
 			TopLeft.transform.position = new Vector2(mWorldMin.x, mWorldMax.y);
 			TopLeft.transform.Rotate(Vector3.forward * 45.0f);
 			TopLeftCollider = GameObject.Find ("TopLeft").GetComponent<BoxCollider2D>();
-			TopLeftCollider.size = new Vector2(70,70);
+            TopLeftCollider.size = new Vector2(cornerSize, cornerSize);
 			
 			TopRight = GameObject.Find ("TopRight");
 			TopRight.transform.position = new Vector2(mWorldMax.x, mWorldMax.y);
 			TopRight.transform.Rotate(Vector3.forward * 45.0f);
 			TopRightCollider = GameObject.Find ("TopRight").GetComponent<BoxCollider2D>();
-			TopRightCollider.size = new Vector2(70,70);
+            TopRightCollider.size = new Vector2(cornerSize, cornerSize);
 			
 			BotLeft = GameObject.Find ("BotLeft");
 			BotLeft.transform.position = new Vector2(mWorldMin.x, mWorldMin.y);
 			BotLeft.transform.Rotate(Vector3.forward * 45.0f);
 			BotLeftCollider = GameObject.Find ("BotLeft").GetComponent<BoxCollider2D>();
-			BotLeftCollider.size = new Vector2(70,70);
+            BotLeftCollider.size = new Vector2(cornerSize, cornerSize);
 
 			BotRight = GameObject.Find ("BotRight");
 			BotRight.transform.position = new Vector2(mWorldMax.x, mWorldMin.y);
 			BotRight.transform.Rotate(Vector3.forward * 45.0f);
 			BotRightCollider = GameObject.Find ("BotRight").GetComponent<BoxCollider2D>();
-			BotRightCollider.size = new Vector2(70,70);
+            BotRightCollider.size = new Vector2(cornerSize, cornerSize);
 		}
 	}
 	
@@ -276,19 +276,23 @@ public class WorldBehavior : MonoBehaviour {
 		sTheGameState.RoundNum++;
 		if ( winner == 2 ) {
 			sTheGameState.BlueWins++;
-			if (sTheGameState.BlueWins >= sTheGameState.BestOf) {
-				Application.LoadLevel (5);
-			} else {
-				Application.LoadLevel (mode);
-			}
-		} else {
+            // Wins X out of Y rounds (1 out of 1, 2 out of 3, 3 out of 5)
+            if (sTheGameState.BlueWins >= 1 && sTheGameState.BestOf == 1 ||
+                sTheGameState.BlueWins >= 2 && sTheGameState.BestOf == 3 ||
+                sTheGameState.BlueWins >= 3 && sTheGameState.BestOf == 5 )
+            { Application.LoadLevel (5); }
+            else
+            { Application.LoadLevel (mode); }
+		}
+        else {
 			sTheGameState.OrangeWins++;
-			
-			if (sTheGameState.OrangeWins >= sTheGameState.BestOf) {
-				Application.LoadLevel (4);
-			} else {
-				Application.LoadLevel (mode);
-			}
+            // Wins X out of Y rounds (1 out of 1, 2 out of 3, 3 out of 5)
+            if (sTheGameState.OrangeWins >= 1 && sTheGameState.BestOf == 1 ||
+                sTheGameState.OrangeWins >= 2 && sTheGameState.BestOf == 3 ||
+                sTheGameState.OrangeWins >= 3 && sTheGameState.BestOf == 5 )
+            { Application.LoadLevel(4); }
+            else
+            { Application.LoadLevel(mode); }
 		}
 	}
 	public void setRounds( char value ) {
@@ -334,6 +338,13 @@ public class WorldBehavior : MonoBehaviour {
 			lastActive.Deactivate();
 			sTheGameState.mode = value;
 		}	
+	}
+	public bool isKeyboard( int player ) {
+		if (sTheGameState.keyboard == player) {
+			return true;
+		}
+		else
+			return false;
 	}
 
 	#endregion

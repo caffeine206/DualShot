@@ -199,6 +199,14 @@ public class SpriteManager : MonoBehaviour {
 			}
 				gameObject.GetComponent<SpriteRenderer>().sprite = mSpriteLine[mCurrentActionNum];
 		}
+        public void prevSprite()
+        {
+            if (mCurrentActionNum > 0)
+            {
+                mCurrentActionNum--;
+                gameObject.GetComponent<SpriteRenderer>().sprite = mSpriteLine[mCurrentActionNum];
+            }
+        }
 		public void setSprite() 
 		{
 			mMyRenderer.sprite = mSpriteLine[mCurrentActionNum];

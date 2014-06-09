@@ -25,6 +25,9 @@ public class ControlButton : MonoBehaviour
 		
 		// Associates text mesh component 
 		tm = GetComponent<TextMesh>();
+		if (world.isKeyboard(player)) {
+			tm.text = "Keyboard";
+		}
 	}
 	
 	// Update is called once per frame

@@ -15,12 +15,12 @@ public class AsteroidSpawner : MonoBehaviour {
 	public float mSpawnSpeed = 30f;
 	public float mSpawnStagger = 10f;
 	
-	public float mRampInterval = 15f;
+	public float mRampInterval = 20f;
 	protected float mlastRamp;
 	//protected float mTimeInterval = 0.25f;
-	protected float mMassInterval = 5f;
+	protected float mMassInterval = 3f;
 	
-	public GameObject mOrb = null;
+	public GameObject[] mOrb;
 	//public GUIText mEcho = null;
 	protected float mMass = 1f;
 	protected float mVelocity = 50f;
@@ -33,10 +33,29 @@ public class AsteroidSpawner : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-	
-		if (mOrb == null) {
-			mOrb = (GameObject) Resources.Load ("Prefabs/Orb");                
-		}
+
+        mOrb = new GameObject[5];
+
+        if (mOrb[0] == null)
+        {
+            mOrb[0] = (GameObject)Resources.Load("Prefabs/Orb1");
+        }
+        if (mOrb[1] == null)
+        {
+            mOrb[1] = (GameObject)Resources.Load("Prefabs/Orb2");
+        }
+        if (mOrb[2] == null)
+        {
+            mOrb[2] = (GameObject)Resources.Load("Prefabs/Orb3");
+        }
+        if (mOrb[3] == null)
+        {
+            mOrb[3] = (GameObject)Resources.Load("Prefabs/Orb4");
+        }
+        if (mOrb[4] == null)
+        {
+            mOrb[4] = (GameObject)Resources.Load("Prefabs/Orb");
+        }
 		if (pause == null) {
 			pause = GetComponent<RespawnBehavior>();
 		}
@@ -67,6 +86,8 @@ public class AsteroidSpawner : MonoBehaviour {
 				mSpawnTime -= mTimeInterval;
 				}*/
 			mSpawnMinSize += mMassInterval;
+            mSpawnMaxSize += mMassInterval;
+            mSpawnStagger += mMassInterval;
 		}
 		
 		if ( Time.realtimeSinceStartup - mLastSpawn > mSpawnTime && mCurOrbs < mMaxOrbs && !pause.GameIsPaused() ) {
@@ -114,8 +135,34 @@ public class AsteroidSpawner : MonoBehaviour {
 		//Added
 	}
 	
-	protected virtual void ThrowOrb(Vector2 pos, Vector2 dir, float mass) {
-		GameObject e = (GameObject) Instantiate(mOrb);
+	protected void ThrowOrb(Vector2 pos, Vector2 dir, float mass) {
+        float rand = Random.Range(0f, 100f);
+        GameObject e;
+        if (rand <= 25f)
+        {
+            e = (GameObject)Instantiate(mOrb[0]);
+            e.GetComponent<OrbBehavior>().mObject = mOrb[0];
+        }
+        else if (rand <= 50f)
+        {
+            e = (GameObject)Instantiate(mOrb[1]);
+            e.GetComponent<OrbBehavior>().mObject = mOrb[1];
+        }
+        else if (rand <= 75f)
+        {
+            e = (GameObject)Instantiate(mOrb[2]);
+            e.GetComponent<OrbBehavior>().mObject = mOrb[2];
+        }
+        else if (rand <= 99f)
+        {
+            e = (GameObject)Instantiate(mOrb[3]);
+            e.GetComponent<OrbBehavior>().mObject = mOrb[3];
+        }
+        else
+        {
+            e = (GameObject)Instantiate(mOrb[4]);
+            e.GetComponent<OrbBehavior>().mObject = mOrb[4];
+        }
 		e.rigidbody2D.mass = mass;
 		e.transform.position = pos;
 		e.rigidbody2D.velocity = dir;

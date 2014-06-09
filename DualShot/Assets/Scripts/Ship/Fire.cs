@@ -13,9 +13,9 @@ public class Fire : MonoBehaviour {
 	public GameObject mWaveProjectile = null;
 	public GameObject[] mShotgunProjectile = null;
 	
-	private float kShotgunSpread = -20.0f;
-	private int kShotgunShots = 5;
-	private int kMaxShotgunShots = 9;
+	private float kShotgunSpread = 65f;
+	private int kShotgunShots = 6;
+	private int kMaxShotgunShots = 14;
 	private float kShotgunDisplacement = 0f;
 	private float kDefaultShotgunDisplacement = 12.0f;
 
@@ -60,10 +60,10 @@ public class Fire : MonoBehaviour {
 
 		if (null != waveBlast) {
 			if (powerLevel > 1)
-				waveBlast.SetPowerLevel(powerLevel);
+				waveBlast.SetNormalPowerLevel(powerLevel);
 			e.transform.position = ship.transform.position + ship.transform.up * displacement;
 			if (grow)
-				e.transform.localScale += new Vector3 (5.0f, 5.0f, 0.0f);
+				e.transform.localScale += new Vector3 (3.0f, 3.0f, 0.0f);
 			waveBlast.SetForwardDirection(mousedir);
 		}
 		Play(mWave, 1f, 1);
@@ -75,7 +75,7 @@ public class Fire : MonoBehaviour {
 		WaveBlastBehavior waveBlast = e.GetComponent<WaveBlastBehavior>();
 		if (null != waveBlast) {
 			if (powerLevel > 1)
-				waveBlast.SetPowerLevel(powerLevel);
+				waveBlast.SetChargedPowerLevel(powerLevel);
 			waveBlast.mSpeed += (waveBlast.mSpeed * kWaveTotalChargeTime) / 2.0f;
 			waveBlast.mForce += kWaveTotalChargeTime * 10.0f;
 			e.transform.localScale += new Vector3(kWaveTotalChargeTime * 2.5f, kWaveTotalChargeTime * 2.5f, 0.0f);
@@ -109,10 +109,12 @@ public class Fire : MonoBehaviour {
 				e.transform.position = ship.transform.position + ship.transform.up * kShotgunDisplacement; //displacement, was 14f
 				e.transform.up = ship.transform.up;
 				if (grow)
-					e.transform.localScale += new Vector3 (100.0f, 100.0f, 0.0f);
+					e.transform.localScale += new Vector3 (60.0f, 60.0f, 0.0f);
 				shotgunBlast.AddShotgunSpeed(rigidbody2D.velocity.magnitude);
 				shotgunBlast.SetForwardDirection(e.transform.up);
-				e.transform.Rotate(Vector3.forward, spread + (i * shots * 2));
+                float shotPer = (float)(i) / shots;
+				e.transform.Rotate(Vector3.forward, -(spread / 2f) + spread * shotPer);
+                //e.transform.Rotate(Vector3.forward, spread + (i * shots * 1.5f));
 			}
 		}
 		Play(mGunShot2, 1f, 1);

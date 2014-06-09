@@ -37,8 +37,8 @@ public class VersusWorldBehavior : WorldBehavior {
 		
 		// setup round counters
 		
-		float near = 100f;
-		float far = 112.5f;
+		float near = 120f;
+		float far = 135f;
 		
 		float aspectSize = mMainCamera.aspect * mMainCamera.orthographicSize;
 		BluePoint1 = new Vector3( far, -far);
