@@ -125,7 +125,7 @@ public class OrbBehavior : MonoBehaviour {
 			ShotgunBlastBehavior shot = other.GetComponent<ShotgunBlastBehavior>();
 			e.transform.position = transform.position + e.transform.up * Mathf.Sqrt(newMass) / kScale;
 			e.rigidbody2D.velocity = (Vector2)(e.transform.up * kExplodeForce) + rigidbody2D.velocity;
-			e.rigidbody2D.velocity += (Vector2) shot.transform.up * 10.0f;
+			e.rigidbody2D.velocity += (Vector2) shot.transform.up * 30.0f;
 			e.transform.up = rigidbody2D.velocity.normalized;
 
 

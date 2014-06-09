@@ -25,21 +25,22 @@ public class RoundButton : MonoBehaviour
 		// Associates text mesh component 
 		tm = GetComponent<TextMesh>();
 		buttonNumber = tm.text[0];
-
-        // Set Mode: 1 vs 1 & Best of: 1 Round to active
-        if (gameObject.name == "Setup-Rounds1Button")
-        {
-            Active = true;
-            tm.fontSize = 70;
-            renderer.material.color = new Color(95, 153, 207, 255);
-        }
+		
+		// Set Mode: 1 vs 1 & Best of: 1 Round to active
+		if (gameObject.name == "Setup-Rounds1Button")
+		{
+			world.setRounds(buttonNumber);
+			Active = true;
+			tm.fontSize = 70;
+			renderer.material.color = new Color(95, 153, 207, 255);
+		}
 	}
 	
 	// To highlight button text when mouse is over collider
 	void OnMouseEnter()
 	{
-        if (!Active)
-        { tm.fontSize = 55; }
+		if (!Active)
+		{ tm.fontSize = 55; }
 		Play(mHover, 0.5f, 1);
 	}
 	// To de-highlight button text when mouse is over collider
@@ -54,25 +55,24 @@ public class RoundButton : MonoBehaviour
 	
 	void OnMouseUp()
 	{
-        if (!Active)
-        {
-            tm.fontSize = 70;
-            world.setRounds(buttonNumber);
-            isActive = true;
-        }
+		world.setRounds(buttonNumber);
+		Active = true;
+		tm.fontSize = 70;
+		renderer.material.color = new Color(95, 153, 207, 255);
 	}
 	
 	public bool isActive {
-        set { Active = value;
-        renderer.material.color = new Color(95, 153, 207, 255);
-        }
+		set
+		{
+			Active = value;
+		}
 		get { return Active; }
 	}
-
+	
 	public void Deactivate () {
 		isActive = false;
 		tm.fontSize = 50;
-        renderer.material.color = Color.white;
+		renderer.material.color = Color.white;
 	}
 	
 	// Audio clip player

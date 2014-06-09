@@ -77,7 +77,7 @@ public class Fire : MonoBehaviour {
 			if (powerLevel > 1)
 				waveBlast.SetPowerLevel(powerLevel);
 			waveBlast.mSpeed += (waveBlast.mSpeed * kWaveTotalChargeTime) / 2.0f;
-			waveBlast.mForce += kWaveTotalChargeTime * 15.0f;
+			waveBlast.mForce += kWaveTotalChargeTime * 10.0f;
 			e.transform.localScale += new Vector3(kWaveTotalChargeTime * 2.5f, kWaveTotalChargeTime * 2.5f, 0.0f);
 			if (grow)
 				e.transform.localScale += new Vector3 (5.0f, 5.0f, 0.0f);

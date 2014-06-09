@@ -230,8 +230,8 @@ public class Ship : MonoBehaviour {
 			Vector2 move = new Vector2(Input.GetAxisRaw(controller + "Horizontal"), Input.GetAxisRaw(controller + "Vertical"));
 			rigidbody2D.AddForce(move.normalized * kHeroSpeed);
 			
-			// Right Stick Aim
-			transform.up += new Vector3(Input.GetAxis(controller + "RHorz"), Input.GetAxis(controller + "RVert"), 0);			
+			// Right Stick Aimto
+			transform.up += new Vector3(Input.GetAxis(controller + "RHorz"), Input.GetAxis(controller + "RVert"), 0) * Time.smoothDeltaTime * 10f;			
 			
 			// Wave blast single click
 			if (Input.GetButtonDown(controller + "Fire1")) {

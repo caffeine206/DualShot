@@ -147,7 +147,7 @@ public class FourPlayerShip : Ship {
 				FireChargedShotgunBlast();
 			}
 			
-		} else if (isController == true) {
+		} else if (isController == true && !respawn.GameIsPaused() && !count.GetIsCounting()) {
 			// Player movement
 			//Vector2 move = new Vector2(Input.GetAxis(controller + "Horizontal"), Input.GetAxis(controller + "Vertical"));
 			Vector2 move = new Vector2(Input.GetAxisRaw(controller + "Horizontal"), Input.GetAxisRaw(controller + "Vertical"));

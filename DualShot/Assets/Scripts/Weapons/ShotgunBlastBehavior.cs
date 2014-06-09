@@ -62,7 +62,7 @@ public class ShotgunBlastBehavior : MonoBehaviour {
 
 	public void SetPowerLevel(int level) {
 		float increase = level * 1.0f;
-		kShotgunLife += increase / 8.0f;
+		kShotgunLife += increase / 10.0f;
 		transform.localScale += new Vector3 (increase * 3.0f, increase * 3.0f, 0.0f);
 	}
 }

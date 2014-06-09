@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class VersusAsteroidSpawner : AsteroidSpawner {
-	
+	public int mMaxOrbs = 20;
 	
 /*
 	
