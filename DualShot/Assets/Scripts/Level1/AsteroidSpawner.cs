@@ -25,7 +25,7 @@ public class AsteroidSpawner : MonoBehaviour {
 	protected float mMass = 1f;
 	protected float mVelocity = 50f;
 	
-	protected int mCurOrbs;
+	public int mCurOrbs;
 	protected float mLastSpawn = 0f; // The last time that orbs were spawned
 	#endregion
 	

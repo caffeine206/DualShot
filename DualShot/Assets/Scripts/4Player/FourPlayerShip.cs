@@ -70,9 +70,9 @@ public class FourPlayerShip : Ship {
 			}
 		}
 
-		if (spikeUp == true) {
-			if (Time.realtimeSinceStartup - spikeBegin > spikeEnd) {
-				spikeUp = false;
+		if (mSpikeUp == true) {
+			if (Time.realtimeSinceStartup - kSpikeBegin > kSpikeEnd) {
+				mSpikeUp = false;
 			}
 		}
 		
@@ -196,8 +196,10 @@ public class FourPlayerShip : Ship {
 		#endregion
 
 		if (other.gameObject.name == "Orb" || other.gameObject.name == "Orb(Clone)") {
-			if (spikeUp == true) {
+			if (mSpikeUp == true) {
 				Destroy(other.gameObject);
+				VersusAsteroidSpawner astroidSpawner = GameObject.Find("GameManager").GetComponent<VersusAsteroidSpawner>();
+				astroidSpawner.mCurOrbs--;
 			}
 		}
 		
@@ -244,8 +246,8 @@ public class FourPlayerShip : Ship {
 
 		if (other.gameObject.name == "SpikeUp" || other.gameObject.name == "SpikeUp(Clone)") {
 			Destroy(other.gameObject);
-			spikeBegin = Time.realtimeSinceStartup;
-			spikeUp = true;
+			kSpikeBegin = Time.realtimeSinceStartup;
+			mSpikeUp = true;
 		}
 	}
 	#endregion
@@ -270,6 +272,14 @@ public class FourPlayerShip : Ship {
 	
 	IEnumerator ShotgunBlastStallTime() {
 		hasFired = true;
+		yield return new WaitForSeconds(kShotgunBlastDisplacementInterval);
+		if (powerLevel >= 2) {
+			fire.FireShotgunBlast(this.gameObject, powerLevel, mGrowUp);
+		}
+		yield return new WaitForSeconds(kShotgunBlastDisplacementInterval);
+		if (powerLevel >= 3) {
+			fire.FireShotgunBlast(this.gameObject, powerLevel, mGrowUp);
+		}
 		yield return new WaitForSeconds(kShotgunBlastSpawnInterval);
 		hasFired = false;
 	}
